@@ -1,0 +1,6 @@
+# ignore backup files
+*~
+.*~
+
+# ignore build folder
+build/
