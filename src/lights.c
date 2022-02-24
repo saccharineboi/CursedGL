@@ -244,36 +244,26 @@ void txComputeSpotLight(TXvec4 resultColor,
 ////////////////////////////////////////
 void txComputeAttenuation(enum TXlightType lightType, int lightIndex, float constant)
 {
-#ifdef _DEBUG
     if (lightIndex < 0)
         return;
-#endif
 
     float range;
     switch (lightType) {
         case TX_LIGHT_POINT:
-#ifdef _DEBUG
             if (lightIndex < TX_NUM_POINT_LIGHTS) {
-#endif
                 pointLights[lightIndex].constantAttenuation = constant;
                 range = pointLights[lightIndex].range;
                 pointLights[lightIndex].linearAttenuation = 4.5f / range;
                 pointLights[lightIndex].quadraticAttenuation = 75.0f / range;
-#ifdef _DEBUG
             }
-#endif
             break;
         case TX_LIGHT_SPOT:
-#ifdef _DEBUG
             if (lightIndex < TX_NUM_SPOT_LIGHTS) {
-#endif
                 spotLights[lightIndex].constantAttenuation = constant;
                 range = spotLights[lightIndex].range;
                 spotLights[lightIndex].linearAttenuation = 4.5f / range;
                 spotLights[lightIndex].quadraticAttenuation = 75.0f / range;
-#ifdef _DEBUG
             }
-#endif
             break;
         case TX_LIGHT_DIRECTIONAL:
             break;
@@ -288,10 +278,8 @@ void txLight1f(int lightIndex,
 {
     switch (lightType) {
         case TX_LIGHT_DIRECTIONAL:
-#ifdef _DEBUG
             if (lightIndex < 0 || lightIndex >= TX_NUM_DIR_LIGHTS)
                 return;
-#endif
             switch (property) {
                 case TX_LIGHT_INTENSITY:
                     dirLights[lightIndex].intensity = s;
@@ -305,10 +293,8 @@ void txLight1f(int lightIndex,
             }
             break;
         case TX_LIGHT_POINT:
-#ifdef _DEBUG
             if (lightIndex < 0 || lightIndex >= TX_NUM_POINT_LIGHTS)
                 return;
-#endif
             switch (property) {
                 case TX_LIGHT_INTENSITY:
                     pointLights[lightIndex].intensity = s;
@@ -330,10 +316,8 @@ void txLight1f(int lightIndex,
             }
             break;
         case TX_LIGHT_SPOT:
-#ifdef _DEBUG
             if (lightIndex < 0 || lightIndex >= TX_NUM_SPOT_LIGHTS)
                 return;
-#endif
             switch (property) {
                 case TX_LIGHT_INTENSITY:
                     spotLights[lightIndex].intensity = s;
@@ -366,10 +350,8 @@ void txLight3fv(int lightIndex,
 {
     switch (lightType) {
         case TX_LIGHT_DIRECTIONAL:
-#ifdef _DEBUG
             if (lightIndex < 0 || lightIndex >= TX_NUM_DIR_LIGHTS)
                 return;
-#endif
             switch (property) {
                 case TX_LIGHT_AMBIENT:
                     txVec3Copy(dirLights[lightIndex].ambient, values);
@@ -388,10 +370,8 @@ void txLight3fv(int lightIndex,
             }
             break;
         case TX_LIGHT_POINT:
-#ifdef _DEBUG
             if (lightIndex < 0 || lightIndex >= TX_NUM_POINT_LIGHTS)
                 return;
-#endif
             switch (property) {
                 case TX_LIGHT_DIFFUSE:
                     txVec3Copy(pointLights[lightIndex].diffuse, values);
@@ -408,10 +388,8 @@ void txLight3fv(int lightIndex,
             }
             break;
         case TX_LIGHT_SPOT:
-#ifdef _DEBUG
             if (lightIndex < 0 || lightIndex >= TX_NUM_SPOT_LIGHTS)
                 return;
-#endif
             switch (property) {
                 case TX_LIGHT_DIFFUSE:
                     txVec3Copy(spotLights[lightIndex].diffuse, values);
@@ -449,10 +427,8 @@ float txLightGet1f(int lightIndex,
 {
     switch (lightType) {
         case TX_LIGHT_DIRECTIONAL:
-#ifdef _DEBUG
             if (lightIndex < 0 || lightIndex >= 0)
                 return 0.0f;
-#endif
             switch (property) {
                 case TX_LIGHT_INTENSITY:
                     return dirLights[lightIndex].intensity;
@@ -465,10 +441,8 @@ float txLightGet1f(int lightIndex,
             }
             break;
         case TX_LIGHT_POINT:
-#ifdef _DEBUG
             if (lightIndex < 0 || lightIndex >= TX_NUM_POINT_LIGHTS)
                 return 0.0f;
-#endif
             switch (property) {
                 case TX_LIGHT_INTENSITY:
                     return pointLights[lightIndex].intensity;
@@ -485,10 +459,8 @@ float txLightGet1f(int lightIndex,
             }
             break;
         case TX_LIGHT_SPOT:
-#ifdef _DEBUG
             if (lightIndex < 0 || lightIndex >= TX_NUM_SPOT_LIGHTS)
                 return 0.0f;
-#endif
             switch (property) {
                 case TX_LIGHT_INTENSITY:
                     return spotLights[lightIndex].intensity;
@@ -515,10 +487,8 @@ float* txLightGet3fv(int lightIndex,
 {
     switch (lightType) {
         case TX_LIGHT_DIRECTIONAL:
-#ifdef _DEBUG
             if (lightIndex < 0 || lightIndex >= TX_NUM_DIR_LIGHTS)
                 return NULL;
-#endif
             switch (property) {
                 case TX_LIGHT_AMBIENT:
                     return dirLights[lightIndex].ambient;
@@ -533,10 +503,8 @@ float* txLightGet3fv(int lightIndex,
             }
             break;
         case TX_LIGHT_POINT:
-#ifdef _DEBUG
             if (lightIndex < 0 || lightIndex >= TX_NUM_POINT_LIGHTS)
                 return NULL;
-#endif
             switch (property) {
                 case TX_LIGHT_DIFFUSE:
                     return pointLights[lightIndex].diffuse;
@@ -550,10 +518,8 @@ float* txLightGet3fv(int lightIndex,
             }
             break;
         case TX_LIGHT_SPOT:
-#ifdef _DEBUG
             if (lightIndex < 0 || lightIndex >= TX_NUM_SPOT_LIGHTS)
                 return NULL;
-#endif
             switch (property) {
                 case TX_LIGHT_DIFFUSE:
                     return spotLights[lightIndex].diffuse;

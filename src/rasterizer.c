@@ -101,64 +101,44 @@ bool txPushMatrix()
 {
     switch (matrixMode) {
         case TX_PROJECTION:
-#ifdef _DEBUG
             if (currentProjectionMatrix < TX_PROJECTION_MATRIX_STACK_SIZE - 1) {
-#endif
                 ++currentProjectionMatrix;
                 txMat4Copy(projectionMatrixStack[currentProjectionMatrix],
                            projectionMatrixStack[currentProjectionMatrix - 1]);
                 return true;
-#ifdef _DEBUG
             }
-#endif
             break;
         case TX_MODELVIEW:
-#ifdef _DEBUG
             if (currentModelViewMatrix < TX_MODELVIEW_MATRIX_STACK_SIZE - 1) {
-#endif
                 ++currentModelViewMatrix;
                 txMat4Copy(modelViewMatrixStack[currentModelViewMatrix],
                            modelViewMatrixStack[currentModelViewMatrix - 1]);
                 return true;
-#ifdef _DEBUG
             }
-#endif
             break;
         case TX_NORMAL:
-#ifdef _DEBUG
             if (currentNormalMatrix < TX_NORMAL_MATRIX_STACK_SIZE - 1) {
-#endif
                 ++currentNormalMatrix;
                 txMat4Copy(normalMatrixStack[currentNormalMatrix],
                            normalMatrixStack[currentNormalMatrix - 1]);
                 return true;
-#ifdef _DEBUG
             }
-#endif
             break;
         case TX_TEXTURE:
-#ifdef _DEBUG
             if (currentTextureMatrix < TX_TEXTURE_MATRIX_STACK_SIZE - 1) {
-#endif
                 ++currentTextureMatrix;
                 txMat4Copy(textureMatrixStack[currentTextureMatrix],
                            textureMatrixStack[currentTextureMatrix - 1]);
                 return true;
-#ifdef _DEBUG
             }
-#endif
             break;
         case TX_LIGHT:
-#ifdef _DEBUG
             if (currentLightMatrix < TX_LIGHT_MATRIX_STACK_SIZE - 1) {
-#endif
                 ++currentLightMatrix;
                 txMat4Copy(lightMatrixStack[currentLightMatrix],
                            lightMatrixStack[currentLightMatrix - 1]);
                 return true;
-#ifdef _DEBUG
             }
-#endif
     }
     return false;
 }
@@ -168,54 +148,34 @@ bool txPopMatrix()
 {
     switch (matrixMode) {
         case TX_PROJECTION:
-#ifdef _DEBUG
             if (currentProjectionMatrix > 0) {
-#endif
                 --currentProjectionMatrix;
                 return true;
-#ifdef _DEBUG
             }
-#endif
             break;
         case TX_MODELVIEW:
-#ifdef _DEBUG
             if (currentModelViewMatrix > 0) {
-#endif
                 --currentModelViewMatrix;
                 return true;
-#ifdef _DEBUG
             }
-#endif
             break;
         case TX_NORMAL:
-#ifdef _DEBUG
             if (currentNormalMatrix > 0) {
-#endif
                 --currentNormalMatrix;
                 return true;
-#ifdef _DEBUG
             }
-#endif
             break;
         case TX_TEXTURE:
-#ifdef _DEBUG
             if (currentTextureMatrix > 0) {
-#endif
                 --currentTextureMatrix;
                 return true;
-#ifdef _DEBUG
             }
-#endif
             break;
         case TX_LIGHT:
-#ifdef _DEBUG
             if (currentLightMatrix > 0) {
-#endif
                 --currentLightMatrix;
                 return true;
-#ifdef _DEBUG
             }
-#endif
             break;
     }
     return false;
