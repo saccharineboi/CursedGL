@@ -115,7 +115,7 @@ int main(void)
 # Features:
 
 - Supports points, lines, line-loops, line-strips, triangles, triangle-fans, triangle-strips, and quads
-- In addition to the above some basic shapes like cubes and floors are provided out-of-the-box
+- In addition to the above some basic shapes like cubes and planes are provided out-of-the-box
 - Face Culling
 - Triangle Clipping
 - Perspective-Correct Vertex-Attribute Interpolation
@@ -179,7 +179,11 @@ Don't forget to update your system before installing the dependencies:
 $ sudo apt update
 $ sudo apt upgrade
 ```
+Also make sure the dependencies are installed:
     
+```
+$ sudo apt install build-essential cmake libncurses5-dev
+```
     
 # Learning:
 *Check the examples/ folder for code samples*
@@ -219,6 +223,10 @@ zs18npnch27t4yfzllam4p0n3p4h7hllmhersgyan37cdc98a3pdp44k5g42f6slfn662qejxj9a60
     
 **Thanks for the support!**
 
+# License:
 
+TRex is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
+TRex is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
+You should have received a copy of the GNU General Public License along with TRex. If not, see <https://www.gnu.org/licenses/>.
