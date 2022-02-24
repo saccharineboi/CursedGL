@@ -108,11 +108,11 @@ int main(void)
 
 ````
 
-# Output of the above code on a 100x50 terminal:
+# Output:
 
 ![TRex Sample Code Output](.github/gif_files/trex_triangle_output.GIF)
 
-# Features
+# Features:
 
 - Supports points, lines, line-loops, line-strips, triangles, triangle-fans, triangle-strips, and quads
 - In addition to the above some basic shapes like cubes and floors are provided out-of-the-box
@@ -138,7 +138,7 @@ int main(void)
   - Spot
 - Matrix Stacks
 
-# Known Bugs And Issues
+# Known Bugs And Issues:
 
 - Viewport cannot be resized
 - No texture support *yet*
@@ -149,7 +149,7 @@ int main(void)
 - Error-reporting functionality is very primitive and requires improvement
 - Code needs testing
 
-# Building
+# Building:
 
 ## Linux
     
@@ -171,22 +171,29 @@ You need to enable WSL2 and install Ubuntu from the Windows Store.
     
 [This video will be helpful.](https://youtu.be/_fntjriRe48)
     
-After you've got everything working, follow the instructions for the linux users above
+After you've got everything working, follow the instructions for the linux users above.
+    
+Don't forget to update your system before installing the dependencies:
+
+```
+$ sudo apt update
+$ sudo apt upgrade
+```
     
     
-# Learning
+# Learning:
 *Check the examples/ folder for code samples*
     
 *Check the comments in the source files under src/ folder*
     
 
-# Contact
+# Contact:
 
 Grab my public key [here](https://flowcrypt.com/pub/saccharineboi@gmail.com?show=pubkey) and send me an email.
     
 PGP fingerprint: 693E AD50 5142 9D3F 74D9  F415 869B 4A61 D04F AD71
 
-# Donations + Tips
+# Donations and Tips:
 
 If you wish to, you can donate anonymously to one of the following addresses:
 
