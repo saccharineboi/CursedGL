@@ -806,6 +806,7 @@ static int clipVertices(TXtriangle_t triangles[])
                                                   &triangles[0]);
 
     // then check against the far plane
+    int totalNumTriangles;
     switch (numTriangles) {
         case 0:
             return 0;
@@ -816,7 +817,7 @@ static int clipVertices(TXtriangle_t triangles[])
                                               farPlaneNormal,
                                               &triangles[0]);
         case 2:
-            int totalNumTriangles = numTriangles;
+            totalNumTriangles = numTriangles;
             numTriangles = txClipTriangleAgainstPlane(&triangles[0],
                                                       &triangles[totalNumTriangles],
                                                       farPlanePosition,
