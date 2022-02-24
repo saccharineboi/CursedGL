@@ -179,7 +179,11 @@ Don't forget to update your system before installing the dependencies:
 $ sudo apt update
 $ sudo apt upgrade
 ```
+Also make sure the dependencies are installed:
     
+```
+$ sudo apt install build-essential cmake libncurses5-dev
+```
     
 # Learning:
 *Check the examples/ folder for code samples*
