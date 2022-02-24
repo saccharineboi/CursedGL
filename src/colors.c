@@ -28,15 +28,15 @@ void txInitColors(int mode)
 #define G_OFFSET (1000.0f / (TX_NUM_G - 1))
 #define B_OFFSET (1000.0f / (TX_NUM_B - 1))
 
-    int color_ctr = 0;
-    int pair_ctr  = TX_COLORPAIR_START;
+    short color_ctr = 0;
+    short pair_ctr  = TX_COLORPAIR_START;
 
     for (int r = 0; r < TX_NUM_R; ++r) {
         for (int g = 0; g < TX_NUM_G; ++g) {
             for (int b = 0; b < TX_NUM_B; ++b) {
-                init_extended_color(color_ctr, (int)((float)r * R_OFFSET),
-                                               (int)((float)g * G_OFFSET),
-                                               (int)((float)b * B_OFFSET));
+                init_color(color_ctr, (short)((float)r * R_OFFSET),
+                                      (short)((float)g * G_OFFSET),
+                                      (short)((float)b * B_OFFSET));
 
                 // To create the BLOCK mode all we do is simply set
                 // the background color to be the same as the
@@ -44,9 +44,9 @@ void txInitColors(int mode)
                 // background color to 0: i.e. black, making the
                 // ASCII letters stand out
                 if (mode == TX_BLOCK_MODE)
-                    init_extended_pair(pair_ctr, color_ctr, color_ctr);
+                    init_pair(pair_ctr, color_ctr, color_ctr);
                 else if (mode == TX_ASCII_MODE)
-                    init_extended_pair(pair_ctr, color_ctr, 0);
+                    init_pair(pair_ctr, color_ctr, 0);
 
                 ++pair_ctr;
                 ++color_ctr;
