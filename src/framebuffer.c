@@ -296,8 +296,8 @@ void txSetPixelInFramebuffer(int row, int col, TXpixel_t* p, enum TXframebufferT
 static unsigned selectLuminanceChar(TXvec3 color)
 {
     static unsigned luminanceValues[] = { '.', ',', '-', '~', ':', ';', '=', '!', '*', '#', '$', '#' };
-    float maxValue = txMax3(color[0], color[1], color[2]);
-    return luminanceValues[(int)(maxValue * 11.0f)];
+    float sum = color[0] + color[1] + color[2];
+    return luminanceValues[(int)(sum * 4.0f - 1.0f)];
 }
 
 ////////////////////////////////////////
