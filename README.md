@@ -197,6 +197,10 @@ Grab my public key [here](https://flowcrypt.com/pub/saccharineboi@gmail.com?show
     
 PGP fingerprint: 693E AD50 5142 9D3F 74D9  F415 869B 4A61 D04F AD71
 
+# Similar Projects:
+    
+ #### - [minirender](https://github.com/aslze/minirender) by *asize* : A simple software rasterizer for 3D meshes
+    
 # Donations and Tips:
 
 If you wish to, you can donate anonymously to one of the following addresses:
