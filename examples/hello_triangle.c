@@ -96,11 +96,10 @@ static bool processInput(WINDOW* win)
 ////////////////////////////////////////
 int main(void)
 {
-    if (!txInit(TX_BLOCK_MODE)) {
+    if (!(txInit() && txSetRenderWindow(stdscr, TX_BLOCK_MODE))) {
         fprintf(stderr, "ERROR: couldn't initialize TRex\n");
         return ERR_INIT;
     }
-
     WINDOW* input_win = createInputWindow();
 
     txClearColor3f(0.0f, 0.0f, 0.0f);

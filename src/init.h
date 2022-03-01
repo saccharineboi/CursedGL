@@ -23,18 +23,26 @@ extern "C" {
 
 #include <stdlib.h>
 #include <stdbool.h>
+#include <ncurses.h>
 
 ////////////////////////////////////////
 /// Tries to initialize TRex, returns true
 /// on success, false otherwise
 ////////////////////////////////////////
-bool txInit(int colorMode);
+bool txInit();
 
 ////////////////////////////////////////
 /// Tries to free resources owned by TRex,
 /// returns true on success, false otherwise
 ////////////////////////////////////////
 bool txEnd();
+
+////////////////////////////////////////
+/// Sets the window TRex will be rendering
+/// onto, and the color mode for the rendering,
+/// returns true on success, false otherwise
+////////////////////////////////////////
+bool txSetRenderWindow(WINDOW* renderWindow, int colorMode);
 
 ////////////////////////////////////////
 #ifdef __cplusplus

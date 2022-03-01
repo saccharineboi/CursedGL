@@ -90,6 +90,15 @@ static bool depthMask = true;
 static float depthClear = 1.0f;
 
 ////////////////////////////////////////
+static WINDOW* renderWindow;
+
+////////////////////////////////////////
+WINDOW* txGetRenderWindow()
+{
+    return renderWindow;
+}
+
+////////////////////////////////////////
 void txClearDepth(float value)
 {
     depthClear = value;
@@ -181,13 +190,13 @@ int txGetFramebufferHeight()
 ////////////////////////////////////////
 int txGetFramebufferMaxWidth()
 {
-    return getmaxx(stdscr);
+    return getmaxx(renderWindow);
 }
 
 ////////////////////////////////////////
 int txGetFramebufferMaxHeight()
 {
-    return getmaxy(stdscr);
+    return getmaxy(renderWindow);
 }
 
 ////////////////////////////////////////
@@ -212,7 +221,7 @@ float txGetFramebufferAspectRatio()
 bool txViewportMax()
 {
     int maxWidth, maxHeight;
-    getmaxyx(stdscr, maxHeight, maxWidth);
+    getmaxyx(renderWindow, maxHeight, maxWidth);
     return txViewport(0, 0, maxWidth, maxHeight);
 }
 
@@ -326,10 +335,10 @@ static void* drawFramebuffer()
             for (int j = framebufferOffsetY; j < framebufferHeight; ++j) {
                 TXpixel_t* currentPixel = txGetPixelFromFrontFramebuffer(i, j);
                 txSetColor(currentPixel->color[0], currentPixel->color[1], currentPixel->color[2]);
-                mvaddch(j, i, selectLuminanceChar(currentPixel->color));
+                mvwaddch(renderWindow, j, i, selectLuminanceChar(currentPixel->color));
             }
         }
-        refresh();
+        wrefresh(renderWindow);
         startRendering = false;
         currentlyRendering = false;
     }
@@ -381,8 +390,9 @@ static void setSwapRenderThreadWaits()
 }
 
 ////////////////////////////////////////
-bool txInitFramebuffer()
+bool txInitFramebuffer(WINDOW* window)
 {
+    renderWindow = window;
     if (pthread_create(&renderThread, NULL, drawFramebuffer, NULL))
         return false;
     setSwapRenderThreadWaits();

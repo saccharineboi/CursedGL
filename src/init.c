@@ -19,7 +19,7 @@
 #include "lights.h"
 
 ////////////////////////////////////////
-bool txInit(int colorMode)
+bool txInit()
 {
     if (!initscr()) {
         fprintf(stderr, "ERROR: failed to initialize ncurses\n");
@@ -37,14 +37,25 @@ bool txInit(int colorMode)
         fprintf(stderr, "ERROR: colors not supported\n");
         return false;
     }
-    txInitColors(colorMode);
 
-    if (!txInitFramebuffer()) {
+    return true;
+}
+
+////////////////////////////////////////
+bool txSetRenderWindow(WINDOW* renderWindow, int colorMode)
+{
+    if (!renderWindow) {
+        endwin();
+        fprintf(stderr, "ERROR: renderWindow is NULL\n");
+        return false;
+    }
+
+    if (!txInitFramebuffer(renderWindow)) {
         endwin();
         fprintf(stderr, "ERROR: failed to initialize framebuffer\n");
         return false;
     }
-
+    txInitColors(colorMode);
     return true;
 }
 

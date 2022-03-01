@@ -83,7 +83,8 @@ TX_FORCE_INLINE int txGetColorPair(float r, float g, float b)
 TX_FORCE_INLINE void txSetColor(float r, float g, float b)
 {
     int pair = txGetColorPair(r, g, b);
-    attron(COLOR_PAIR(pair));
+    extern WINDOW* txGetRenderWindow();
+    wattron(txGetRenderWindow(), COLOR_PAIR(pair));
 }
 
 ////////////////////////////////////////

@@ -25,6 +25,8 @@ extern "C" {
 #include "pixel.h"
 #include "common.h"
 
+#include <ncurses.h>
+
 ////////////////////////////////////////
 enum TXframebufferType { TX_FRAMEBUFFER_FRONT, TX_FRAMEBUFFER_BACK };
 
@@ -78,7 +80,7 @@ void txEnable(unsigned flags);
 void txDisable(unsigned flags);
 
 ////////////////////////////////////////
-bool txInitFramebuffer();
+bool txInitFramebuffer(WINDOW* renderWindow);
 
 ////////////////////////////////////////
 int txGetFramebufferWidth();
@@ -275,6 +277,9 @@ float txGetClearDepth();
 
 ////////////////////////////////////////
 bool txGetDepthMask();
+
+////////////////////////////////////////
+WINDOW* txGetRenderWindow();
 
 ////////////////////////////////////////
 #ifdef __cplusplus
