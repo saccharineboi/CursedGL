@@ -158,13 +158,7 @@ int main(void)
     WINDOW* input_win = createInputWindow();
 
     txClearColor3f(0.3f, 0.3f, 0.3f);
-    txViewportMax();
     txEnable(TX_DEPTH_TEST | TX_CULL_FACE);
-
-    txPerspective(TX_PI / 2.0f,
-                  txGetFramebufferAspectRatio(),
-                  0.1f,
-                  100.0f);
 
     ////////////////////////////////////////
     ////////////// POINT LIGHT /////////////
@@ -200,6 +194,12 @@ int main(void)
 
     float lightRotY = 0.0f;
     while (!processInput(input_win)) {
+        txViewportMax();
+        txPerspective(TX_PI / 2.0f,
+                      txGetFramebufferAspectRatio(),
+                      0.1f,
+                      100.0f);
+
         txClear(TX_COLOR_BIT | TX_DEPTH_BIT);
 
         lightRotY += 0.01f;

@@ -38,6 +38,18 @@ bool txInit()
         return false;
     }
 
+    if (noecho() == ERR) {
+        endwin();
+        fprintf(stderr, "ERROR: noecho() failed\n");
+        return false;
+    }
+
+    if (raw() == ERR) {
+        endwin();
+        fprintf(stderr, "ERROR: raw() failed\n");
+        return false;
+    }
+
     return true;
 }
 
@@ -47,6 +59,17 @@ bool txSetRenderWindow(WINDOW* renderWindow, int colorMode)
     if (!renderWindow) {
         endwin();
         fprintf(stderr, "ERROR: renderWindow is NULL\n");
+        return false;
+    }
+
+    if (nodelay(renderWindow, true) == ERR) {
+        endwin();
+        fprintf(stderr, "ERROR: couldn't set nodel");
+    }
+
+    if (keypad(renderWindow, true) == ERR) {
+        endwin();
+        fprintf(stderr, "ERROR: couldn't call keypad on renderWindow\n");
         return false;
     }
 

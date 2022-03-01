@@ -93,6 +93,9 @@ static float depthClear = 1.0f;
 static WINDOW* renderWindow;
 
 ////////////////////////////////////////
+static bool viewportResized;
+
+////////////////////////////////////////
 WINDOW* txGetRenderWindow()
 {
     return renderWindow;
@@ -228,22 +231,25 @@ bool txViewportMax()
 ////////////////////////////////////////
 bool txViewport(int offsetX, int offsetY, int width, int height)
 {
-    framebufferOffsetX  = offsetX;
-    framebufferOffsetY  = offsetY;
-    framebufferWidth    = width;
-    framebufferHeight   = height;
+    if (framebufferOffsetX != offsetX ||
+        framebufferOffsetY != offsetY ||
+        framebufferWidth   != width   ||
+        framebufferHeight  != height) {
 
-    size_t allocSize = (size_t)((framebufferWidth - framebufferOffsetX) *
-                                (framebufferHeight - framebufferOffsetY) *
-                                (int)sizeof(TXpixel_t));
+        viewportResized = true;
 
-    framebuffers[0] = (TXpixel_t*)malloc(allocSize);
-    framebuffers[1] = (TXpixel_t*)malloc(allocSize);
-    if (!framebuffers[0] || !framebuffers[1]) {
-        free(framebuffers[0]);
-        free(framebuffers[1]);
-        endwin();
-        return false;
+        framebufferOffsetX  = offsetX;
+        framebufferOffsetY  = offsetY;
+        framebufferWidth    = width;
+        framebufferHeight   = height;
+
+        free(framebuffers[BACK_BUFFER]);
+        framebuffers[BACK_BUFFER] = (TXpixel_t*)malloc(txGetFramebufferSize());
+        if (!framebuffers[BACK_BUFFER]) {
+            endwin();
+            fprintf(stderr, "ERROR: not enough memory for back buffer\n");
+            return false;
+        }
     }
     return true;
 }
@@ -338,7 +344,8 @@ static void* drawFramebuffer()
                 mvwaddch(renderWindow, j, i, selectLuminanceChar(currentPixel->color));
             }
         }
-        wrefresh(renderWindow);
+        if (!viewportResized)
+            wrefresh(renderWindow);
         startRendering = false;
         currentlyRendering = false;
     }
@@ -354,8 +361,8 @@ bool txFreeFramebuffer()
     if (pthread_join(renderThread, NULL))
         return false;
 
-    free(framebuffers[0]);
-    free(framebuffers[1]);
+    free(framebuffers[FRONT_BUFFER]);
+    free(framebuffers[BACK_BUFFER]);
     framebufferWidth = framebufferHeight = 0;
     return true;
 }
@@ -369,8 +376,20 @@ void txSwapBuffers()
         timeWaited += renderThreadWait;
     }
 
-    memcpy(framebuffers[txGetFrontBuffer()],
-           framebuffers[txGetBackBuffer()],
+    if (viewportResized) {
+        free(framebuffers[FRONT_BUFFER]);
+        framebuffers[FRONT_BUFFER] = (TXpixel_t*)malloc(txGetFramebufferSize());
+        if (!framebuffers[FRONT_BUFFER]) {
+            endwin();
+            fprintf(stderr, "not enough memory for front buffer\n");
+            return;
+        }
+        viewportResized = false;
+        return;
+    }
+
+    memcpy(framebuffers[FRONT_BUFFER],
+           framebuffers[BACK_BUFFER],
            txGetFramebufferSize());
     currentFramebuffer ^= 1;
     startRendering = true;
