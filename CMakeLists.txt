@@ -9,7 +9,7 @@ list(APPEND CMAKE_C_FLAGS "-Wall \
                            -Wextra \
                            -Werror \
                            -O2 \
-                           -s \
+                           -g \
                            -flto \
                            -Wfloat-equal \
                            -Wundef \

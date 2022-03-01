@@ -345,7 +345,6 @@ static void* drawFramebuffer()
             }
         }
         if (!viewportResized)
-            wrefresh(renderWindow);
         startRendering = false;
         currentlyRendering = false;
     }
@@ -382,12 +381,13 @@ void txSwapBuffers()
         if (!framebuffers[FRONT_BUFFER]) {
             endwin();
             fprintf(stderr, "not enough memory for front buffer\n");
-            return;
         }
-        viewportResized = false;
+        else
+            viewportResized = false;
         return;
     }
 
+    wrefresh(renderWindow);
     memcpy(framebuffers[FRONT_BUFFER],
            framebuffers[BACK_BUFFER],
            txGetFramebufferSize());
