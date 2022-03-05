@@ -293,7 +293,6 @@ TX_FORCE_INLINE void txMulMat4Vec3(TXvec3 res, TXmat4 mat, TXvec3 v, float w)
     res[0] = mat[0] * v0 + mat[4] * v1 + mat[8]  * v2 + mat[12] * w;
     res[1] = mat[1] * v0 + mat[5] * v1 + mat[9]  * v2 + mat[13] * w;
     res[2] = mat[2] * v0 + mat[6] * v1 + mat[10] * v2 + mat[14] * w;
-    res[3] = mat[3] * v0 + mat[7] * v1 + mat[11] * v2 + mat[15] * w;
 }
 
 ////////////////////////////////////////

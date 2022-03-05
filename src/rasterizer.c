@@ -458,8 +458,8 @@ TX_FORCE_INLINE void runFragmentShader(enum TXvertexInfo vertexInfo,
                                        TXvec4 mvPos0,  TXvec3 mvPos1,  TXvec3 mvPos2,
                                        float interpolatedZ)
 {
-    TXvec4 interpolatedNormals   = TX_VEC4_ZERO,
-           interpolatedPositions = TX_VEC4_ZERO;
+    TXvec4 interpolatedNormals   = TX_VEC4_ZERO;
+    TXvec4 interpolatedPositions = TX_VEC4_W1;
 
     // TXvec4 interpolatedTexCoords = TX_VEC4_ZERO;
     // Texture-coordinate interpolation
@@ -849,8 +849,17 @@ static void renderTriangles(enum TXvertexInfo vertexInfo,
 {
     for (int tri = 0; tri < numTriangles; ++tri) {
         TXvec4 viewport_v0, viewport_v1, viewport_v2;
+
         TXvec4 normal0, normal1, normal2;
+        txVec4Zero(normal0);
+        txVec4Zero(normal1);
+        txVec4Zero(normal2);
+
         TXvec4 mvPos0, mvPos1, mvPos2;
+        txVec4Zero(mvPos0);
+        txVec4Zero(mvPos1);
+        txVec4Zero(mvPos2);
+
         TXvec3 zValues;
 
         ////////////////////////////////////////

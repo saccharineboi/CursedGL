@@ -113,13 +113,13 @@ void txComputeDirLight(TXvec4 resultColor,
 ////////////////////////////////////////
 void txComputePointLight(TXvec4 resultColor,
                          TXvec4 interpolatedNormal,
-                         TXvec3 interpolatedPosition,
+                         TXvec4 interpolatedPosition,
                          TXvec3 viewDir);
 
 ////////////////////////////////////////
 void txComputeSpotLight(TXvec4 resultColor,
                         TXvec4 interpolatedNormal,
-                        TXvec3 interpolatedPosition,
+                        TXvec4 interpolatedPosition,
                         TXvec3 viewDir);
 
 ////////////////////////////////////////

@@ -94,7 +94,7 @@ void txComputeDirLight(TXvec4 resultColor,
 ////////////////////////////////////////
 void txComputePointLight(TXvec4 resultColor,
                          TXvec4 interpolatedNormal,
-                         TXvec3 interpolatedPosition,
+                         TXvec4 interpolatedPosition,
                          TXvec3 viewDir)
 {
     float* diffuseMaterial  = txGetMaterial4fv(TX_MATERIAL_DIFFUSE);
@@ -163,7 +163,7 @@ void txComputePointLight(TXvec4 resultColor,
 ////////////////////////////////////////
 void txComputeSpotLight(TXvec4 resultColor,
                         TXvec4 interpolatedNormal,
-                        TXvec3 interpolatedPosition,
+                        TXvec4 interpolatedPosition,
                         TXvec3 viewDir)
 {
     float* diffuseMaterial  = txGetMaterial4fv(TX_MATERIAL_DIFFUSE);
