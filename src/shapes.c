@@ -114,3 +114,74 @@ void txDrawCube()
     txDrawQuad(back_v0, back_v1, back_v2, back_v3, TX_POSITION_NORMAL);
     txDrawQuad(bottom_v0, bottom_v1, bottom_v2, bottom_v3, TX_POSITION_NORMAL);
 }
+
+////////////////////////////////////////
+void txDrawColoredCube()
+{
+    // front face
+    static TXvec4 front_v0[] = { { -0.5f, -0.5f, 0.5f, 1.0f },
+                                 {  1.0f,  0.0f, 0.0f, 1.0f } };
+    static TXvec4 front_v1[] = { {  0.5f, -0.5f, 0.5f, 1.0f },
+                                 {  1.0f,  0.0f, 0.0f, 1.0f } };
+    static TXvec4 front_v2[] = { {  0.5f,  0.5f, 0.5f, 1.0f },
+                                 {  1.0f,  0.0f, 0.0f, 1.0f } };
+    static TXvec4 front_v3[] = { { -0.5f,  0.5f, 0.5f, 1.0f },
+                                 {  1.0f,  0.0f, 0.0f, 1.0f } };
+
+    // left face
+    static TXvec4 left_v0[] = { { -0.5f, -0.5f, -0.5f, 1.0f },
+                                {  0.0f,  1.0f,  0.0f, 1.0f } };
+    static TXvec4 left_v1[] = { { -0.5f, -0.5f,  0.5f, 1.0f },
+                                {  0.0f,  1.0f,  0.0f, 1.0f } };
+    static TXvec4 left_v2[] = { { -0.5f,  0.5f,  0.5f, 1.0f },
+                                {  0.0f,  1.0f,  0.0f, 1.0f } };
+    static TXvec4 left_v3[] = { { -0.5f,  0.5f, -0.5f, 1.0f },
+                                {  0.0f,  1.0f,  0.0f, 1.0f } };
+
+    // right face
+    static TXvec4 right_v0[] = { { 0.5f, -0.5f,  0.5f, 1.0f },
+                                 { 0.0f,  0.0f,  1.0f, 1.0f } };
+    static TXvec4 right_v1[] = { { 0.5f, -0.5f, -0.5f, 1.0f },
+                                 { 0.0f,  0.0f,  1.0f, 1.0f } };
+    static TXvec4 right_v2[] = { { 0.5f,  0.5f, -0.5f, 1.0f },
+                                 { 0.0f,  0.0f,  1.0f, 1.0f } };
+    static TXvec4 right_v3[] = { { 0.5f,  0.5f,  0.5f, 1.0f },
+                                 { 0.0f,  0.0f,  1.0f, 1.0f } };
+
+    // back face
+    static TXvec4 back_v0[] = { {  0.5f, -0.5f, -0.5f, 1.0f },
+                                {  1.0f,  1.0f,  0.0f, 1.0f } };
+    static TXvec4 back_v1[] = { { -0.5f, -0.5f, -0.5f, 1.0f },
+                                {  1.0f,  1.0f,  0.0f, 1.0f } };
+    static TXvec4 back_v2[] = { { -0.5f,  0.5f, -0.5f, 1.0f },
+                                {  1.0f,  1.0f,  0.0f, 1.0f } };
+    static TXvec4 back_v3[] = { {  0.5f,  0.5f, -0.5f, 1.0f },
+                                {  1.0f,  1.0f,  0.0f, 1.0f } };
+
+    // top face
+    static TXvec4 top_v0[] = { { -0.5f, 0.5f,  0.5f, 1.0f },
+                               {  0.0f, 1.0f,  1.0f, 1.0f } };
+    static TXvec4 top_v1[] = { {  0.5f, 0.5f,  0.5f, 1.0f },
+                               {  0.0f, 1.0f,  1.0f, 1.0f } };
+    static TXvec4 top_v2[] = { {  0.5f, 0.5f, -0.5f, 1.0f },
+                               {  0.0f, 1.0f,  1.0f, 1.0f } };
+    static TXvec4 top_v3[] = { { -0.5f, 0.5f, -0.5f, 1.0f },
+                               {  0.0f, 1.0f,  1.0f, 1.0f } };
+
+    // bottom face
+    static TXvec4 bottom_v0[] = { { -0.5f, -0.5f, -0.5f, 1.0f },
+                                  {  1.0f,  0.0f,  1.0f, 1.0f } };
+    static TXvec4 bottom_v1[] = { {  0.5f, -0.5f, -0.5f, 1.0f },
+                                  {  1.0f,  0.0f,  1.0f, 1.0f } };
+    static TXvec4 bottom_v2[] = { {  0.5f, -0.5f,  0.5f, 1.0f },
+                                  {  1.0f,  0.0f,  1.0f, 1.0f } };
+    static TXvec4 bottom_v3[] = { { -0.5f, -0.5f,  0.5f, 1.0f },
+                                  {  1.0f,  0.0f,  1.0f, 1.0f } };
+
+    txDrawQuad(top_v0, top_v1, top_v2, top_v3, TX_POSITION_COLOR);
+    txDrawQuad(front_v0, front_v1, front_v2, front_v3, TX_POSITION_COLOR);
+    txDrawQuad(left_v0, left_v1, left_v2, left_v3, TX_POSITION_COLOR);
+    txDrawQuad(right_v0, right_v1, right_v2, right_v3, TX_POSITION_COLOR);
+    txDrawQuad(back_v0, back_v1, back_v2, back_v3, TX_POSITION_COLOR);
+    txDrawQuad(bottom_v0, bottom_v1, bottom_v2, bottom_v3, TX_POSITION_COLOR);
+}

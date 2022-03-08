@@ -32,6 +32,9 @@ void txDrawPlane();
 void txDrawCube();
 
 ////////////////////////////////////////
+void txDrawColoredCube();
+
+////////////////////////////////////////
 #ifdef __cplusplus
 }
 #endif

@@ -84,6 +84,11 @@ set(EXAMPLE hello_cube)
 add_executable(${EXAMPLE} examples/hello_cube.c)
 target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
 
+# colored_cube
+set(EXAMPLE colored_cube)
+add_executable(${EXAMPLE} examples/colored_cube.c)
+target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+
 # first_person_demo
 set(EXAMPLE first_person_demo)
 add_executable(${EXAMPLE} examples/first_person_demo.c)
