@@ -26,6 +26,7 @@
 #define ERR_INIT 1
 #define ERR_EXIT 2
 #define ERR_LOAD 3
+#define ERR_MODE 4
 #define ROTATION_SPEED 0.05f
 
 ////////////////////////////////////////
@@ -85,6 +86,19 @@ static bool processInput(WINDOW* win)
 }
 
 ////////////////////////////////////////
+static int getModeFromUser(int argc, char** argv)
+{
+    if (argc < 2)
+        return TX_BLOCK_MODE;
+    if (!strcmp(argv[1], "ascii"))
+        return TX_ASCII_MODE;
+    else if (!strcmp(argv[1], "block"))
+        return TX_BLOCK_MODE;
+    else
+        return -1;
+}
+
+////////////////////////////////////////
 /// example: hello_triangle
 ////////////////////////////////////////
 /// This example shows how to render
@@ -94,9 +108,15 @@ static bool processInput(WINDOW* win)
 /// Q to quit
 /// WASDZC and arrow keys to rotate
 ////////////////////////////////////////
-int main(void)
+int main(int argc, char** argv)
 {
-    if (!(txInit() && txSetRenderWindow(stdscr, TX_BLOCK_MODE))) {
+    int mode = getModeFromUser(argc, argv);
+    if (mode == -1) {
+        fprintf(stderr, "ERROR: invalid mode\n");
+        return ERR_MODE;
+    }
+
+    if (!(txInit() && txSetRenderWindow(stdscr, mode))) {
         fprintf(stderr, "ERROR: couldn't initialize TRex\n");
         return ERR_INIT;
     }
