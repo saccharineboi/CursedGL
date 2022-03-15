@@ -259,7 +259,7 @@ void txPerspective(float fovy,
                    float near,
                    float far)
 {
-    txGenPerspectiveProjectionMatrix(txGetProjectionMatrix(),
+    txGenPerspectiveProjectionMatrix(projectionMatrixStack[currentProjectionMatrix],
                                      fovy,
                                      aspectRatio / widthMultiplier,
                                      near,
@@ -272,7 +272,7 @@ void txOrtho(float width,
              float near,
              float far)
 {
-    txGenOrthographicProjectionMatrix(txGetProjectionMatrix(),
+    txGenOrthographicProjectionMatrix(projectionMatrixStack[currentProjectionMatrix],
                                       width * widthMultiplier,
                                       height,
                                       near,
