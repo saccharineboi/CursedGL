@@ -139,7 +139,7 @@ bool txIsCurrentlyRendering();
 
 ////////////////////////////////////////
 /// Defines the dimensions of a viewport
-/// for TRex to render into
+/// for CursedGL to render into
 ////////////////////////////////////////
 bool txViewport(int offsetX, int offsetY, int width, int height);
 

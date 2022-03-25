@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "trex.h"
+#include <cursedgl.h>
 
 #include <ncurses.h>
 #include <string.h>
@@ -49,7 +49,7 @@
 /// implicitly calls refresh() after every
 /// getch() invocation, causing a performance
 /// hit if getch is called on the window
-/// TRex is rendering into
+/// CursedGL is rendering into
 ////////////////////////////////////////
 static WINDOW* createInputWindow()
 {
@@ -172,7 +172,7 @@ int main(int argc, char** argv)
     }
 
     if (!(txInit() && txSetRenderWindow(stdscr, mode))) {
-        fprintf(stderr, "ERROR: couldn't initialize TRex\n");
+        fprintf(stderr, "ERROR: couldn't initialize CursedGL\n");
         return ERR_INIT;
     }
     WINDOW* input_win = createInputWindow();

@@ -108,9 +108,9 @@ enum TXmatrixType { TX_PROJECTION,
 /// TX_FLAT also uses Blinn-Phong.
 ///
 /// The default mode is TX_UNLIT, therefore if you
-/// want to use lighting, you need to explicitly tell TRex
+/// want to use lighting, you need to explicitly tell CursedGL
 /// to use either TX_FLAT or TX_SMOOTH. You don't need to
-/// txEnable(TX_LIGHTING) or anything like that, TRex is
+/// txEnable(TX_LIGHTING) or anything like that, CursedGL is
 /// intelligent enough to know that you want lighting enabled
 /// when you select TX_FLAT or TX_SMOOTH.
 ///
@@ -121,7 +121,7 @@ enum TXmatrixType { TX_PROJECTION,
 /// to be interpolated before the rendering can begin: you don't
 /// need to worry about it unless your mesh has a LOT of normals.
 ///
-/// TRex performs perspective-correct interpolation on all attributes
+/// CursedGL performs perspective-correct interpolation on all attributes
 ////////////////////////////////////////
 enum TXshadeModel { TX_UNLIT, TX_FLAT, TX_SMOOTH };
 
@@ -157,7 +157,7 @@ bool txPopMatrix();
 /// TX_CW  : clockwise
 /// TX_CCW : counter-clockwise
 ///
-/// By default TRex expects
+/// By default CursedGL expects
 /// triangles in counter-clockwise order
 ////////////////////////////////////////
 enum TXwindOrder { TX_CW, TX_CCW };
@@ -594,7 +594,7 @@ bool txShouldCullFace(TXvec3 view_v0,
 /// This is perspective-correct
 /// interpolation, and in fact currently
 /// the only way to perform interpolation
-/// in TRex.
+/// in CursedGL.
 ///
 /// I'm not sure if I should also provide
 /// perspective-incorrect interpolation

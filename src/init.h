@@ -26,19 +26,19 @@ extern "C" {
 #include <ncurses.h>
 
 ////////////////////////////////////////
-/// Tries to initialize TRex, returns true
+/// Tries to initialize CursedGL, returns true
 /// on success, false otherwise
 ////////////////////////////////////////
 bool txInit();
 
 ////////////////////////////////////////
-/// Tries to free resources owned by TRex,
+/// Tries to free resources owned by CursedGL,
 /// returns true on success, false otherwise
 ////////////////////////////////////////
 bool txEnd();
 
 ////////////////////////////////////////
-/// Sets the window TRex will be rendering
+/// Sets the window CursedGL will be rendering
 /// onto, and the color mode for the rendering,
 /// returns true on success, false otherwise
 ////////////////////////////////////////

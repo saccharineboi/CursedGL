@@ -306,7 +306,7 @@ void txSetPixelInFramebuffer(int row, int col, TXpixel_t* p, enum TXframebufferT
 
 ////////////////////////////////////////
 /// The effect of this function is visible
-/// only when TRex is running in ASCII mode
+/// only when CursedGL is running in ASCII mode
 ////////////////////////////////////////
 static unsigned selectLuminanceChar(TXvec3 color)
 {

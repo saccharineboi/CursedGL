@@ -24,7 +24,7 @@
 /// Make sure to set the w value of
 /// directional vectors to 0.0f,
 /// positional vectors to 1.0f.
-/// This is how TRex differentiates between
+/// This is how CursedGL differentiates between
 /// vectors that represent direction vs
 /// vectors that represent position
 ////////////////////////////////////////

@@ -36,15 +36,15 @@ extern "C" {
 /// whereas ASCII mode produces the familiar
 /// ASCII graphics on the terminal**
 ///
-/// * Note that technically TRex doesn't produce
-/// PS1-style graphics since TRex performs
+/// * Note that technically CursedGL doesn't produce
+/// PS1-style graphics since CursedGL performs
 /// perspective-correct vertex-attribute
 /// interpolation. Nevertheless, the resulting
 /// graphics look blocky and pixelated, similar to
 /// PS1 graphics
 ///
 /// ** See the implementation of txInitColors to
-/// find out how TRex does this
+/// find out how CursedGL does this
 ////////////////////////////////////////
 enum TXcolorMode { TX_BLOCK_MODE,
                    TX_ASCII_MODE };

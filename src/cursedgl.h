@@ -23,7 +23,7 @@ extern "C" {
 
 ////////////////////////////////////////
 /// Constants and routines that may
-/// be useful for everywhere in TRex's
+/// be useful for everywhere in CursedGL's
 /// source code
 ////////////////////////////////////////
 #include "common.h"
@@ -70,7 +70,7 @@ extern "C" {
 
 ////////////////////////////////////////
 /// Predefined list of 2D and 3D objects
-/// that are ready to be rendered by TRex
+/// that are ready to be rendered by CursedGL
 ////////////////////////////////////////
 #include "shapes.h"
 ////////////////////////////////////////
@@ -82,7 +82,7 @@ extern "C" {
 /// folder.
 ///
 /// I wrote this loader only to test
-/// TRex's ability to render complex objects
+/// CursedGL's ability to render complex objects
 /// like Utah teapot, it's not written to be
 /// used for parsing obj files you downloaded
 /// from the internet. Use assimp for that!
@@ -92,7 +92,7 @@ extern "C" {
 
 ////////////////////////////////////////
 /// Routines that initialize and shut down
-/// TRex
+/// CursedGL
 ////////////////////////////////////////
 #include "init.h"
 ////////////////////////////////////////

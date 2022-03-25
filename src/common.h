@@ -46,7 +46,7 @@ extern "C" {
 
 ////////////////////////////////////////
 /// Various mathematical constants that are
-/// used by TRex's own functions. Of course
+/// used by CursedGL's own functions. Of course
 /// you are free to use them as well.
 ////////////////////////////////////////
 #define TX_EPSILON  (1e-6f)

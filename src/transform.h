@@ -297,7 +297,7 @@ TX_FORCE_INLINE void txMulMat4Vec3(TXvec3 res, TXmat4 mat, TXvec3 v, float w)
 
 ////////////////////////////////////////
 /// Specification of a triangle that
-/// TRex uses internally for things like
+/// CursedGL uses internally for things like
 /// clipping, lighting calculations,
 /// vertex-attribute interpolation, etc.
 ////////////////////////////////////////

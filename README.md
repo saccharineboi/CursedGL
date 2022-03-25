@@ -1,16 +1,16 @@
-![TRex Logo](.github/logo.svg)
+![CursedGL Logo](.github/logo.svg)
 
 *Made with C99* <br/>
 
-<a href="#"><img src="https://img.shields.io/github/license/saccharineboi/TRex.svg"/><a/>
-<a href="#"><img src="https://img.shields.io/github/issues/saccharineboi/TRex.svg"/></a>
-<a href="#"><img src="https://img.shields.io/github/issues-closed/saccharineboi/TRex.svg"/></a>
-<a href="#"><img src="https://img.shields.io/github/issues-pr/saccharineboi/TRex.svg"/></a>
-<a href="#"><img src="https://img.shields.io/github/issues-pr-closed/saccharineboi/TRex.svg"/></a>
+<a href="#"><img src="https://img.shields.io/github/license/saccharineboi/CursedGL.svg"/><a/>
+<a href="#"><img src="https://img.shields.io/github/issues/saccharineboi/CursedGL.svg"/></a>
+<a href="#"><img src="https://img.shields.io/github/issues-closed/saccharineboi/CursedGL.svg"/></a>
+<a href="#"><img src="https://img.shields.io/github/issues-pr/saccharineboi/CursedGL.svg"/></a>
+<a href="#"><img src="https://img.shields.io/github/issues-pr-closed/saccharineboi/CursedGL.svg"/></a>
 
 # Description:
 
-**TRex is an ncurses-based software rasterizer that renders directly to the terminal**
+**CursedGL is an ncurses-based software rasterizer that renders directly to the terminal**
 
 # Usage:
 
@@ -21,7 +21,7 @@
 // Calling wgetch (as in processInput)
 // implicitly invokes refresh(). Hence
 // it's important to handle input on a
-// different window than the one TRex
+// different window than the one CursedGL
 // is rendering onto. See ncurses
 // documentation for more info
 static WINDOW* createInputWindow()
@@ -45,9 +45,9 @@ static bool processInput(WINDOW* win)
 // Spinning triangle
 int main(void)
 {
-    // Initialize TRex
+    // Initialize CursedGL
     if (!txInit(TX_BLOCK_MODE)) {
-        fprintf(stderr, "ERROR: couldn't initialize TRex\n");
+        fprintf(stderr, "ERROR: couldn't initialize CursedGL\n");
         return -1;
     }
 
@@ -66,7 +66,7 @@ int main(void)
                   0.1f,
                   100.0f);
 
-    // TRex uses right-handed coordinate-system
+    // CursedGL uses right-handed coordinate-system
     txTranslate3f(0.0f, 0.0f, -2.0f);
     
     // Render loop
@@ -110,7 +110,7 @@ int main(void)
 
 # Output:
 
-![TRex Sample Code Output](.github/gif_files/trex_triangle_output.GIF)
+![CursedGL Sample Code Output](.github/gif_files/trex_triangle_output.GIF)
 
 # Features:
 
@@ -156,8 +156,8 @@ int main(void)
 Make sure to have GCC, ncurses, and cmake installed.
 
 ```
-$ git clone https://github.com/saccharineboi/TRex.git
-$ cd TRex
+$ git clone https://github.com/saccharineboi/CursedGL.git
+$ cd CursedGL
 $ mkdir build && cd build
 $ cmake ..
 $ make
@@ -229,8 +229,8 @@ zs18npnch27t4yfzllam4p0n3p4h7hllmhersgyan37cdc98a3pdp44k5g42f6slfn662qejxj9a60
 
 # License:
 
-TRex is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+CursedGL is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-TRex is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+CursedGL is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with TRex. If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along with CursedGL. If not, see <https://www.gnu.org/licenses/>.

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(trex)
+project(cursedgl)
 
 # C settings
 set(CMAKE_C_STANDARD 99)
@@ -46,7 +46,7 @@ set(HEADER_FILES    ${CMAKE_SOURCE_DIR}/src/colors.h
                     ${CMAKE_SOURCE_DIR}/src/rasterizer.h
                     ${CMAKE_SOURCE_DIR}/src/shapes.h
                     ${CMAKE_SOURCE_DIR}/src/transform.h
-                    ${CMAKE_SOURCE_DIR}/src/trex.h
+                    ${CMAKE_SOURCE_DIR}/src/cursedgl.h
                     ${CMAKE_SOURCE_DIR}/src/vec.h)
 
 # include directories

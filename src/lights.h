@@ -36,7 +36,7 @@ extern "C" {
 #define TX_NUM_SPOT_LIGHTS  2
 
 ////////////////////////////////////////
-/// Types of light supported by TRex.
+/// Types of light supported by CursedGL.
 /// Note that point and spot lights do
 /// not contribute to the ambient coloring
 /// of objects in the scene
