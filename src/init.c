@@ -14,7 +14,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "init.h"
-#include "colors.h"
 #include "framebuffer.h"
 #include "lights.h"
 

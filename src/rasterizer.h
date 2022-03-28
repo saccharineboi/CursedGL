@@ -28,7 +28,6 @@ extern "C" {
 #include "framebuffer.h"
 #include "transform.h"
 #include "lights.h"
-#include "colors.h"
 
 #include <ncurses.h>
 #include <unistd.h>

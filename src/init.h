@@ -23,7 +23,7 @@ extern "C" {
 
 #include <stdlib.h>
 #include <stdbool.h>
-#include <ncurses.h>
+#include <notcurses.h>
 
 ////////////////////////////////////////
 /// Tries to initialize CursedGL, returns true
@@ -36,13 +36,6 @@ bool txInit();
 /// returns true on success, false otherwise
 ////////////////////////////////////////
 bool txEnd();
-
-////////////////////////////////////////
-/// Sets the window CursedGL will be rendering
-/// onto, and the color mode for the rendering,
-/// returns true on success, false otherwise
-////////////////////////////////////////
-bool txSetRenderWindow(WINDOW* renderWindow, int colorMode);
 
 ////////////////////////////////////////
 #ifdef __cplusplus
