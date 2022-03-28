@@ -17,67 +17,30 @@
 #include "framebuffer.h"
 #include "lights.h"
 
+#include <locale.h>
+
+////////////////////////////////////////
+static struct notcurses* ctx = NULL;
+
 ////////////////////////////////////////
 bool txInit()
 {
-    if (!initscr()) {
-        fprintf(stderr, "ERROR: failed to initialize ncurses\n");
+    if (!setlocale(LC_ALL, "")) {
+        fprintf(stderr, "ERROR: couldn't set locale\n");
         return false;
     }
 
-    if (start_color() == ERR) {
-        endwin();
-        fprintf(stderr, "ERROR: start_color() failed\n");
+    if (!(ctx = notcurses_core_init(NULL, NULL))) {
+        fprintf(stderr, "ERROR: couldn't initialize notcurses\n");
         return false;
     }
 
-    if (!has_colors() || !can_change_color()) {
-        endwin();
-        fprintf(stderr, "ERROR: colors not supported\n");
+    if (!notcurses_canchangecolor(ctx) || !notcurses_cantruecolor(ctx)) {
+        fprintf(stderr, "ERROR: terminal not supported\n");
+        notcurses_stop(ctx);
         return false;
     }
 
-    if (noecho() == ERR) {
-        endwin();
-        fprintf(stderr, "ERROR: noecho() failed\n");
-        return false;
-    }
-
-    if (raw() == ERR) {
-        endwin();
-        fprintf(stderr, "ERROR: raw() failed\n");
-        return false;
-    }
-
-    return true;
-}
-
-////////////////////////////////////////
-bool txSetRenderWindow(WINDOW* renderWindow, int colorMode)
-{
-    if (!renderWindow) {
-        endwin();
-        fprintf(stderr, "ERROR: renderWindow is NULL\n");
-        return false;
-    }
-
-    if (nodelay(renderWindow, true) == ERR) {
-        endwin();
-        fprintf(stderr, "ERROR: couldn't set nodel");
-    }
-
-    if (keypad(renderWindow, true) == ERR) {
-        endwin();
-        fprintf(stderr, "ERROR: couldn't call keypad on renderWindow\n");
-        return false;
-    }
-
-    if (!txInitFramebuffer(renderWindow)) {
-        endwin();
-        fprintf(stderr, "ERROR: failed to initialize framebuffer\n");
-        return false;
-    }
-    txInitColors(colorMode);
     return true;
 }
 
@@ -86,6 +49,5 @@ bool txEnd()
 {
     if (!txFreeFramebuffer())
         return false;
-    endwin();
-    return true;
+    return !notcurses_stop(ctx);
 }
