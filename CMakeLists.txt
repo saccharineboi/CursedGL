@@ -20,8 +20,7 @@ list(APPEND CMAKE_C_FLAGS "-Wall \
                            -Wmissing-include-dirs")
 
 # add source files
-set(SOURCE_FILES    ${CMAKE_SOURCE_DIR}/src/colors.c
-                    ${CMAKE_SOURCE_DIR}/src/framebuffer.c
+set(SOURCE_FILES    ${CMAKE_SOURCE_DIR}/src/framebuffer.c
                     ${CMAKE_SOURCE_DIR}/src/init.c
                     ${CMAKE_SOURCE_DIR}/src/lights.c
                     ${CMAKE_SOURCE_DIR}/src/material.c
@@ -31,8 +30,7 @@ set(SOURCE_FILES    ${CMAKE_SOURCE_DIR}/src/colors.c
                     ${CMAKE_SOURCE_DIR}/src/transform.c)
 
 # add header files
-set(HEADER_FILES    ${CMAKE_SOURCE_DIR}/src/colors.h
-                    ${CMAKE_SOURCE_DIR}/src/common.h
+set(HEADER_FILES    ${CMAKE_SOURCE_DIR}/src/common.h
                     ${CMAKE_SOURCE_DIR}/src/framebuffer.h
                     ${CMAKE_SOURCE_DIR}/src/init.h
                     ${CMAKE_SOURCE_DIR}/src/lights.h
@@ -55,7 +53,7 @@ include_directories (
 )
 
 # build library
-set(LIBS ${LIBS} ncurses m pthread)
+set(LIBS ${LIBS} notcurses m pthread)
 add_library(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 
 # build examples
