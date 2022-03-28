@@ -16,6 +16,7 @@
 #include "rasterizer.h"
 
 #include <string.h>
+#include <notcurses/notcurses.h>
 
 ////////////////////////////////////////
 /// This is the color that will be used

@@ -23,7 +23,7 @@ extern "C" {
 
 #include <stdlib.h>
 #include <stdbool.h>
-#include <notcurses.h>
+#include <notcurses/notcurses.h>
 
 ////////////////////////////////////////
 /// Tries to initialize CursedGL, returns true
@@ -36,6 +36,9 @@ bool txInit();
 /// returns true on success, false otherwise
 ////////////////////////////////////////
 bool txEnd();
+
+////////////////////////////////////////
+struct notcurses* getContext();
 
 ////////////////////////////////////////
 #ifdef __cplusplus

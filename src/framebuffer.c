@@ -15,15 +15,18 @@
 
 #include "framebuffer.h"
 #include "pixel.h"
-#include "colors.h"
 
 #include <stdlib.h>
-#include <ncurses.h>
+#include <notcurses/notcurses.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <stdint.h>
 
 ////////////////////////////////////////
 static TXpixel_t* framebuffers[2];
+
+////////////////////////////////////////
+static uint32_t* raw_framebuffers[2];
 
 ////////////////////////////////////////
 int currentFramebuffer = TX_FRAMEBUFFER_FRONT;
@@ -90,15 +93,15 @@ static bool depthMask = true;
 static float depthClear = 1.0f;
 
 ////////////////////////////////////////
-static WINDOW* renderWindow;
+static struct ncplane* renderPlane;
 
 ////////////////////////////////////////
 static bool viewportResized;
 
 ////////////////////////////////////////
-WINDOW* txGetRenderWindow()
+struct ncplane* txGetRenderPlane()
 {
-    return renderWindow;
+    return renderPlane;
 }
 
 ////////////////////////////////////////
@@ -179,6 +182,12 @@ size_t txGetFramebufferSize()
 }
 
 ////////////////////////////////////////
+size_t txGetRawFramebufferSize()
+{
+    return sizeof(uint32_t)
+}
+
+////////////////////////////////////////
 int txGetFramebufferWidth()
 {
     return framebufferWidth;
@@ -191,27 +200,9 @@ int txGetFramebufferHeight()
 }
 
 ////////////////////////////////////////
-int txGetFramebufferMaxWidth()
+void txGetFramebufferMaxDims(int* width, int* height)
 {
-    return getmaxx(renderWindow);
-}
-
-////////////////////////////////////////
-int txGetFramebufferMaxHeight()
-{
-    return getmaxy(renderWindow);
-}
-
-////////////////////////////////////////
-int txGetFramebufferOffsetX()
-{
-    return framebufferOffsetX;
-}
-
-////////////////////////////////////////
-int txGetFramebufferOffsetY()
-{
-    return framebufferOffsetY;
+    notcurses_term_dim_yx(txGetContext(), &width, &height);
 }
 
 ////////////////////////////////////////
@@ -224,7 +215,7 @@ float txGetFramebufferAspectRatio()
 bool txViewportMax()
 {
     int maxWidth, maxHeight;
-    getmaxyx(renderWindow, maxHeight, maxWidth);
+    txGetFramebufferMaxDims(&maxWidth, &maxHeight);
     return txViewport(0, 0, maxWidth, maxHeight);
 }
 
@@ -244,7 +235,10 @@ bool txViewport(int offsetX, int offsetY, int width, int height)
         framebufferHeight   = height;
 
         free(framebuffers[BACK_BUFFER]);
+        free(framebuffers_raw[BACK_BUFFER]);
+
         framebuffers[BACK_BUFFER] = (TXpixel_t*)malloc(txGetFramebufferSize());
+        framebuffers[BACK_BUFFER] = (uint32_t*)malloc();
         if (!framebuffers[BACK_BUFFER]) {
             endwin();
             fprintf(stderr, "ERROR: not enough memory for back buffer\n");

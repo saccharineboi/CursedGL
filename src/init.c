@@ -51,3 +51,9 @@ bool txEnd()
         return false;
     return !notcurses_stop(ctx);
 }
+
+////////////////////////////////////////
+struct notcurses* getContext()
+{
+    return ctx;
+}

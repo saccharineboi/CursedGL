@@ -25,7 +25,7 @@ extern "C" {
 #include "pixel.h"
 #include "common.h"
 
-#include <ncurses.h>
+#include <notcurses/notcurses.h>
 
 ////////////////////////////////////////
 enum TXframebufferType { TX_FRAMEBUFFER_FRONT, TX_FRAMEBUFFER_BACK };
@@ -89,16 +89,7 @@ int txGetFramebufferWidth();
 int txGetFramebufferHeight();
 
 ////////////////////////////////////////
-/// Returns the maximum width a framebuffer
-/// can have, which is the width of the terminal
-////////////////////////////////////////
-int txGetFramebufferMaxWidth();
-
-////////////////////////////////////////
-/// Returns the maximum height a framebuffer
-/// can have, which is the height of the terminal
-////////////////////////////////////////
-int txGetFramebufferMaxHeight();
+void txGetFramebufferMaxDims(int* width, int* height);
 
 ////////////////////////////////////////
 /// Returns the aspect ratio of the
@@ -106,12 +97,6 @@ int txGetFramebufferMaxHeight();
 /// divided by framebuffer height
 ////////////////////////////////////////
 float txGetFramebufferAspectRatio();
-
-////////////////////////////////////////
-int txGetFramebufferOffsetX();
-
-////////////////////////////////////////
-int txGetFramebufferOffsetY();
 
 ////////////////////////////////////////
 /// Returns the amount of time the swap
@@ -159,6 +144,14 @@ void txGetFramebufferDims(int* width, int* height);
 /// (front and back) are of the same size
 ////////////////////////////////////////
 size_t txGetFramebufferSize();
+
+////////////////////////////////////////
+/// Returns the size of one of the raw
+/// framebuffers in bytes. Note that both
+/// framebuffers (front and back) are of
+/// the same size
+////////////////////////////////////////
+size_t txGetRawFramebufferSize();
 
 ////////////////////////////////////////
 /// Sets the color the framebuffer will
@@ -279,7 +272,7 @@ float txGetClearDepth();
 bool txGetDepthMask();
 
 ////////////////////////////////////////
-WINDOW* txGetRenderWindow();
+struct ncplane* txGetRenderPlane();
 
 ////////////////////////////////////////
 #ifdef __cplusplus

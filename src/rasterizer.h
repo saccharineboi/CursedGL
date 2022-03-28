@@ -29,7 +29,6 @@ extern "C" {
 #include "transform.h"
 #include "lights.h"
 
-#include <ncurses.h>
 #include <unistd.h>
 
 ////////////////////////////////////////
