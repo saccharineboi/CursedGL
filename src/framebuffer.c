@@ -15,6 +15,7 @@
 
 #include "framebuffer.h"
 #include "pixel.h"
+#include "init.c"
 
 #include <stdlib.h>
 #include <notcurses/notcurses.h>
@@ -97,6 +98,18 @@ static struct ncplane* renderPlane;
 
 ////////////////////////////////////////
 static bool viewportResized;
+
+////////////////////////////////////////
+static int newFramebufferWidth;
+
+////////////////////////////////////////
+static int newFramebufferHeight;
+
+////////////////////////////////////////
+static int newFramebufferOffsetX;
+
+////////////////////////////////////////
+static int newFramebufferOffsetY;
 
 ////////////////////////////////////////
 struct ncplane* txGetRenderPlane()
@@ -184,7 +197,9 @@ size_t txGetFramebufferSize()
 ////////////////////////////////////////
 size_t txGetRawFramebufferSize()
 {
-    return sizeof(uint32_t)
+    return (size_t)((framebufferWidth  - framebufferOffsetX) *
+                    (framebufferHeight - framebufferOffsetY) *
+                    (int)sizeof(uint32_t));
 }
 
 ////////////////////////////////////////
@@ -200,9 +215,15 @@ int txGetFramebufferHeight()
 }
 
 ////////////////////////////////////////
-void txGetFramebufferMaxDims(int* width, int* height)
+int txGetFramebufferOffsetX()
 {
-    notcurses_term_dim_yx(txGetContext(), &width, &height);
+    return framebufferOffsetX;
+}
+
+////////////////////////////////////////
+int txGetFramebufferOffsetY()
+{
+    return framebufferOffsetY;
 }
 
 ////////////////////////////////////////
@@ -227,23 +248,12 @@ bool txViewport(int offsetX, int offsetY, int width, int height)
         framebufferWidth   != width   ||
         framebufferHeight  != height) {
 
+        newFramebufferWidth = width;
+        newFramebufferHeight = height;
+        newFramebufferOffsetX = offsetX;
+        newFramebufferOffsetY = offsetY;
+
         viewportResized = true;
-
-        framebufferOffsetX  = offsetX;
-        framebufferOffsetY  = offsetY;
-        framebufferWidth    = width;
-        framebufferHeight   = height;
-
-        free(framebuffers[BACK_BUFFER]);
-        free(framebuffers_raw[BACK_BUFFER]);
-
-        framebuffers[BACK_BUFFER] = (TXpixel_t*)malloc(txGetFramebufferSize());
-        framebuffers[BACK_BUFFER] = (uint32_t*)malloc();
-        if (!framebuffers[BACK_BUFFER]) {
-            endwin();
-            fprintf(stderr, "ERROR: not enough memory for back buffer\n");
-            return false;
-        }
     }
     return true;
 }
@@ -253,6 +263,12 @@ void txGetFramebufferDims(int* width, int* height)
 {
     *width  = framebufferWidth;
     *height = framebufferHeight;
+}
+
+////////////////////////////////////////
+void txGetFramebufferMaxDims(int* width, int* height)
+{
+    notcurses_term_dim_yx(txGetContext(), (unsigned*)width, (unsigned*)height);
 }
 
 ////////////////////////////////////////
@@ -299,17 +315,6 @@ void txSetPixelInFramebuffer(int row, int col, TXpixel_t* p, enum TXframebufferT
 }
 
 ////////////////////////////////////////
-/// The effect of this function is visible
-/// only when CursedGL is running in ASCII mode
-////////////////////////////////////////
-static unsigned selectLuminanceChar(TXvec3 color)
-{
-    static unsigned luminanceValues[] = { '.', ',', '-', '~', ':', ';', '=', '!', '*', '#', '$', '#' };
-    float sum = color[0] + color[1] + color[2];
-    return luminanceValues[(int)(sum * 4.0f - 1.0f)];
-}
-
-////////////////////////////////////////
 /// This function is running continuously
 /// on a different thread, and it will
 /// continue to run until the swap thread
@@ -321,6 +326,14 @@ static unsigned selectLuminanceChar(TXvec3 color)
 ////////////////////////////////////////
 static void* drawFramebuffer()
 {
+    struct ncvisual_options options = {
+        .n          = renderPlane,
+        .scaling    = NCSCALE_STRETCH,
+        .leny       = (unsigned)framebufferHeight,
+        .lenx       = (unsigned)framebufferWidth,
+        .blitter    = NCBLIT_1x1
+    };
+
     while (true) {
         if (stopRendering)
             return NULL;
@@ -331,14 +344,26 @@ static void* drawFramebuffer()
         }
 
         currentlyRendering = true;
+        int cnt = 0;
         for (int i = framebufferOffsetX; i < framebufferWidth; ++i) {
             for (int j = framebufferOffsetY; j < framebufferHeight; ++j) {
                 TXpixel_t* currentPixel = txGetPixelFromFrontFramebuffer(i, j);
-                txSetColor(currentPixel->color[0], currentPixel->color[1], currentPixel->color[2]);
-                mvwaddch(renderWindow, j, i, selectLuminanceChar(currentPixel->color));
+                unsigned u_r = (unsigned)currentPixel->color[0] * 255;
+                unsigned u_g = (unsigned)currentPixel->color[1] * 255;
+                unsigned u_b = (unsigned)currentPixel->color[2] * 255;
+                raw_framebuffers[BACK_BUFFER][cnt++] = ((0xffu << 24) |
+                                                        (u_b  << 16) |
+                                                        (u_g  << 8)  |
+                                                        (u_r  << 0));
             }
         }
-        if (!viewportResized)
+        if (!viewportResized) {
+            ncblit_rgba(raw_framebuffers[BACK_BUFFER],
+                        framebufferWidth * (int)sizeof(uint32_t),
+                        &options);
+            notcurses_render(txGetContext());
+        }
+
         startRendering = false;
         currentlyRendering = false;
     }
@@ -356,6 +381,8 @@ bool txFreeFramebuffer()
 
     free(framebuffers[FRONT_BUFFER]);
     free(framebuffers[BACK_BUFFER]);
+    free(raw_framebuffers[FRONT_BUFFER]);
+    free(raw_framebuffers[BACK_BUFFER]);
     framebufferWidth = framebufferHeight = 0;
     return true;
 }
@@ -371,28 +398,47 @@ void txSwapBuffers()
 
     if (viewportResized) {
         free(framebuffers[FRONT_BUFFER]);
+        free(framebuffers[BACK_BUFFER]);
+        free(raw_framebuffers[FRONT_BUFFER]);
+        free(raw_framebuffers[BACK_BUFFER]);
+
+        framebufferWidth = newFramebufferWidth;
+        framebufferHeight = newFramebufferHeight;
+
+        framebufferOffsetX = newFramebufferOffsetX;
+        framebufferOffsetY = newFramebufferOffsetY;
+
         framebuffers[FRONT_BUFFER] = (TXpixel_t*)malloc(txGetFramebufferSize());
-        if (!framebuffers[FRONT_BUFFER]) {
-            endwin();
-            fprintf(stderr, "not enough memory for front buffer\n");
+        framebuffers[BACK_BUFFER] = (TXpixel_t*)malloc(txGetFramebufferSize());
+
+        raw_framebuffers[FRONT_BUFFER] = (uint32_t*)malloc(txGetRawFramebufferSize());
+        raw_framebuffers[BACK_BUFFER] = (uint32_t*)malloc(txGetRawFramebufferSize());
+
+        if (!framebuffers[FRONT_BUFFER] ||
+            !framebuffers[BACK_BUFFER] ||
+            !raw_framebuffers[FRONT_BUFFER] ||
+            !raw_framebuffers[BACK_BUFFER]) {
+            fprintf(stderr, "ERROR: not enough memory for framebuffer(s)\n");
         }
-        else
-            viewportResized = false;
+
+        viewportResized = false;
         return;
     }
+    else {
 
-    wrefresh(renderWindow);
-    memcpy(framebuffers[FRONT_BUFFER],
-           framebuffers[BACK_BUFFER],
-           txGetFramebufferSize());
-    currentFramebuffer ^= 1;
-    startRendering = true;
+        memcpy(framebuffers[FRONT_BUFFER],
+               framebuffers[BACK_BUFFER],
+               txGetFramebufferSize());
 
-    unsigned timeToWait = swapThreadWait - timeWaited;
-    if (timeToWait > swapThreadWait)
-        timeToWait = 0;
-    timeWaited = 0;
-    usleep(timeToWait);
+        currentFramebuffer ^= 1;
+        startRendering = true;
+
+        unsigned timeToWait = swapThreadWait - timeWaited;
+        if (timeToWait > swapThreadWait)
+            timeToWait = 0;
+        timeWaited = 0;
+        usleep(timeToWait);
+    }
 }
 
 ////////////////////////////////////////
@@ -403,9 +449,9 @@ static void setSwapRenderThreadWaits()
 }
 
 ////////////////////////////////////////
-bool txInitFramebuffer(WINDOW* window)
+bool txInitFramebuffer(struct ncplane* plane)
 {
-    renderWindow = window;
+    renderPlane = plane;
     if (pthread_create(&renderThread, NULL, drawFramebuffer, NULL))
         return false;
     setSwapRenderThreadWaits();

@@ -38,7 +38,7 @@ bool txInit();
 bool txEnd();
 
 ////////////////////////////////////////
-struct notcurses* getContext();
+struct notcurses* txGetContext();
 
 ////////////////////////////////////////
 #ifdef __cplusplus

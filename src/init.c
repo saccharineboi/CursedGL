@@ -36,8 +36,14 @@ bool txInit()
     }
 
     if (!notcurses_canchangecolor(ctx) || !notcurses_cantruecolor(ctx)) {
-        fprintf(stderr, "ERROR: terminal not supported\n");
         notcurses_stop(ctx);
+        fprintf(stderr, "ERROR: terminal not supported\n");
+        return false;
+    }
+
+    if (!txInitFramebuffer(notcurses_stdplane(ctx))) {
+        notcurses_stop(ctx);
+        fprintf(stderr, "ERROR: couldn't initialize framebuffer\n");
         return false;
     }
 
@@ -53,7 +59,7 @@ bool txEnd()
 }
 
 ////////////////////////////////////////
-struct notcurses* getContext()
+struct notcurses* txGetContext()
 {
     return ctx;
 }

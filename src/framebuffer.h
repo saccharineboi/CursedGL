@@ -80,13 +80,19 @@ void txEnable(unsigned flags);
 void txDisable(unsigned flags);
 
 ////////////////////////////////////////
-bool txInitFramebuffer(WINDOW* renderWindow);
+bool txInitFramebuffer(struct ncplane* renderPlane);
 
 ////////////////////////////////////////
 int txGetFramebufferWidth();
 
 ////////////////////////////////////////
 int txGetFramebufferHeight();
+
+////////////////////////////////////////
+int txGetFramebufferOffsetX();
+
+////////////////////////////////////////
+int txGetFramebufferOffsetY();
 
 ////////////////////////////////////////
 void txGetFramebufferMaxDims(int* width, int* height);
