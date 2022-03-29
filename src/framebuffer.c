@@ -27,7 +27,7 @@
 static TXpixel_t* framebuffers[2];
 
 ////////////////////////////////////////
-static uint32_t* raw_framebuffers[2];
+static uint32_t* raw_framebuffer = NULL;
 
 ////////////////////////////////////////
 int currentFramebuffer = TX_FRAMEBUFFER_FRONT;
@@ -233,29 +233,28 @@ float txGetFramebufferAspectRatio()
 }
 
 ////////////////////////////////////////
-bool txViewportMax()
+void txViewportMax()
 {
     int maxWidth, maxHeight;
     txGetFramebufferMaxDims(&maxWidth, &maxHeight);
-    return txViewport(0, 0, maxWidth, maxHeight);
+    txViewport(0, 0, maxWidth, maxHeight);
 }
 
 ////////////////////////////////////////
-bool txViewport(int offsetX, int offsetY, int width, int height)
+void txViewport(int offsetX, int offsetY, int width, int height)
 {
     if (framebufferOffsetX != offsetX ||
         framebufferOffsetY != offsetY ||
         framebufferWidth   != width   ||
         framebufferHeight  != height) {
 
-        newFramebufferWidth = width;
-        newFramebufferHeight = height;
-        newFramebufferOffsetX = offsetX;
-        newFramebufferOffsetY = offsetY;
+        newFramebufferWidth     = width;
+        newFramebufferHeight    = height;
+        newFramebufferOffsetX   = offsetX;
+        newFramebufferOffsetY   = offsetY;
 
-        viewportResized = true;
+        viewportResized         = true;
     }
-    return true;
 }
 
 ////////////////////////////////////////
@@ -268,7 +267,7 @@ void txGetFramebufferDims(int* width, int* height)
 ////////////////////////////////////////
 void txGetFramebufferMaxDims(int* width, int* height)
 {
-    notcurses_term_dim_yx(txGetContext(), (unsigned*)width, (unsigned*)height);
+    notcurses_term_dim_yx(txGetContext(), (unsigned*)height, (unsigned*)width);
 }
 
 ////////////////////////////////////////
@@ -300,7 +299,7 @@ void txClear(int flags)
 ////////////////////////////////////////
 TXpixel_t* txGetPixelFromFramebuffer(int row, int col, enum TXframebufferType type)
 {
-    int pos = row * framebufferHeight + col;
+    int pos = row * framebufferWidth + col;
     if (pos < 0 || pos > framebufferWidth * framebufferHeight)
         return NULL;
     return &framebuffers[type][pos];
@@ -309,7 +308,7 @@ TXpixel_t* txGetPixelFromFramebuffer(int row, int col, enum TXframebufferType ty
 ////////////////////////////////////////
 void txSetPixelInFramebuffer(int row, int col, TXpixel_t* p, enum TXframebufferType type)
 {
-    int pos = row * framebufferHeight + col;
+    int pos = row * framebufferWidth + col;
     if (pos >= 0 && pos <= framebufferWidth * framebufferHeight)
         txVec4Copy(framebuffers[type][pos].color, p->color);
 }
@@ -326,14 +325,6 @@ void txSetPixelInFramebuffer(int row, int col, TXpixel_t* p, enum TXframebufferT
 ////////////////////////////////////////
 static void* drawFramebuffer()
 {
-    struct ncvisual_options options = {
-        .n          = renderPlane,
-        .scaling    = NCSCALE_STRETCH,
-        .leny       = (unsigned)framebufferHeight,
-        .lenx       = (unsigned)framebufferWidth,
-        .blitter    = NCBLIT_1x1
-    };
-
     while (true) {
         if (stopRendering)
             return NULL;
@@ -343,23 +334,33 @@ static void* drawFramebuffer()
             continue;
         }
 
+        struct ncvisual_options options = {
+            .n          = renderPlane,
+            .scaling    = NCSCALE_NONE,
+            .leny       = (unsigned)framebufferHeight,
+            .lenx       = (unsigned)framebufferWidth,
+            .blitter    = NCBLIT_1x1
+        };
+
         currentlyRendering = true;
         int cnt = 0;
-        for (int i = framebufferOffsetX; i < framebufferWidth; ++i) {
-            for (int j = framebufferOffsetY; j < framebufferHeight; ++j) {
+        for (int i = framebufferOffsetY; i < framebufferHeight; ++i) {
+            for (int j = framebufferOffsetX; j < framebufferWidth; ++j) {
                 TXpixel_t* currentPixel = txGetPixelFromFrontFramebuffer(i, j);
-                unsigned u_r = (unsigned)currentPixel->color[0] * 255;
-                unsigned u_g = (unsigned)currentPixel->color[1] * 255;
-                unsigned u_b = (unsigned)currentPixel->color[2] * 255;
-                raw_framebuffers[BACK_BUFFER][cnt++] = ((0xffu << 24) |
-                                                        (u_b  << 16) |
-                                                        (u_g  << 8)  |
-                                                        (u_r  << 0));
+                uint32_t u_r = (uint32_t)(currentPixel->color[0] * 255.0f);
+                uint32_t u_g = (uint32_t)(currentPixel->color[1] * 255.0f);
+                uint32_t u_b = (uint32_t)(currentPixel->color[2] * 255.0f);
+
+                raw_framebuffer[cnt++] = (((uint32_t)255 << 24) |
+                                                    (u_b << 16) |
+                                                    (u_g << 8)  |
+                                                    (u_r << 0));
             }
         }
         if (!viewportResized) {
-            ncblit_rgba(raw_framebuffers[BACK_BUFFER],
-                        framebufferWidth * (int)sizeof(uint32_t),
+            int width = txGetFramebufferWidth() - txGetFramebufferOffsetX();
+            ncblit_rgba(raw_framebuffer,
+                        width * (int)(sizeof(uint32_t)),
                         &options);
             notcurses_render(txGetContext());
         }
@@ -381,8 +382,9 @@ bool txFreeFramebuffer()
 
     free(framebuffers[FRONT_BUFFER]);
     free(framebuffers[BACK_BUFFER]);
-    free(raw_framebuffers[FRONT_BUFFER]);
-    free(raw_framebuffers[BACK_BUFFER]);
+
+    free(raw_framebuffer);
+
     framebufferWidth = framebufferHeight = 0;
     return true;
 }
@@ -399,8 +401,8 @@ void txSwapBuffers()
     if (viewportResized) {
         free(framebuffers[FRONT_BUFFER]);
         free(framebuffers[BACK_BUFFER]);
-        free(raw_framebuffers[FRONT_BUFFER]);
-        free(raw_framebuffers[BACK_BUFFER]);
+
+        free(raw_framebuffer);
 
         framebufferWidth = newFramebufferWidth;
         framebufferHeight = newFramebufferHeight;
@@ -411,21 +413,16 @@ void txSwapBuffers()
         framebuffers[FRONT_BUFFER] = (TXpixel_t*)malloc(txGetFramebufferSize());
         framebuffers[BACK_BUFFER] = (TXpixel_t*)malloc(txGetFramebufferSize());
 
-        raw_framebuffers[FRONT_BUFFER] = (uint32_t*)malloc(txGetRawFramebufferSize());
-        raw_framebuffers[BACK_BUFFER] = (uint32_t*)malloc(txGetRawFramebufferSize());
+        raw_framebuffer = (uint32_t*)malloc(txGetRawFramebufferSize());
 
-        if (!framebuffers[FRONT_BUFFER] ||
-            !framebuffers[BACK_BUFFER] ||
-            !raw_framebuffers[FRONT_BUFFER] ||
-            !raw_framebuffers[BACK_BUFFER]) {
-            fprintf(stderr, "ERROR: not enough memory for framebuffer(s)\n");
-        }
+        notcurses_refresh(txGetContext(), NULL, NULL);
 
         viewportResized = false;
+        startRendering = true;
+
         return;
     }
     else {
-
         memcpy(framebuffers[FRONT_BUFFER],
                framebuffers[BACK_BUFFER],
                txGetFramebufferSize());

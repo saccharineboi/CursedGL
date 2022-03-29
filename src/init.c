@@ -35,12 +35,6 @@ bool txInit()
         return false;
     }
 
-    if (!notcurses_canchangecolor(ctx) || !notcurses_cantruecolor(ctx)) {
-        notcurses_stop(ctx);
-        fprintf(stderr, "ERROR: terminal not supported\n");
-        return false;
-    }
-
     if (!txInitFramebuffer(notcurses_stdplane(ctx))) {
         notcurses_stop(ctx);
         fprintf(stderr, "ERROR: couldn't initialize framebuffer\n");

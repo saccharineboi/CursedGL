@@ -713,7 +713,7 @@ void txDrawPoint(TXvec4 v0)
     // Points currently do not react to lighting.
     // Not sure if they should
 
-    TXpixel_t* p = txGetPixelFromBackFramebuffer(x, y);
+    TXpixel_t* p = txGetPixelFromBackFramebuffer(y, x);
     if (txIsDepthTestEnabled() && txCompareDepth(depth, p->depth)) {
         txVec4Copy(p->color, rasterColor);
         if (txGetDepthMask())
@@ -770,7 +770,7 @@ void txDrawLine(TXvec4 v0, TXvec4 v1)
                 if (interpolatedDepth < 0.0f || interpolatedDepth > 1.0f)
                     continue;
 
-                TXpixel_t* p = txGetPixelFromBackFramebuffer(i, j);
+                TXpixel_t* p = txGetPixelFromBackFramebuffer(j, i);
                 if (txIsDepthTestEnabled()) {
                     if (txCompareDepth(interpolatedDepth, p->depth)) {
                         txVec4Copy(p->color, rasterColor);
@@ -907,10 +907,10 @@ static void renderTriangles(enum TXvertexInfo vertexInfo,
         ////////////////////////////////////////
         TXvec4 outputColor = TX_VEC4_W1;
 
-        for (int i = minx; i <= maxx; ++i) {
-            for (int j = miny; j <= maxy; ++j) {
-                if (txIsPointInTriangle(i,
-                                        j,
+        for (int i = miny; i <= maxy; ++i) {
+            for (int j = minx; j <= maxx; ++j) {
+                if (txIsPointInTriangle(j,
+                                        i,
                                         viewport_v0,
                                         viewport_v1,
                                         viewport_v2,
