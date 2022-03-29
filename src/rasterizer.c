@@ -755,9 +755,9 @@ void txDrawLine(TXvec4 v0, TXvec4 v1)
 
     // Lines also do not react to light sources. Not sure if they should.
 
-    for (int i = minx; i <= maxx; ++i) {
-        for (int j = miny; j <= maxy; ++j) {
-            if (txIsPointInLine(i, j, viewport_v0, viewport_v1)) {
+    for (int i = miny; i <= maxy; ++i) {
+        for (int j = minx; j <= maxx; ++j) {
+            if (txIsPointInLine(j, i, viewport_v0, viewport_v1)) {
                 float interpolatedDepth = txInterpolateLineDepth(i,
                                                                  j,
                                                                  viewport_v0,
@@ -770,7 +770,7 @@ void txDrawLine(TXvec4 v0, TXvec4 v1)
                 if (interpolatedDepth < 0.0f || interpolatedDepth > 1.0f)
                     continue;
 
-                TXpixel_t* p = txGetPixelFromBackFramebuffer(j, i);
+                TXpixel_t* p = txGetPixelFromBackFramebuffer(i, j);
                 if (txIsDepthTestEnabled()) {
                     if (txCompareDepth(interpolatedDepth, p->depth)) {
                         txVec4Copy(p->color, rasterColor);

@@ -86,17 +86,18 @@ int main()
     }
 
     txClearColor3f(0.0f, 0.0f, 0.0f);
-    txViewportMax();
     txEnable(TX_DEPTH_TEST);
-
-    txPerspective(TX_PI / 2.0f,
-                  txGetFramebufferAspectRatio(),
-                  0.1f,
-                  100.0f);
 
     txTranslate3f(0.0f, 0.0f, -1.0f);
     while (!processInput()) {
         txClear(TX_COLOR_BIT | TX_DEPTH_BIT);
+
+        txViewportMax();
+        txPerspective(TX_PI / 2.0f,
+                      txGetFramebufferAspectRatio(),
+                      0.1f,
+                      100.0f);
+
 
         TXvec4 v0_begin = { -0.5f, -0.5f, 0.0f, 1.0f };
         TXvec4 v0_end   = {  0.5f, -0.5f, 0.0f, 1.0f };
