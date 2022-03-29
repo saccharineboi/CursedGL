@@ -16,28 +16,15 @@
 
 ```c
 
-#include <trex.h>
-
-// Calling wgetch (as in processInput)
-// implicitly invokes refresh(). Hence
-// it's important to handle input on a
-// different window than the one CursedGL
-// is rendering onto. See ncurses
-// documentation for more info
-static WINDOW* createInputWindow()
-{
-    WINDOW* input_win = newwin(0, 0, 0, 0);
-    raw();
-    noecho();
-    nodelay(input_win, true);
-    keypad(input_win, true);
-    return input_win;
-}
+#include <cursedgl.h>
 
 // Quit rendering if Q is pressed
-static bool processInput(WINDOW* win)
+static bool processInput()
 {
-    if (wgetch(win) == 'q')
+    struct ncinput input;
+    notcurses_get_nblock(txGetContext(), &input);
+
+    if (input.id == 'q')
         return true;
     return false;
 }
@@ -46,26 +33,14 @@ static bool processInput(WINDOW* win)
 int main(void)
 {
     // Initialize CursedGL
-    if (!txInit(TX_BLOCK_MODE)) {
+    if (!txInit()) {
         fprintf(stderr, "ERROR: couldn't initialize CursedGL\n");
         return -1;
     }
 
-    // Create a separate window for input handling
-    WINDOW* input_win = createInputWindow();
-
     // Set the color the framebuffer will be cleared with
     txClearColor3f(0.0f, 0.0f, 0.0f);
     
-    // Occupy the whole terminal area
-    txViewportMax();
-
-    // Use perspective projection
-    txPerspective(TX_PI / 2.0f,
-                  txGetFramebufferAspectRatio(),
-                  0.1f,
-                  100.0f);
-
     // CursedGL uses right-handed coordinate-system
     txTranslate3f(0.0f, 0.0f, -2.0f);
     
@@ -74,6 +49,15 @@ int main(void)
     
         // Clear the framebuffer
         txClear(TX_COLOR_BIT | TX_DEPTH_BIT);
+
+        // Occupy the whole terminal area
+        txViewportMax();
+
+        // Use perspective projection
+        txPerspective(TX_PI / 2.0f,
+                      txGetFramebufferAspectRatio(),
+                      0.1f,
+                      100.0f);
 
         // Specify the vertex data for our triangle
         TXvec4 pos0 = { -1.0f, -1.0f, 0.0f, 1.0f };
@@ -95,9 +79,6 @@ int main(void)
         // Swap the front and back framebuffers
         txSwapBuffers();
     }
-
-    // Delete the ncurses window used for input-handling
-    delwin(input_win);
     
     // Free memory used for rendering
     txEnd();
@@ -140,7 +121,6 @@ int main(void)
 
 # Known Bugs And Issues:
 
-- Viewport cannot be resized
 - No texture support *yet*
 - More sophisticated multi-threading system would be better
 - Math library needs SIMD implementation
