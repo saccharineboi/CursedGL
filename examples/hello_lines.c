@@ -15,7 +15,7 @@
 
 #include <cursedgl.h>
 
-#include <ncurses.h>
+#include <notcurses/notcurses.h>
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
@@ -30,49 +30,33 @@
 #define ROTATION_SPEED 0.05f
 
 ////////////////////////////////////////
-/// Always use a different ncurses window
-/// for input. This is because ncurses
-/// implicitly calls refresh() after every
-/// getch() invocation, causing a performance
-/// hit if getch is called on the window
-/// CursedGL is rendering into
-////////////////////////////////////////
-static WINDOW* createInputWindow()
-{
-    WINDOW* input_win = newwin(0, 0, 0, 0);
-    raw();
-    noecho();
-    nodelay(input_win, true);
-    keypad(input_win, true);
-    return input_win;
-}
-
-////////////////////////////////////////
 /// Basic input processing without
 /// finite-state automaton. This works
 /// because CursedGL is itself a finite-state
 /// automaton, much like OpenGL
 ////////////////////////////////////////
-static bool processInput(WINDOW* win)
+static bool processInput()
 {
-    int k = wgetch(win);
-    switch (k) {
+    struct ncinput input;
+    notcurses_get_nblock(txGetContext(), &input);
+
+    switch (input.id) {
         case 'q':
             return true;
         case 'a':
-        case KEY_LEFT:
+        case NCKEY_LEFT:
             txRotate4f(ROTATION_SPEED, 0.0f, 1.0f, 0.0f);
             break;
         case 'd':
-        case KEY_RIGHT:
+        case NCKEY_RIGHT:
             txRotate4f(-ROTATION_SPEED, 0.0f, 1.0f, 0.0f);
             break;
         case 'w':
-        case KEY_UP:
+        case NCKEY_UP:
             txRotate4f(-ROTATION_SPEED, 1.0f, 0.0f, 0.0f);
             break;
         case 's':
-        case KEY_DOWN:
+        case NCKEY_DOWN:
             txRotate4f(ROTATION_SPEED, 1.0f, 0.0f, 0.0f);
             break;
         case 'z':
@@ -86,19 +70,6 @@ static bool processInput(WINDOW* win)
 }
 
 ////////////////////////////////////////
-static int getModeFromUser(int argc, char** argv)
-{
-    if (argc < 2)
-        return TX_BLOCK_MODE;
-    if (!strcmp(argv[1], "ascii"))
-        return TX_ASCII_MODE;
-    else if (!strcmp(argv[1], "block"))
-        return TX_BLOCK_MODE;
-    else
-        return -1;
-}
-
-////////////////////////////////////////
 /// example: hello_lines
 ////////////////////////////////////////
 /// This example shows how to render lines
@@ -107,19 +78,12 @@ static int getModeFromUser(int argc, char** argv)
 /// Q to quit
 /// WASDZC and arrow keys to rotate
 ////////////////////////////////////////
-int main(int argc, char** argv)
+int main()
 {
-    int mode = getModeFromUser(argc, argv);
-    if (mode == -1) {
-        fprintf(stderr, "ERROR: invalid mode\n");
-        return ERR_MODE;
-    }
-
-    if (!(txInit() && txSetRenderWindow(stdscr, mode))) {
+    if (!txInit()) {
         fprintf(stderr, "ERROR: couldn't initialize CursedGL\n");
         return ERR_INIT;
     }
-    WINDOW* input_win = createInputWindow();
 
     txClearColor3f(0.0f, 0.0f, 0.0f);
     txViewportMax();
@@ -131,7 +95,7 @@ int main(int argc, char** argv)
                   100.0f);
 
     txTranslate3f(0.0f, 0.0f, -1.0f);
-    while (!processInput(input_win)) {
+    while (!processInput()) {
         txClear(TX_COLOR_BIT | TX_DEPTH_BIT);
 
         TXvec4 v0_begin = { -0.5f, -0.5f, 0.0f, 1.0f };
@@ -173,7 +137,6 @@ int main(int argc, char** argv)
         txSwapBuffers();
     }
 
-    delwin(input_win);
     txEnd();
     return SUCCESS;
 }

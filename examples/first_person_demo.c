@@ -15,7 +15,7 @@
 
 #include <cursedgl.h>
 
-#include <ncurses.h>
+#include <notcurses/notcurses.h>
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
@@ -44,31 +44,13 @@
 #define CUBE_POS                10.0f
 
 ////////////////////////////////////////
-/// Always use a different ncurses window
-/// for input. This is because ncurses
-/// implicitly calls refresh() after every
-/// getch() invocation, causing a performance
-/// hit if getch is called on the window
-/// CursedGL is rendering into
-////////////////////////////////////////
-static WINDOW* createInputWindow()
-{
-    WINDOW* input_win = newwin(0, 0, 0, 0);
-    raw();
-    noecho();
-    nodelay(input_win, true);
-    keypad(input_win, true);
-    return input_win;
-}
-
-////////////////////////////////////////
 /// Basic implementation of a first-person
 /// camera. Use W and S to move forward and
 /// backward, A and D to look left and right,
 /// H and L to strafe left and right,
 /// Z and C to move up and down
 ////////////////////////////////////////
-static bool processInput(WINDOW* win)
+static bool processInput()
 {
     static TXvec3 eye       = { 0.0f, 0.0f, 10.0f };
     static TXvec3 up        = { 0.0f, CAMERA_SPEED, 0.0f };
@@ -76,8 +58,10 @@ static bool processInput(WINDOW* win)
     static bool flashLightEnabled;
     TXvec3 strafe;
 
-    int k = wgetch(win);
-    switch (k) {
+    struct ncinput input;
+    notcurses_get_nblock(txGetContext(), &input);
+
+    switch (input.id) {
         case 'q':
             return true;
         case 'w':
@@ -136,19 +120,6 @@ static bool processInput(WINDOW* win)
 }
 
 ////////////////////////////////////////
-static int getModeFromUser(int argc, char** argv)
-{
-    if (argc < 2)
-        return TX_BLOCK_MODE;
-    if (!strcmp(argv[1], "ascii"))
-        return TX_ASCII_MODE;
-    else if (!strcmp(argv[1], "block"))
-        return TX_BLOCK_MODE;
-    else
-        return -1;
-}
-
-////////////////////////////////////////
 /// example: first_person_demo
 ////////////////////////////////////////
 /// This example shows how to implement
@@ -163,19 +134,12 @@ static int getModeFromUser(int argc, char** argv)
 /// H to strafe left, L to strafe right
 /// F to toggle flashlight
 ////////////////////////////////////////
-int main(int argc, char** argv)
+int main()
 {
-    int mode = getModeFromUser(argc, argv);
-    if (mode == -1) {
-        fprintf(stderr, "ERROR: invalid mode\n");
-        return ERR_MODE;
-    }
-
-    if (!(txInit() && txSetRenderWindow(stdscr, mode))) {
+    if (!txInit()) {
         fprintf(stderr, "ERROR: couldn't initialize CursedGL\n");
         return ERR_INIT;
     }
-    WINDOW* input_win = createInputWindow();
 
     txClearColor3f(0.3f, 0.3f, 0.3f);
     txEnable(TX_DEPTH_TEST | TX_CULL_FACE);
@@ -213,7 +177,7 @@ int main(int argc, char** argv)
     }
 
     float lightRotY = 0.0f;
-    while (!processInput(input_win)) {
+    while (!processInput()) {
         txViewportMax();
         txPerspective(TX_PI / 2.0f,
                       txGetFramebufferAspectRatio(),
@@ -271,7 +235,6 @@ int main(int argc, char** argv)
     }
 
     txFreeObjModel(&teapot);
-    delwin(input_win);
     txEnd();
     return SUCCESS;
 }

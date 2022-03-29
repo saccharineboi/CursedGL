@@ -15,7 +15,7 @@
 
 #include <cursedgl.h>
 
-#include <ncurses.h>
+#include <notcurses/notcurses.h>
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
@@ -30,45 +30,17 @@
 #define ROTATION_SPEED 0.05f
 
 ////////////////////////////////////////
-/// Always use a different ncurses window
-/// for input. This is because ncurses
-/// implicitly calls refresh() after every
-/// getch() invocation, causing a performance
-/// hit if getch is called on the window
-/// CursedGL is rendering into
-////////////////////////////////////////
-static WINDOW* createInputWindow()
-{
-    WINDOW* input_win = newwin(0, 0, 0, 0);
-    raw();
-    noecho();
-    nodelay(input_win, true);
-    keypad(input_win, true);
-    return input_win;
-}
-
-////////////////////////////////////////
 /// Exit the game loop if the user
 /// presses q
 ////////////////////////////////////////
-static bool processInput(WINDOW* win)
+static bool processInput()
 {
-    if (wgetch(win) == 'q')
+    struct ncinput input;
+    notcurses_get_nblock(txGetContext(), &input);
+
+    if (input.id == 'q')
         return true;
     return false;
-}
-
-////////////////////////////////////////
-static int getModeFromUser(int argc, char** argv)
-{
-    if (argc < 2)
-        return TX_BLOCK_MODE;
-    if (!strcmp(argv[1], "ascii"))
-        return TX_ASCII_MODE;
-    else if (!strcmp(argv[1], "block"))
-        return TX_BLOCK_MODE;
-    else
-        return -1;
 }
 
 ////////////////////////////////////////
@@ -82,20 +54,13 @@ static int getModeFromUser(int argc, char** argv)
 /// CONTROLS:
 /// Q to quit
 ////////////////////////////////////////
-int main(int argc, char** argv)
+int main()
 {
-    int mode = getModeFromUser(argc, argv);
-    if (mode == -1) {
-        fprintf(stderr, "ERROR: invalid mode\n");
-        return ERR_MODE;
-    }
-
-    if (!(txInit() && txSetRenderWindow(stdscr, mode))) {
+    if (!txInit()) {
         fprintf(stderr, "ERROR: couldn't initialize CursedGL\n");
         return ERR_INIT;
     }
     srandom((unsigned)time(NULL));
-    WINDOW* input_win = createInputWindow();
 
     txClearColor3f(0.0f, 0.0f, 0.0f);
     txViewportMax();
@@ -107,7 +72,7 @@ int main(int argc, char** argv)
 
     int numInsidePoints = 0;
     int numOutsidePoints = 0;
-    while (!processInput(input_win)) {
+    while (!processInput()) {
 
         // note the absence of txClear
 
@@ -143,7 +108,6 @@ int main(int argc, char** argv)
         txSwapBuffers();
     }
 
-    delwin(input_win);
     txEnd();
 
     int numTotalPoints = numInsidePoints + numOutsidePoints;

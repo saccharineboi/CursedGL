@@ -15,7 +15,7 @@
 
 #include <cursedgl.h>
 
-#include <ncurses.h>
+#include <notcurses/notcurses.h>
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
@@ -30,33 +30,17 @@
 #define ROTATION_SPEED 0.05f
 
 ////////////////////////////////////////
-/// Always use a different ncurses window
-/// for input. This is because ncurses
-/// implicitly calls refresh() after every
-/// getch() invocation, causing a performance
-/// hit if getch is called on the window
-/// CursedGL is rendering into
-////////////////////////////////////////
-static WINDOW* createInputWindow()
-{
-    WINDOW* input_win = newwin(0, 0, 0, 0);
-    raw();
-    noecho();
-    nodelay(input_win, true);
-    keypad(input_win, true);
-    return input_win;
-}
-
-////////////////////////////////////////
 /// Basic input processing without
 /// finite-state automaton. This works
 /// because CursedGL is itself a finite-state
 /// automaton, much like OpenGL
 ////////////////////////////////////////
-static bool processInput(WINDOW* win)
+static bool processInput()
 {
-    int k = wgetch(win);
-    switch (k) {
+    struct ncinput input;
+    notcurses_get_nblock(txGetContext(), &input);
+
+    switch (input.id) {
         case 'q':
             return true;
         case 'a':
@@ -83,37 +67,24 @@ static bool processInput(WINDOW* win)
             txMatrixMode(TX_MODELVIEW);
             txRotate4f(-ROTATION_SPEED, 0.0f, 0.0f, 1.0f);
             break;
-        case KEY_LEFT:
+        case NCKEY_LEFT:
             txMatrixMode(TX_LIGHT);
             txRotate4f(-ROTATION_SPEED, 0.0f, 1.0f, 0.0f);
             break;
-        case KEY_RIGHT:
+        case NCKEY_RIGHT:
             txMatrixMode(TX_LIGHT);
             txRotate4f(ROTATION_SPEED, 0.0f, 1.0f, 0.0f);
             break;
-        case KEY_UP:
+        case NCKEY_UP:
             txMatrixMode(TX_LIGHT);
             txRotate4f(-ROTATION_SPEED, 1.0f, 0.0f, 0.0f);
             break;
-        case KEY_DOWN:
+        case NCKEY_DOWN:
             txMatrixMode(TX_LIGHT);
             txRotate4f(ROTATION_SPEED, 1.0f, 0.0f, 0.0f);
             break;
     }
     return false;
-}
-
-////////////////////////////////////////
-static int getModeFromUser(int argc, char** argv)
-{
-    if (argc < 2)
-        return TX_BLOCK_MODE;
-    if (!strcmp(argv[1], "ascii"))
-        return TX_ASCII_MODE;
-    else if (!strcmp(argv[1], "block"))
-        return TX_BLOCK_MODE;
-    else
-        return -1;
 }
 
 ////////////////////////////////////////
@@ -127,35 +98,22 @@ static int getModeFromUser(int argc, char** argv)
 /// WASDZC to rotate the object
 /// Arrow keys to rotate the light
 ////////////////////////////////////////
-int main(int argc, char** argv)
+int main()
 {
-    int mode = getModeFromUser(argc, argv);
-    if (mode == -1) {
-        fprintf(stderr, "ERROR: invalid mode\n");
-        return ERR_MODE;
-    }
-
-    if (!(txInit() && txSetRenderWindow(stdscr, mode))) {
+    if (!txInit()) {
         fprintf(stderr, "ERROR: couldn't initialize CursedGL\n");
         return ERR_INIT;
     }
-    WINDOW* input_win = createInputWindow();
 
     txClearColor3f(0.0f, 0.0f, 0.0f);
-    txViewportMax();
     txEnable(TX_DEPTH_TEST | TX_CULL_FACE);
 
-    txPerspective(TX_PI / 2.0f,
-                  txGetFramebufferAspectRatio(),
-                  0.1f,
-                  100.0f);
-
-    txMaterial3f(TX_MATERIAL_AMBIENT, 1.0f, 1.0f, 1.0f);
+    txMaterial3f(TX_MATERIAL_AMBIENT, 1.0f, 0.0f, 0.0f);
     txMaterial3f(TX_MATERIAL_DIFFUSE, 1.0f, 1.0f, 1.0f);
     txMaterial3f(TX_MATERIAL_SPECULAR, 1.0f, 1.0f, 1.0f);
-    txMaterial1f(TX_MATERIAL_SHININESS, 64.0f);
+    txMaterial1f(TX_MATERIAL_SHININESS, 32.0f);
     txLight3f(0, TX_LIGHT_DIRECTIONAL, TX_LIGHT_AMBIENT, 0.2f, 0.2f, 0.2f);
-    txLight3f(0, TX_LIGHT_DIRECTIONAL, TX_LIGHT_DIFFUSE, 0.0f, 1.0f, 1.0f);
+    txLight3f(0, TX_LIGHT_DIRECTIONAL, TX_LIGHT_DIFFUSE, 1.0f, 1.0f, 1.0f);
     txLight3f(0, TX_LIGHT_DIRECTIONAL, TX_LIGHT_SPECULAR, 1.0f, 1.0f, 1.0f);
     txLight1f(0, TX_LIGHT_DIRECTIONAL, TX_LIGHT_INTENSITY, 1.0f);
 
@@ -163,15 +121,20 @@ int main(int argc, char** argv)
 
     txTranslate3f(0.0f, 0.0f, -2.5f);
     txScale3f(2.0f, 2.0f, 2.0f);
-    while (!processInput(input_win)) {
+    while (!processInput()) {
         txClear(TX_COLOR_BIT | TX_DEPTH_BIT);
+
+        txViewportMax();
+        txPerspective(TX_PI / 2.0f,
+                      txGetFramebufferAspectRatio(),
+                      0.1f,
+                      100.0f);
 
         txDrawCube();
 
         txSwapBuffers();
     }
 
-    delwin(input_win);
     txEnd();
     return SUCCESS;
 }
