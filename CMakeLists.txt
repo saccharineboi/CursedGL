@@ -8,7 +8,7 @@ set(CMAKE_C_STANDARD_REQUIRED TRUE)
 list(APPEND CMAKE_C_FLAGS "-Wall \
                            -Wextra \
                            -Werror \
-                           -O2 \
+                           -Og \
                            -g \
                            -flto \
                            -Wfloat-equal \
@@ -53,10 +53,16 @@ include_directories (
 )
 
 # build library
-set(LIBS ${LIBS} notcurses m pthread)
+set(LIBS ${LIBS} notcurses-core m pthread)
 add_library(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 
 # build examples
+
+# colored_cube
+set(EXAMPLE colored_cube)
+add_executable(${EXAMPLE} examples/colored_cube.c)
+target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+
 # interpolation
 set(EXAMPLE interpolation)
 add_executable(${EXAMPLE} examples/interpolation.c)
@@ -80,11 +86,6 @@ target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
 # hello_cube
 set(EXAMPLE hello_cube)
 add_executable(${EXAMPLE} examples/hello_cube.c)
-target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
-
-# colored_cube
-set(EXAMPLE colored_cube)
-add_executable(${EXAMPLE} examples/colored_cube.c)
 target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
 
 # first_person_demo
