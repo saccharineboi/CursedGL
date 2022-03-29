@@ -758,8 +758,8 @@ void txDrawLine(TXvec4 v0, TXvec4 v1)
     for (int i = miny; i <= maxy; ++i) {
         for (int j = minx; j <= maxx; ++j) {
             if (txIsPointInLine(j, i, viewport_v0, viewport_v1)) {
-                float interpolatedDepth = txInterpolateLineDepth(i,
-                                                                 j,
+                float interpolatedDepth = txInterpolateLineDepth(j,
+                                                                 i,
                                                                  viewport_v0,
                                                                  viewport_v1);
 
