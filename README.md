@@ -1,8 +1,7 @@
-![CursedGL Logo](.github/gif_files/cursedgl_animated.GIF)
+<img src=".github/gif_files/cursedgl_animated.GIF" width="100%" height="auto">
 
 *Made with C99* <br/>
-
-<a href="#"><img src="https://img.shields.io/github/license/saccharineboi/CursedGL.svg"/><a/>
+<a href="#"><img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg"/></a>
 <a href="#"><img src="https://img.shields.io/github/issues/saccharineboi/CursedGL.svg"/></a>
 <a href="#"><img src="https://img.shields.io/github/issues-closed/saccharineboi/CursedGL.svg"/></a>
 <a href="#"><img src="https://img.shields.io/github/issues-pr/saccharineboi/CursedGL.svg"/></a>
@@ -91,7 +90,11 @@ int main(void)
 
 # Output:
 
-![CursedGL Sample Code Output](.github/videos/usage.mp4)
+
+
+https://user-images.githubusercontent.com/95090318/160808050-00e4c22b-03b3-4f51-9ebc-5eebd17b12ec.mp4
+
+
 
 # Features:
 
@@ -153,18 +156,6 @@ You need to enable WSL2 and install Ubuntu from the Windows Store.
     
 After you've got everything working, follow the instructions for the linux users above.
     
-Don't forget to update your system before installing the dependencies:
-
-```
-$ sudo apt update
-$ sudo apt upgrade
-```
-Also make sure the dependencies are installed:
-    
-```
-$ sudo apt install build-essential cmake libncurses5-dev
-```
-    
 # Learning:
 *Check the examples/ folder for code samples*
     
@@ -184,14 +175,18 @@ PGP fingerprint: 693E AD50 5142 9D3F 74D9  F415 869B 4A61 D04F AD71
 # Donations and Tips:
 
 If you wish to, you can donate anonymously to one of the following addresses:
-
-<a href="#" target="_blank" title="Monero"><img alt="Monero Logo" src=".github/crypto_addresses/xmr-addr.png" width="150" height="auto"></a>
     
-<a href="#" target="_blank" title="Bitcoin"><img alt="Bitcoin Logo" src=".github/crypto_logos/btc-addr.png" width="150" height="auto"></a>
+<p float="left">
     
-<a href="#" target="_blank" title="Ethereum"><img alt="Ethereum Logo" src=".github/crypto_logos/eth-addr.png" width="150" height="auto"></a>
+<img alt="Monero Logo" src=".github/crypto_addresses/xmr-addr.png" width="24%" height="auto">
     
-<a href="#" target="_blank" title="Dogecoin"><img alt="Dogecoin Logo" src=".github/crypto_logos/doge-addr.png" width="150" height="auto"></a>
+<img alt="Bitcoin Logo" src=".github/crypto_addresses/btc-addr.png" width="24%" height="auto">
+    
+<img alt="Ethereum Logo" src=".github/crypto_addresses/eth-addr.png" width="24%" height="auto">
+    
+<img alt="Dogecoin Logo" src=".github/crypto_addresses/doge-addr.png" width="24%" height="auto">
+    
+</p>
     
 <br>
     
