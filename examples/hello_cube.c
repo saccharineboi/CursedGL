@@ -108,11 +108,13 @@ int main()
     txClearColor3f(0.0f, 0.0f, 0.0f);
     txEnable(TX_DEPTH_TEST | TX_CULL_FACE);
 
-    txMaterial3f(TX_MATERIAL_AMBIENT, 1.0f, 0.0f, 0.0f);
-    txMaterial3f(TX_MATERIAL_DIFFUSE, 1.0f, 1.0f, 1.0f);
+    txMaterial3f(TX_MATERIAL_AMBIENT, 1.0f, 0.5f, 0.25f);
+    txMaterial3f(TX_MATERIAL_DIFFUSE, 1.0f, 0.5f, 0.25f);
     txMaterial3f(TX_MATERIAL_SPECULAR, 1.0f, 1.0f, 1.0f);
     txMaterial1f(TX_MATERIAL_SHININESS, 32.0f);
-    txLight3f(0, TX_LIGHT_DIRECTIONAL, TX_LIGHT_AMBIENT, 0.2f, 0.2f, 0.2f);
+
+    txLight3f(0, TX_LIGHT_DIRECTIONAL, TX_LIGHT_DIRECTION, 0.0f, 0.0f, -1.0f);
+    txLight3f(0, TX_LIGHT_DIRECTIONAL, TX_LIGHT_AMBIENT, 0.1f, 0.1f, 0.1f);
     txLight3f(0, TX_LIGHT_DIRECTIONAL, TX_LIGHT_DIFFUSE, 1.0f, 1.0f, 1.0f);
     txLight3f(0, TX_LIGHT_DIRECTIONAL, TX_LIGHT_SPECULAR, 1.0f, 1.0f, 1.0f);
     txLight1f(0, TX_LIGHT_DIRECTIONAL, TX_LIGHT_INTENSITY, 1.0f);
