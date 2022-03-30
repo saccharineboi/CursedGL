@@ -19,11 +19,16 @@
 #define DIR_LIGHT_COLOR_R       1.0f
 #define DIR_LIGHT_COLOR_G       1.0f
 #define DIR_LIGHT_COLOR_B       1.0f
-#define POINT_LIGHT_COLOR_R     0.0f
-#define POINT_LIGHT_COLOR_G     1.0f
-#define POINT_LIGHT_COLOR_B     1.0f
-#define POINT_LIGHT_RADIUS      10.0f
-#define POINT_LIGHT_HEIGHT      5.0f
+#define POINT_LIGHT0_COLOR_R     0.0f
+#define POINT_LIGHT0_COLOR_G     1.0f
+#define POINT_LIGHT0_COLOR_B     1.0f
+#define POINT_LIGHT0_RADIUS      10.0f
+#define POINT_LIGHT0_HEIGHT      5.0f
+#define POINT_LIGHT1_COLOR_R     1.0f
+#define POINT_LIGHT1_COLOR_G     1.0f
+#define POINT_LIGHT1_COLOR_B     0.0f
+#define POINT_LIGHT1_RADIUS      10.0f
+#define POINT_LIGHT1_HEIGHT      5.0f
 #define SPOT_LIGHT_COLOR_R      1.0f
 #define SPOT_LIGHT_COLOR_G      1.0f
 #define SPOT_LIGHT_COLOR_B      1.0f
@@ -132,17 +137,30 @@ int main()
     txEnable(TX_DEPTH_TEST | TX_CULL_FACE);
 
     ////////////////////////////////////////
-    ////////////// POINT LIGHT /////////////
+    //////////// POINT LIGHT 0 /////////////
     ////////////////////////////////////////
-    txLight3f(0, TX_LIGHT_POINT, TX_LIGHT_DIFFUSE, POINT_LIGHT_COLOR_R,
-                                                   POINT_LIGHT_COLOR_G,
-                                                   POINT_LIGHT_COLOR_B);
-    txLight3f(0, TX_LIGHT_POINT, TX_LIGHT_SPECULAR, POINT_LIGHT_COLOR_R,
-                                                    POINT_LIGHT_COLOR_G,
-                                                    POINT_LIGHT_COLOR_B);
+    txLight3f(0, TX_LIGHT_POINT, TX_LIGHT_DIFFUSE, POINT_LIGHT0_COLOR_R,
+                                                   POINT_LIGHT0_COLOR_G,
+                                                   POINT_LIGHT0_COLOR_B);
+    txLight3f(0, TX_LIGHT_POINT, TX_LIGHT_SPECULAR, POINT_LIGHT0_COLOR_R,
+                                                    POINT_LIGHT0_COLOR_G,
+                                                    POINT_LIGHT0_COLOR_B);
     txLight1f(0, TX_LIGHT_POINT, TX_LIGHT_INTENSITY, 5.0f);
     txLight1f(0, TX_LIGHT_POINT, TX_LIGHT_RANGE, 1000.0f);
     txComputeAttenuation(TX_LIGHT_POINT, 0, 1.0f);
+
+    ////////////////////////////////////////
+    //////////// POINT LIGHT 1 /////////////
+    ////////////////////////////////////////
+    txLight3f(1, TX_LIGHT_POINT, TX_LIGHT_DIFFUSE, POINT_LIGHT1_COLOR_R,
+                                                   POINT_LIGHT1_COLOR_G,
+                                                   POINT_LIGHT1_COLOR_B);
+    txLight3f(1, TX_LIGHT_POINT, TX_LIGHT_SPECULAR, POINT_LIGHT1_COLOR_R,
+                                                    POINT_LIGHT1_COLOR_G,
+                                                    POINT_LIGHT1_COLOR_B);
+    txLight1f(1, TX_LIGHT_POINT, TX_LIGHT_INTENSITY, 5.0f);
+    txLight1f(1, TX_LIGHT_POINT, TX_LIGHT_RANGE, 1000.0f);
+    txComputeAttenuation(TX_LIGHT_POINT, 1, 1.0f);
 
     ////////////////////////////////////////
     ///////////// FLASH LIGHT //////////////
@@ -175,9 +193,13 @@ int main()
 
         lightRotY += 0.01f;
         txLight3f(0, TX_LIGHT_POINT, TX_LIGHT_POSITION,
-                  POINT_LIGHT_RADIUS * cosf(lightRotY),
-                  POINT_LIGHT_HEIGHT,
-                  POINT_LIGHT_RADIUS * sinf(lightRotY));
+                  POINT_LIGHT0_RADIUS * cosf(lightRotY),
+                  POINT_LIGHT0_HEIGHT,
+                  POINT_LIGHT0_RADIUS * sinf(lightRotY));
+        txLight3f(1, TX_LIGHT_POINT, TX_LIGHT_POSITION,
+                  POINT_LIGHT1_RADIUS * -cosf(lightRotY),
+                  POINT_LIGHT1_HEIGHT,
+                  POINT_LIGHT1_RADIUS * -sinf(lightRotY));
 
         txMatrixMode(TX_MODELVIEW);
 
@@ -195,17 +217,29 @@ int main()
             txDrawPlane();
         txPopMatrix();
 
-        // Draw the light source as a point
+        // Draw the light sources as a point
         txPushMatrix();
-            txTranslate3f(POINT_LIGHT_RADIUS * cosf(lightRotY),
-                          POINT_LIGHT_HEIGHT,
-                          POINT_LIGHT_RADIUS * sinf(lightRotY));
+            txTranslate3f(POINT_LIGHT0_RADIUS * cosf(lightRotY),
+                          POINT_LIGHT0_HEIGHT,
+                          POINT_LIGHT0_RADIUS * sinf(lightRotY));
 
             txShadeModel(TX_UNLIT);
-            txColor3f(POINT_LIGHT_COLOR_R,
-                      POINT_LIGHT_COLOR_G,
-                      POINT_LIGHT_COLOR_B);
+            txColor3f(POINT_LIGHT0_COLOR_R,
+                      POINT_LIGHT0_COLOR_G,
+                      POINT_LIGHT0_COLOR_B);
             TXvec4 pointPos = { 0.0f, 0.0f, 0.0f, 1.0f };
+            txDrawPoint(pointPos);
+        txPopMatrix();
+
+        txPushMatrix();
+            txTranslate3f(POINT_LIGHT1_RADIUS * -cosf(lightRotY),
+                          POINT_LIGHT1_HEIGHT,
+                          POINT_LIGHT1_RADIUS * -sinf(lightRotY));
+
+            txShadeModel(TX_UNLIT);
+            txColor3f(POINT_LIGHT1_COLOR_R,
+                      POINT_LIGHT1_COLOR_G,
+                      POINT_LIGHT1_COLOR_B);
             txDrawPoint(pointPos);
         txPopMatrix();
 
