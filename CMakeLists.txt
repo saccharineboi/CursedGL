@@ -97,3 +97,8 @@ target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
 set(EXAMPLE hello_lines)
 add_executable(${EXAMPLE} examples/hello_lines.c)
 target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+
+# usage
+set(EXAMPLE usage)
+add_executable(${EXAMPLE} examples/usage.c)
+target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})

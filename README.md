@@ -1,4 +1,4 @@
-![CursedGL Logo](.github/logo.svg)
+![CursedGL Logo](.github/gif_files/cursedgl_animated.GIF)
 
 *Made with C99* <br/>
 
@@ -10,7 +10,7 @@
 
 # Description:
 
-**CursedGL is an ncurses-based software rasterizer that renders directly to the terminal**
+**CursedGL is an notcurses-based software rasterizer that renders directly to the terminal**
 
 # Usage:
 
@@ -39,13 +39,13 @@ int main(void)
     }
 
     // Set the color the framebuffer will be cleared with
-    txClearColor3f(0.0f, 0.0f, 0.0f);
-    
-    // CursedGL uses right-handed coordinate-system
+    txClearColor3f(0.2f, 0.3f, 0.3f);
+
+    // TRex uses right-handed coordinate-system
     txTranslate3f(0.0f, 0.0f, -2.0f);
     
     // Render loop
-    while (!processInput(input_win)) {
+    while (!processInput()) {
     
         // Clear the framebuffer
         txClear(TX_COLOR_BIT | TX_DEPTH_BIT);
@@ -60,21 +60,21 @@ int main(void)
                       100.0f);
 
         // Specify the vertex data for our triangle
-        TXvec4 pos0 = { -1.0f, -1.0f, 0.0f, 1.0f };
-        TXvec4 pos1 = {  1.0f, -1.0f, 0.0f, 1.0f };
-        TXvec4 pos2 = {  0.0f,  1.0f, 0.0f, 1.0f };
-
-        // Specify the color of the triangle
-        txColor3f(0.0f, 1.0f, 1.0f);
+        TXvec4 v0[] = { { -1.0f, -1.0f, 0.0f, 1.0f },
+                      {    1.0f,  0.0f, 0.0f, 1.0f } };
+        TXvec4 v1[] = { {  1.0f, -1.0f, 0.0f, 1.0f },
+                      {    0.0f,  1.0f, 0.0f, 1.0f } };
+        TXvec4 v2[] = { {  0.0f,  1.0f, 0.0f, 1.0f },
+                        {  0.0f,  0.0f, 1.0f, 1.0f } };
         
         // Rotate the triangle continuously around y-axis
         txRotate4f(0.01f, 0.0f, 1.0f, 0.0f);
         
         // Draw the triangle with one of the predefined
         // vertex-attribute configurations (here we use
-        // TX_POSITION, for more see enum TXvertexInfo
+        // TX_POSITION_COLOR, for more see enum TXvertexInfo
         // in rasterizer.h)
-        txDrawTriangle(&pos0, &pos1, &pos2, TX_POSITION);
+        txDrawTriangle(v0, v1, v2, TX_POSITION_COLOR);
 
         // Swap the front and back framebuffers
         txSwapBuffers();
@@ -185,23 +185,13 @@ PGP fingerprint: 693E AD50 5142 9D3F 74D9  F415 869B 4A61 D04F AD71
 
 If you wish to, you can donate anonymously to one of the following addresses:
 
-<a href="#" target="_blank" title="Bitcoin"><img alt="Bitcoin Logo" src=".github/crypto_logos/bitcoin-btc-logo.svg" width="48" height="auto"></a>
-bc1q85e5jgmuveat7nfjjlc3tn6netzqt8zlzdxja9
+<a href="#" target="_blank" title="Monero"><img alt="Monero Logo" src=".github/crypto_addresses/xmr-addr.png" width="150" height="auto"></a>
     
-<a href="#" target="_blank" title="Bitcoin Cash"><img alt="Bitcoin Cash Logo" src=".github/crypto_logos/bitcoin-cash-bch-logo.svg" width="48" height="auto"></a><bf>
-qqv7r74wde7aqjglwpu385xxqj0d4rkphcu5ldvxdv
+<a href="#" target="_blank" title="Bitcoin"><img alt="Bitcoin Logo" src=".github/crypto_logos/btc-addr.png" width="150" height="auto"></a>
     
-<a href="#" target="_blank" title="Ethereum"><img alt="Ethereum Logo" src=".github/crypto_logos/ethereum-eth-logo.svg" width="48" height="auto"></a>
-0x1cf9368014d57464c068836af16b87058152e513
+<a href="#" target="_blank" title="Ethereum"><img alt="Ethereum Logo" src=".github/crypto_logos/eth-addr.png" width="150" height="auto"></a>
     
-<a href="#" target="_blank" title="Monero"><img alt="Monero Logo" src=".github/crypto_logos/monero.svg" width="48" height="auto"></a>
-49TrZJkS7mVBNHAu2P8stPZ5a1xDH4xvcH1q3wvYN9yg8B45zNt1FByas5B4bvF7k1FzqHggk9T4z8FRpNvTNcxj6kZN2wS
-    
-<a href="#" target="_blank" title="Dogecoin"><img alt="Dogecoin Logo" src=".github/crypto_logos/Dogecoin.svg" width="48" height="auto"></a>
-DLDd4ugJnCdEbtQdbusZBe39kHBnQ149zX
-    
-<a href="#" target="_blank" title="ZCash"><img alt="ZCash Logo" src=".github/crypto_logos/z.svg" width="48" height="auto"></a>
-zs18npnch27t4yfzllam4p0n3p4h7hllmhersgyan37cdc98a3pdp44k5g42f6slfn662qejxj9a60
+<a href="#" target="_blank" title="Dogecoin"><img alt="Dogecoin Logo" src=".github/crypto_logos/doge-addr.png" width="150" height="auto"></a>
     
 <br>
     
