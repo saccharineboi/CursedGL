@@ -91,7 +91,7 @@ int main(void)
 
 # Output:
 
-![CursedGL Sample Code Output](.github/gif_files/trex_triangle_output.GIF)
+![CursedGL Sample Code Output](.github/videos/usage.mp4)
 
 # Features:
 
