@@ -9,7 +9,7 @@
 
 # Description:
 
-**CursedGL is an notcurses-based software rasterizer that renders directly to the terminal**
+**CursedGL (Cursed Graphics Library) is a notcurses-based software rasterizer inspired by OpenGL 1.X that renders directly to the terminal**
 
 # Usage:
 
