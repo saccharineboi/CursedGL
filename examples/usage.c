@@ -1,3 +1,5 @@
+// Copyright (C) 2022 saccharineboi
+
 #include <cursedgl.h>
 
 // Quit rendering if Q is pressed
