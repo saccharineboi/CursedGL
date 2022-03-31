@@ -686,12 +686,9 @@ void txDrawPoint(TXvec4 v0)
     int fbWidth  = txGetFramebufferWidth();
     int fbHeight = txGetFramebufferHeight();
 
-    int fbOffsetX = txGetFramebufferOffsetX();
-    int fbOffsetY = txGetFramebufferOffsetY();
-
     float depth = viewport_v0[2];
-    if ((x < fbOffsetX || x >= fbWidth) ||
-        (y < fbOffsetY || y >= fbHeight) ||
+    if ((x < 0 || x >= fbWidth) ||
+        (y < 0 || y >= fbHeight) ||
         (depth < 0.0f || depth > 1.0f))
     {
         return;
@@ -726,11 +723,8 @@ void txDrawLine(TXvec4 v0, TXvec4 v1)
     int fbWidth  = txGetFramebufferWidth();
     int fbHeight = txGetFramebufferHeight();
 
-    int fbOffsetX = txGetFramebufferOffsetX();
-    int fbOffsetY = txGetFramebufferOffsetY();
-
-    int minx = (int)fmaxf((float)fbOffsetX, fminf(viewport_v0[0], viewport_v1[0]));
-    int miny = (int)fmaxf((float)fbOffsetY, fminf(viewport_v0[1], viewport_v1[1]));
+    int minx = (int)fmaxf(0.0f, fminf(viewport_v0[0], viewport_v1[0]));
+    int miny = (int)fmaxf(0.0f, fminf(viewport_v0[1], viewport_v1[1]));
 
     int maxx = (int)fminf((float)fbWidth  - TX_FB_BIAS, fmaxf(viewport_v0[0],
                                                               viewport_v1[0]));
@@ -868,15 +862,12 @@ static void renderTriangles(enum TXvertexInfo vertexInfo,
         int fbWidth  = txGetFramebufferWidth();
         int fbHeight = txGetFramebufferHeight();
 
-        int fbOffsetX = txGetFramebufferOffsetX();
-        int fbOffsetY = txGetFramebufferOffsetY();
-
-        int minx = (int)fmaxf((float)fbOffsetX, txMin3(viewport_v0[0],
-                                                       viewport_v1[0],
-                                                       viewport_v2[0]));
-        int miny = (int)fmaxf((float)fbOffsetY, txMin3(viewport_v0[1],
-                                                       viewport_v1[1],
-                                                       viewport_v2[1]));
+        int minx = (int)fmaxf(0.0f, txMin3(viewport_v0[0],
+                                           viewport_v1[0],
+                                           viewport_v2[0]));
+        int miny = (int)fmaxf(0.0f, txMin3(viewport_v0[1],
+                                           viewport_v1[1],
+                                           viewport_v2[1]));
         int maxx = (int)fminf((float)fbWidth  - TX_FB_BIAS, txMax3(viewport_v0[0],
                                                                    viewport_v1[0],
                                                                    viewport_v2[0]));

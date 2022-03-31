@@ -76,12 +76,6 @@ int txGetFramebufferWidth();
 int txGetFramebufferHeight();
 
 ////////////////////////////////////////
-int txGetFramebufferOffsetX();
-
-////////////////////////////////////////
-int txGetFramebufferOffsetY();
-
-////////////////////////////////////////
 void txGetFramebufferMaxDims(int* width, int* height);
 
 ////////////////////////////////////////
@@ -119,10 +113,10 @@ bool txIsCurrentlyRendering();
 /// Defines the dimensions of a viewport
 /// for CursedGL to render into
 ////////////////////////////////////////
-void txViewport(int offsetX, int offsetY, int width, int height);
+void txViewport(int width, int height);
 
 ////////////////////////////////////////
-/// Alias for txViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
+/// Alias for txViewport(WINDOW_WIDTH, WINDOW_HEIGHT)
 /// where WINDOW_WIDTH is the width of the terminal, and
 /// WINDOW_HEIGHT is the height of the terminal
 ////////////////////////////////////////

@@ -32,12 +32,6 @@ static int framebufferWidth;
 static int framebufferHeight;
 
 ////////////////////////////////////////
-static int framebufferOffsetX;
-
-////////////////////////////////////////
-static int framebufferOffsetY;
-
-////////////////////////////////////////
 static TXvec4 framebufferClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 ////////////////////////////////////////
@@ -91,12 +85,6 @@ static int newFramebufferWidth;
 
 ////////////////////////////////////////
 static int newFramebufferHeight;
-
-////////////////////////////////////////
-static int newFramebufferOffsetX;
-
-////////////////////////////////////////
-static int newFramebufferOffsetY;
 
 ////////////////////////////////////////
 struct ncplane* txGetRenderPlane()
@@ -176,17 +164,13 @@ void txSetSwapToRenderRatio(unsigned ratio)
 ////////////////////////////////////////
 size_t txGetFramebufferSize()
 {
-    return (size_t)((framebufferWidth  - framebufferOffsetX) *
-                    (framebufferHeight - framebufferOffsetY) *
-                    (int)sizeof(TXpixel_t));
+    return (size_t)(framebufferWidth * framebufferHeight * (int)sizeof(TXpixel_t));
 }
 
 ////////////////////////////////////////
 size_t txGetRawFramebufferSize()
 {
-    return (size_t)((framebufferWidth  - framebufferOffsetX) *
-                    (framebufferHeight - framebufferOffsetY) *
-                    (int)sizeof(uint32_t));
+    return (size_t)(framebufferWidth * framebufferHeight * (int)sizeof(uint32_t));
 }
 
 ////////////////////////////////////////
@@ -202,18 +186,6 @@ int txGetFramebufferHeight()
 }
 
 ////////////////////////////////////////
-int txGetFramebufferOffsetX()
-{
-    return framebufferOffsetX;
-}
-
-////////////////////////////////////////
-int txGetFramebufferOffsetY()
-{
-    return framebufferOffsetY;
-}
-
-////////////////////////////////////////
 float txGetFramebufferAspectRatio()
 {
     return (float)framebufferWidth / (float)framebufferHeight;
@@ -224,21 +196,17 @@ void txViewportMax()
 {
     int maxWidth, maxHeight;
     txGetFramebufferMaxDims(&maxWidth, &maxHeight);
-    txViewport(0, 0, maxWidth, maxHeight);
+    txViewport(maxWidth, maxHeight);
 }
 
 ////////////////////////////////////////
-void txViewport(int offsetX, int offsetY, int width, int height)
+void txViewport(int width, int height)
 {
-    if (framebufferOffsetX != offsetX ||
-        framebufferOffsetY != offsetY ||
-        framebufferWidth   != width   ||
+    if (framebufferWidth   != width   ||
         framebufferHeight  != height) {
 
         newFramebufferWidth     = width;
         newFramebufferHeight    = height;
-        newFramebufferOffsetX   = offsetX;
-        newFramebufferOffsetY   = offsetY;
 
         viewportResized         = true;
     }
@@ -331,8 +299,8 @@ static void* drawFramebuffer()
 
         currentlyRendering = true;
         int cnt = 0;
-        for (int i = framebufferOffsetY; i < framebufferHeight; ++i) {
-            for (int j = framebufferOffsetX; j < framebufferWidth; ++j) {
+        for (int i = 0; i < framebufferHeight; ++i) {
+            for (int j = 0; j < framebufferWidth; ++j) {
                 TXpixel_t* currentPixel = txGetPixelFromFrontFramebuffer(i, j);
                 uint32_t u_r = (uint32_t)(currentPixel->color[0] * 255.0f);
                 uint32_t u_g = (uint32_t)(currentPixel->color[1] * 255.0f);
@@ -345,9 +313,8 @@ static void* drawFramebuffer()
             }
         }
         if (!viewportResized) {
-            int width = txGetFramebufferWidth() - txGetFramebufferOffsetX();
             ncblit_rgba(raw_framebuffer,
-                        width * (int)(sizeof(uint32_t)),
+                        txGetFramebufferWidth() * (int)(sizeof(uint32_t)),
                         &options);
             notcurses_render(txGetContext());
         }
@@ -393,9 +360,6 @@ void txSwapBuffers()
 
         framebufferWidth = newFramebufferWidth;
         framebufferHeight = newFramebufferHeight;
-
-        framebufferOffsetX = newFramebufferOffsetX;
-        framebufferOffsetY = newFramebufferOffsetY;
 
         framebuffers[FRONT_BUFFER] = (TXpixel_t*)malloc(txGetFramebufferSize());
         framebuffers[BACK_BUFFER] = (TXpixel_t*)malloc(txGetFramebufferSize());
