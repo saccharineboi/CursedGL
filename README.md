@@ -111,9 +111,6 @@ https://user-images.githubusercontent.com/95090318/160808050-00e4c22b-03b3-4f51-
 - Built-in Math Library
 - Right-handed Coordinate System
 - Multi-threaded rendering
-- 2 Rendering Modes:
-  - Block
-  - ASCII
 - Double-buffering
 - API similar to OpenGL's Immediate Mode Interface
 - 3 Supported Light Types:

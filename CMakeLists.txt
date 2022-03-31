@@ -8,7 +8,7 @@ set(CMAKE_C_STANDARD_REQUIRED TRUE)
 list(APPEND CMAKE_C_FLAGS "-Wall \
                            -Wextra \
                            -Werror \
-                           -O2 \
+                           -Og \
                            -g \
                            -flto \
                            -Wfloat-equal \
