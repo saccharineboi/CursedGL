@@ -222,7 +222,7 @@ void txGetFramebufferDims(int* width, int* height)
 ////////////////////////////////////////
 void txGetFramebufferMaxDims(int* width, int* height)
 {
-    notcurses_term_dim_yx(txGetContext(), (unsigned*)height, (unsigned*)width);
+    ncplane_dim_yx(renderPlane, (unsigned*)height, (unsigned*)width);
 }
 
 ////////////////////////////////////////
