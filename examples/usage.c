@@ -45,9 +45,9 @@ int main(void)
 
         // Specify the vertex data for our triangle
         TXvec4 v0[] = { { -1.0f, -1.0f, 0.0f, 1.0f },
-                      {    1.0f,  0.0f, 0.0f, 1.0f } };
+                        {  1.0f,  0.0f, 0.0f, 1.0f } };
         TXvec4 v1[] = { {  1.0f, -1.0f, 0.0f, 1.0f },
-                      {    0.0f,  1.0f, 0.0f, 1.0f } };
+                        {  0.0f,  1.0f, 0.0f, 1.0f } };
         TXvec4 v2[] = { {  0.0f,  1.0f, 0.0f, 1.0f },
                         {  0.0f,  0.0f, 1.0f, 1.0f } };
 
