@@ -4,6 +4,9 @@ project(cursedgl)
 # C settings
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED TRUE)
+SET(CMAKE_AR  "gcc-ar")
+SET(CMAKE_C_ARCHIVE_CREATE "<CMAKE_AR> qcs <TARGET> <LINK_FLAGS> <OBJECTS>")
+SET(CMAKE_C_ARCHIVE_FINISH   true)
 
 list(APPEND CMAKE_C_FLAGS "-Wall \
                            -Wextra \
