@@ -531,8 +531,8 @@ void txDrawPoint(TXvec4 v0);
 ////////////////////////////////////////
 TX_FORCE_INLINE float txInterpolateLineDepth(int i,
                                              int j,
-                                             TXvec2 viewport_v0,
-                                             TXvec2 viewport_v1)
+                                             TXvec3 viewport_v0,
+                                             TXvec3 viewport_v1)
 {
     float lineLength = txVec2Dist(viewport_v0, viewport_v1);
     TXvec2 point = { (float)i, (float)j };
