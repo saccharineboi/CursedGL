@@ -34,27 +34,27 @@ set(SOURCE_FILES    ${CMAKE_SOURCE_DIR}/src/framebuffer.c
                     ${CMAKE_SOURCE_DIR}/src/error.c)
 
 # add header files
-set(HEADER_FILES    ${CMAKE_SOURCE_DIR}/src/common.h
-                    ${CMAKE_SOURCE_DIR}/src/framebuffer.h
-                    ${CMAKE_SOURCE_DIR}/src/init.h
-                    ${CMAKE_SOURCE_DIR}/src/lights.h
-                    ${CMAKE_SOURCE_DIR}/src/mat2.h
-                    ${CMAKE_SOURCE_DIR}/src/mat3.h
-                    ${CMAKE_SOURCE_DIR}/src/mat4.h
-                    ${CMAKE_SOURCE_DIR}/src/material.h
-                    ${CMAKE_SOURCE_DIR}/src/objLoader.h
-                    ${CMAKE_SOURCE_DIR}/src/pixel.h
-                    ${CMAKE_SOURCE_DIR}/src/quat.h
-                    ${CMAKE_SOURCE_DIR}/src/rasterizer.h
-                    ${CMAKE_SOURCE_DIR}/src/shapes.h
-                    ${CMAKE_SOURCE_DIR}/src/transform.h
-                    ${CMAKE_SOURCE_DIR}/src/cursedgl.h
-                    ${CMAKE_SOURCE_DIR}/src/vec.h
-                    ${CMAKE_SOURCE_DIR}/src/error.h)
+set(HEADER_FILES    ${CMAKE_SOURCE_DIR}/include/common.h
+                    ${CMAKE_SOURCE_DIR}/include/framebuffer.h
+                    ${CMAKE_SOURCE_DIR}/include/init.h
+                    ${CMAKE_SOURCE_DIR}/include/lights.h
+                    ${CMAKE_SOURCE_DIR}/include/mat2.h
+                    ${CMAKE_SOURCE_DIR}/include/mat3.h
+                    ${CMAKE_SOURCE_DIR}/include/mat4.h
+                    ${CMAKE_SOURCE_DIR}/include/material.h
+                    ${CMAKE_SOURCE_DIR}/include/objLoader.h
+                    ${CMAKE_SOURCE_DIR}/include/pixel.h
+                    ${CMAKE_SOURCE_DIR}/include/quat.h
+                    ${CMAKE_SOURCE_DIR}/include/rasterizer.h
+                    ${CMAKE_SOURCE_DIR}/include/shapes.h
+                    ${CMAKE_SOURCE_DIR}/include/transform.h
+                    ${CMAKE_SOURCE_DIR}/include/cursedgl.h
+                    ${CMAKE_SOURCE_DIR}/include/vec.h
+                    ${CMAKE_SOURCE_DIR}/include/error.h)
 
 # include directories
 include_directories (
-    "${CMAKE_SOURCE_DIR}/src"
+    "${CMAKE_SOURCE_DIR}/include"
 )
 
 # build library
