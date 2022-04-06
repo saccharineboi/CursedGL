@@ -1,6 +1,7 @@
 <img src=".github/gif_files/cursedgl_animated.GIF" width="100%" height="auto">
 
 *Made with C99* <br/>
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/7648729701844ab59e39fc0794d96701)](https://www.codacy.com/gh/saccharineboi/CursedGL/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=saccharineboi/CursedGL&amp;utm_campaign=Badge_Grade)
 <a href="#"><img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg"/></a>
 <a href="#"><img src="https://img.shields.io/github/issues/saccharineboi/CursedGL.svg"/></a>
 <a href="#"><img src="https://img.shields.io/github/issues-closed/saccharineboi/CursedGL.svg"/></a>
