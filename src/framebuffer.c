@@ -3,6 +3,7 @@
 #include "framebuffer.h"
 #include "pixel.h"
 #include "init.h"
+#include "error.h"
 
 #include <stdlib.h>
 #include <notcurses/notcurses.h>
@@ -121,6 +122,7 @@ bool txCompareDepth(float interpolatedDepth, float pixelDepth)
         case TX_NOTEQUAL:
             return !txFloatEquals(interpolatedDepth, pixelDepth);
         default:
+            txOutputError("CursedGL: depthFunc is invalid");
             return false;
     }
 }
@@ -255,8 +257,10 @@ void txClear(int flags)
 TXpixel_t* txGetPixelFromFramebuffer(int row, int col, enum TXframebufferType type)
 {
     int pos = row * framebufferWidth + col;
-    if (pos < 0 || pos > framebufferWidth * framebufferHeight)
+    if (pos < 0 || pos > framebufferWidth * framebufferHeight) {
+        txOutputError("CursedGL: (row, col) is invalid");
         return NULL;
+    }
     return &framebuffers[type][pos];
 }
 
@@ -362,9 +366,19 @@ void txSwapBuffers()
         framebufferHeight = newFramebufferHeight;
 
         framebuffers[FRONT_BUFFER] = (TXpixel_t*)malloc(txGetFramebufferSize());
+        if (!framebuffers[FRONT_BUFFER]) {
+            txOutputError("CursedGL: couldn't allocate enough memory for front framebuffer");
+        }
+
         framebuffers[BACK_BUFFER] = (TXpixel_t*)malloc(txGetFramebufferSize());
+        if (!framebuffers[BACK_BUFFER]) {
+            txOutputError("CursedGL: couldn't allocate enough memory for back framebuffer");
+        }
 
         raw_framebuffer = (uint32_t*)malloc(txGetRawFramebufferSize());
+        if (!raw_framebuffer) {
+            txOutputError("CursedGL: couldn't allocate enough memory for raw framebuffer");
+        }
 
         notcurses_refresh(txGetContext(), NULL, NULL);
 
@@ -400,8 +414,10 @@ static void setSwapRenderThreadWaits()
 bool txInitFramebuffer(struct ncplane* plane)
 {
     renderPlane = plane;
-    if (pthread_create(&renderThread, NULL, drawFramebuffer, NULL))
+    if (pthread_create(&renderThread, NULL, drawFramebuffer, NULL)) {
+        txOutputError("CursedGL: couldn't create renderthread");
         return false;
+    }
     setSwapRenderThreadWaits();
     return true;
 }
