@@ -2,7 +2,7 @@
 
 #include "framebuffer.h"
 #include "pixel.h"
-#include "init.c"
+#include "init.h"
 
 #include <stdlib.h>
 #include <notcurses/notcurses.h>
