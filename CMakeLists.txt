@@ -30,7 +30,8 @@ set(SOURCE_FILES    ${CMAKE_SOURCE_DIR}/src/framebuffer.c
                     ${CMAKE_SOURCE_DIR}/src/objLoader.c
                     ${CMAKE_SOURCE_DIR}/src/rasterizer.c
                     ${CMAKE_SOURCE_DIR}/src/shapes.c
-                    ${CMAKE_SOURCE_DIR}/src/transform.c)
+                    ${CMAKE_SOURCE_DIR}/src/transform.c
+                    ${CMAKE_SOURCE_DIR}/src/error.c)
 
 # add header files
 set(HEADER_FILES    ${CMAKE_SOURCE_DIR}/src/common.h
@@ -48,7 +49,8 @@ set(HEADER_FILES    ${CMAKE_SOURCE_DIR}/src/common.h
                     ${CMAKE_SOURCE_DIR}/src/shapes.h
                     ${CMAKE_SOURCE_DIR}/src/transform.h
                     ${CMAKE_SOURCE_DIR}/src/cursedgl.h
-                    ${CMAKE_SOURCE_DIR}/src/vec.h)
+                    ${CMAKE_SOURCE_DIR}/src/vec.h
+                    ${CMAKE_SOURCE_DIR}/src/error.h)
 
 # include directories
 include_directories (
