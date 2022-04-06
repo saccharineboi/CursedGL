@@ -414,7 +414,7 @@ float txLightGet1f(int lightIndex,
 {
     switch (lightType) {
         case TX_LIGHT_DIRECTIONAL:
-            if (lightIndex < 0 || lightIndex >= 0)
+            if (lightIndex < 0 || lightIndex >= TX_NUM_DIR_LIGHTS)
                 return 0.0f;
             switch (property) {
                 case TX_LIGHT_INTENSITY:
