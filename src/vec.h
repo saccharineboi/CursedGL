@@ -252,7 +252,7 @@ TX_FORCE_INLINE void txVec4DivideByW(TXvec4 r, TXvec4 v)
     r[0] = v[0] / v[3];
     r[1] = v[1] / v[3];
     r[2] = v[2] / v[3];
-    r[3] = v[3] / v[3];
+    r[3] = 1.0f;
 }
 
 ////////////////////////////////////////
@@ -263,7 +263,7 @@ TX_FORCE_INLINE void txVec2Set(TXvec2 v, float x, float y)
 }
 
 ////////////////////////////////////////
-TX_FORCE_INLINE void txVec3Set(TXvec2 v, float x, float y, float z)
+TX_FORCE_INLINE void txVec3Set(TXvec3 v, float x, float y, float z)
 {
     v[0] = x;
     v[1] = y;
@@ -271,7 +271,7 @@ TX_FORCE_INLINE void txVec3Set(TXvec2 v, float x, float y, float z)
 }
 
 ////////////////////////////////////////
-TX_FORCE_INLINE void txVec4Set(TXvec2 v, float x, float y, float z, float w)
+TX_FORCE_INLINE void txVec4Set(TXvec4 v, float x, float y, float z, float w)
 {
     v[0] = x;
     v[1] = y;
