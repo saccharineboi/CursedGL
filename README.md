@@ -65,7 +65,7 @@ int main(void)
     // Set the color the framebuffer will be cleared with
     txClearColor3f(0.2f, 0.3f, 0.3f);
 
-    // TRex uses right-handed coordinate-system
+    // CursedGL uses right-handed coordinate-system
     txTranslate3f(0.0f, 0.0f, -2.0f);
 
     // Render loop
