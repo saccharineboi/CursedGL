@@ -360,10 +360,6 @@ TX_FORCE_INLINE void runVertexShader(enum TXvertexInfo vertexInfo,
                                      TXvec4 normal0, TXvec4 normal1, TXvec4 normal2,
                                      TXvec4 mvPos0,  TXvec4 mvPos1,  TXvec4 mvPos2)
 {
-    txConvertToWindowSpace(ss_v0, tri->v0_pos);
-    txConvertToWindowSpace(ss_v1, tri->v1_pos);
-    txConvertToWindowSpace(ss_v2, tri->v2_pos);
-
     ////////////////////////////////////////
     // Once upon a time, the following 3 divisions
     // were simply not doable. I've pasted some links
@@ -399,6 +395,10 @@ TX_FORCE_INLINE void runVertexShader(enum TXvertexInfo vertexInfo,
 
     switch (vertexInfo) {
         case TX_POSITION_NORMAL:
+            txConvertToWindowSpace(ss_v0, tri->v0_pos);
+            txConvertToWindowSpace(ss_v1, tri->v1_pos);
+            txConvertToWindowSpace(ss_v2, tri->v2_pos);
+
             txConvertToCustomSpace(mvPos0, mvPos1, mvPos2,
                                    txGetModelViewMatrix(),
                                    tri->v0_obj_pos,
@@ -423,7 +423,15 @@ TX_FORCE_INLINE void runVertexShader(enum TXvertexInfo vertexInfo,
                                    tri->v2_attr1);
             break;
         case TX_POSITION:
+            txConvertToWindowSpace(ss_v0, tri->v0_pos);
+            txConvertToWindowSpace(ss_v1, tri->v1_pos);
+            txConvertToWindowSpace(ss_v2, tri->v2_pos);
+            break;
         case TX_POSITION_COLOR:
+            txConvertToWindowSpace(ss_v0, tri->v0_pos);
+            txConvertToWindowSpace(ss_v1, tri->v1_pos);
+            txConvertToWindowSpace(ss_v2, tri->v2_pos);
+            break;
         case TX_POSITION_TEXCOORD:
         case TX_POSITION_COLOR_TEXCOORD:
         case TX_POSITION_NORMAL_TEXCOORD:
