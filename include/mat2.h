@@ -12,7 +12,6 @@ extern "C" {
 
 #include <math.h>
 #include <string.h>
-#include <stdio.h>
 
 // NOTE: matrices are stored in memory
 // in column-major order
@@ -136,13 +135,6 @@ TX_FORCE_INLINE void txMat2Invert(TXmat2 r, TXmat2 m)
         r[2] = det * -m[2];
         r[3] = det *  m[0];
     }
-}
-
-////////////////////////////////////////
-TX_FORCE_INLINE void txMat2Print(TXmat2 m)
-{
-    printf("mat2:\t[ %.2f, %.2f ]\n", m[0], m[1]);
-    printf("\t[ %.2f, %.2f ]\n", m[2], m[3]);
 }
 
 ////////////////////////////////////////

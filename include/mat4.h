@@ -12,7 +12,6 @@ extern "C" {
 
 #include <math.h>
 #include <string.h>
-#include <stdio.h>
 
 // NOTE: matrices are stored in memory
 // in column-major order
@@ -243,16 +242,6 @@ TX_FORCE_INLINE void txMat4Invert(TXmat4 r, TXmat4 m)
     r[13] = (m00 * b09 - m01 * b07 + m02 * b06) * det;
     r[14] = (m31 * b01 - m30 * b03 - m32 * b00) * det;
     r[15] = (m20 * b03 - m21 * b01 + m22 * b00) * det;
-}
-
-
-////////////////////////////////////////
-TX_FORCE_INLINE void txMat4Print(TXmat4 m)
-{
-    printf("mat4:\t[%.2f, %.2f, %.2f, %.2f]\n", m[0],  m[1],  m[2],  m[3]);
-    printf("\t[%.2f, %.2f, %.2f, %.2f]\n",      m[4],  m[5],  m[6],  m[7]);
-    printf("\t[%.2f, %.2f, %.2f, %.2f]\n",      m[8],  m[9],  m[10], m[11]);
-    printf("\t[%.2f, %.2f, %.2f, %.2f]\n",      m[12], m[13], m[14], m[15]);
 }
 
 ////////////////////////////////////////

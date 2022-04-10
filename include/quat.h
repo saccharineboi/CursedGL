@@ -11,7 +11,6 @@ extern "C" {
 #include "common.h"
 
 #include <math.h>
-#include <stdio.h>
 #include <string.h>
 
 // NOTE: Given a quaternion q = ai + bj + ck + d
@@ -151,12 +150,6 @@ TX_FORCE_INLINE void txQuatInverse(TXquat q, TXquat a)
         q[2] = -multiplier * a[2];
         q[3] = -multiplier * a[3];
     }
-}
-
-////////////////////////////////////////
-TX_FORCE_INLINE void txQuatPrint(TXquat q)
-{
-    printf("quat: [%.2f, %.2f, %.2f, %.2f]\n", q[3], q[0], q[1], q[2]);
 }
 
 ////////////////////////////////////////

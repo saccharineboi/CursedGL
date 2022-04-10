@@ -11,7 +11,6 @@ extern "C" {
 #include "common.h"
 
 #include <math.h>
-#include <stdio.h>
 #include <string.h>
 
 ////////////////////////////////////////
@@ -180,16 +179,6 @@ extern "C" {
     }
 
 ////////////////////////////////////////
-#define TX_VEC_PRINT(N) \
-    TX_FORCE_INLINE void txVec##N##Print(TXvec##N v) \
-    { \
-        printf("vec%d:", N); \
-        for (int i = 0; i < N; ++i) \
-            printf("\t%.2f", v[i]); \
-        putchar('\n'); \
-    }
-
-////////////////////////////////////////
 #define TX_VEC_CLAMP(N) \
     TX_FORCE_INLINE void txVec##N##Clamp(TXvec##N r, TXvec##N v, float min, float max) \
     { \
@@ -230,7 +219,6 @@ extern "C" {
     TX_VEC_DIST(N) \
     TX_VEC_SQRDIST(N) \
     TX_VEC_INVERT(N) \
-    TX_VEC_PRINT(N) \
     TX_VEC_CLAMP(N)
 
 ////////////////////////////////////////
