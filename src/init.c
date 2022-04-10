@@ -28,6 +28,7 @@ bool txInit()
         return false;
     }
 
+    txOutputMessage(TX_INFO, "[CursedGL] txInit: successfully initialized CursedGL");
     return true;
 }
 
