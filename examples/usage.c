@@ -2,6 +2,9 @@
 
 #include <cursedgl.h>
 
+// File that will contain CursedGL text output
+#define OUTPUT_FILE "usage.txt"
+
 // Quit rendering if Q is pressed
 static bool processInput()
 {
@@ -13,14 +16,35 @@ static bool processInput()
     return false;
 }
 
+// Callback used for getting information from CursedGL
+static void messageCallback(enum TXmessageType type, const char* message)
+{
+    FILE* outputFile = fopen(OUTPUT_FILE, "a");
+    if (outputFile) {
+        switch (type) {
+            case TX_INFO:
+                fprintf(outputFile, "[INFO] %s\n", message);
+                break;
+            case TX_WARNING:
+                fprintf(outputFile, "[WARNING] %s\n", message);
+                break;
+            case TX_ERROR:
+                fprintf(outputFile, "[ERROR] %s\n", message);
+                break;
+        }
+        fclose(outputFile);
+    }
+}
+
 // Spinning triangle
 int main(void)
 {
+    // Set callback to listen to CursedGL's text output
+    txSetMessageCallback(messageCallback);
+
     // Initialize CursedGL
-    if (!txInit()) {
-        fprintf(stderr, "ERROR: couldn't initialize CursedGL\n");
+    if (!txInit())
         return -1;
-    }
 
     // Set the color the framebuffer will be cleared with
     txClearColor3f(0.2f, 0.3f, 0.3f);

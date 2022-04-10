@@ -15,6 +15,7 @@
 #define ERR_LOAD 3
 #define ERR_MODE 4
 #define ROTATION_SPEED 0.05f
+#define OUTPUT_FILE "teapot.txt"
 
 ////////////////////////////////////////
 /// Basic input processing without
@@ -75,6 +76,29 @@ static bool processInput()
 }
 
 ////////////////////////////////////////
+/// Callback used for getting information
+/// from CursedGL
+////////////////////////////////////////
+static void messageCallback(enum TXmessageType type, const char* message)
+{
+    FILE* outputFile = fopen(OUTPUT_FILE, "a");
+    if (outputFile) {
+        switch (type) {
+            case TX_INFO:
+                fprintf(outputFile, "[INFO] %s\n", message);
+                break;
+            case TX_WARNING:
+                fprintf(outputFile, "[WARNING] %s\n", message);
+                break;
+            case TX_ERROR:
+                fprintf(outputFile, "[ERROR] %s\n", message);
+                break;
+        }
+        fclose(outputFile);
+    }
+}
+
+////////////////////////////////////////
 /// example: teapot
 ////////////////////////////////////////
 /// This example shows how to render
@@ -87,20 +111,16 @@ static bool processInput()
 ////////////////////////////////////////
 int main()
 {
-    if (!txInit()) {
-        fprintf(stderr, "ERROR: couldn't initialize CursedGL\n");
+    txSetMessageCallback(messageCallback);
+    if (!txInit())
         return ERR_INIT;
-    }
 
     txClearColor3f(0.0f, 0.0f, 0.0f);
     txEnable(TX_DEPTH_TEST | TX_CULL_FACE);
 
     TXobjModel_t teapot;
-    if (!txLoadObjModel("../obj/utah-teapot.obj", &teapot)) {
-        txEnd();
-        fprintf(stderr, "ERROR: couldn't load the obj file");
+    if (!txLoadObjModel("../obj/utah-teapot.obj", &teapot))
         return ERR_LOAD;
-    }
 
     txMaterial3f(TX_MATERIAL_AMBIENT, 1.0f, 1.0f, 1.0f);
     txMaterial3f(TX_MATERIAL_DIFFUSE, 1.0f, 1.0f, 1.0f);

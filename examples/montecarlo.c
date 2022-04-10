@@ -15,6 +15,7 @@
 #define ERR_LOAD 3
 #define ERR_MODE 4
 #define ROTATION_SPEED 0.05f
+#define OUTPUT_FILE "montecarlo.txt"
 
 ////////////////////////////////////////
 /// Exit the game loop if the user
@@ -31,6 +32,29 @@ static bool processInput()
 }
 
 ////////////////////////////////////////
+/// Callback used for getting information
+/// from CursedGL
+////////////////////////////////////////
+static void messageCallback(enum TXmessageType type, const char* message)
+{
+    FILE* outputFile = fopen(OUTPUT_FILE, "a");
+    if (outputFile) {
+        switch (type) {
+            case TX_INFO:
+                fprintf(outputFile, "[INFO] %s\n", message);
+                break;
+            case TX_WARNING:
+                fprintf(outputFile, "[WARNING] %s\n", message);
+                break;
+            case TX_ERROR:
+                fprintf(outputFile, "[ERROR] %s\n", message);
+                break;
+        }
+        fclose(outputFile);
+    }
+}
+
+////////////////////////////////////////
 /// example: montecarlo
 ////////////////////////////////////////
 /// This 2D example shows how to use points
@@ -43,10 +67,9 @@ static bool processInput()
 ////////////////////////////////////////
 int main()
 {
-    if (!txInit()) {
-        fprintf(stderr, "ERROR: couldn't initialize CursedGL\n");
+    txSetMessageCallback(messageCallback);
+    if (!txInit())
         return ERR_INIT;
-    }
     srandom((unsigned)time(NULL));
 
     txClearColor3f(0.0f, 0.0f, 0.0f);

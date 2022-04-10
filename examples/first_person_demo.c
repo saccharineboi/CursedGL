@@ -34,6 +34,7 @@
 #define SPOT_LIGHT_COLOR_B      1.0f
 #define CUBE_SCALE              3.0f
 #define CUBE_POS                10.0f
+#define OUTPUT_FILE             "first_person_demo.txt"
 
 ////////////////////////////////////////
 /// Basic implementation of a first-person
@@ -112,6 +113,29 @@ static bool processInput()
 }
 
 ////////////////////////////////////////
+/// Callback used for getting information
+/// from CursedGL
+////////////////////////////////////////
+static void messageCallback(enum TXmessageType type, const char* message)
+{
+    FILE* outputFile = fopen(OUTPUT_FILE, "a");
+    if (outputFile) {
+        switch (type) {
+            case TX_INFO:
+                fprintf(outputFile, "[INFO] %s\n", message);
+                break;
+            case TX_WARNING:
+                fprintf(outputFile, "[WARNING] %s\n", message);
+                break;
+            case TX_ERROR:
+                fprintf(outputFile, "[ERROR] %s\n", message);
+                break;
+        }
+        fclose(outputFile);
+    }
+}
+
+////////////////////////////////////////
 /// example: first_person_demo
 ////////////////////////////////////////
 /// This example shows how to implement
@@ -128,10 +152,9 @@ static bool processInput()
 ////////////////////////////////////////
 int main()
 {
-    if (!txInit()) {
-        fprintf(stderr, "ERROR: couldn't initialize CursedGL\n");
+    txSetMessageCallback(messageCallback);
+    if (!txInit())
         return ERR_INIT;
-    }
 
     txClearColor3f(0.3f, 0.3f, 0.3f);
     txEnable(TX_DEPTH_TEST | TX_CULL_FACE);
@@ -175,11 +198,8 @@ int main()
     txLight1f(0, TX_LIGHT_SPOT, TX_LIGHT_RANGE, 25.0f);
 
     TXobjModel_t teapot;
-    if (!txLoadObjModel("../obj/utah-teapot.obj", &teapot)) {
-        txEnd();
-        fprintf(stderr, "ERROR: couldn't load the utah-teapot\n");
+    if (!txLoadObjModel("../obj/utah-teapot.obj", &teapot))
         return ERR_LOAD;
-    }
 
     float lightRotY = 0.0f;
     while (!processInput()) {
