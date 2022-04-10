@@ -3,21 +3,26 @@
 #include "error.h"
 
 ////////////////////////////////////////
-static txErrorCallback errorCallback = NULL;
+static txMessageCallback messageCallback = NULL;
 
 ////////////////////////////////////////
-static FILE* errorOutputFile = NULL;
-
-////////////////////////////////////////
-void txSetErrorCallback(txErrorCallback callback)
+void txSetMessageCallback(txMessageCallback callback)
 {
-    errorCallback = callback;
+    messageCallback = callback;
 }
 
 ////////////////////////////////////////
-void txOutputError(const char* message)
+void txOutputMessage(enum TXmessageType type, const char* message, ...)
 {
-    if (errorCallback && errorOutputFile) {
-        errorCallback(errorOutputFile, message);
+    if (messageCallback) {
+        va_list arg;
+        va_start(arg, message);
+
+#define FORMATTED_MESSAGE_MAX_SIZE 250
+        char formattedMessage[FORMATTED_MESSAGE_MAX_SIZE];
+        vsnprintf(formattedMessage, FORMATTED_MESSAGE_MAX_SIZE, message, arg);
+        va_end(arg);
+
+        messageCallback(type, formattedMessage);
     }
 }

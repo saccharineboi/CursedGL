@@ -9,15 +9,19 @@ extern "C" {
 ////////////////////////////////////////
 
 #include <stdio.h>
+#include <stdarg.h>
 
 ////////////////////////////////////////
-typedef void (*txErrorCallback) (FILE* output, const char* message);
+enum TXmessageType { TX_INFO, TX_WARNING, TX_ERROR };
 
 ////////////////////////////////////////
-void txSetErrorCallback(txErrorCallback callback);
+typedef void (*txMessageCallback) (enum TXmessageType type, const char* message);
 
 ////////////////////////////////////////
-void txOutputError(const char* message);
+void txSetMessageCallback(txMessageCallback callback);
+
+////////////////////////////////////////
+void txOutputMessage(enum TXmessageType type, const char* message, ...);
 
 ////////////////////////////////////////
 #ifdef __cplusplus
