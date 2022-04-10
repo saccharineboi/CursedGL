@@ -15,6 +15,7 @@ extern "C" {
 #include "framebuffer.h"
 #include "transform.h"
 #include "lights.h"
+#include "error.h"
 
 #include <unistd.h>
 
@@ -296,6 +297,9 @@ TX_FORCE_INLINE void txCopyTransform(enum TXmatrixType dst,
         case TX_LIGHT:
             srcMatrix = txGetLightMatrix();
             break;
+        default:
+            txOutputMessage(TX_WARNING, "[CursedGL] txCopyTransform: source matrix type (%d) is invalid", src);
+            break;
     }
 
     switch (dst) {
@@ -313,6 +317,9 @@ TX_FORCE_INLINE void txCopyTransform(enum TXmatrixType dst,
             break;
         case TX_LIGHT:
             dstMatrix = txGetLightMatrix();
+            break;
+        default:
+            txOutputMessage(TX_WARNING, "[CursedGL] txCopyTransform: destination matrix type (%d) is invalid", dst);
             break;
     }
 
@@ -339,6 +346,9 @@ TX_FORCE_INLINE void txTranslate3f(float tx, float ty, float tz)
             break;
         case TX_LIGHT:
             txTranslateMat4(txGetLightMatrix(), translation);
+            break;
+        default:
+            txOutputMessage(TX_WARNING, "[CursedGL] txTranslate3f: matrix mode is invalid");
             break;
     }
 }
@@ -383,6 +393,9 @@ TX_FORCE_INLINE void txRotate4f(float rads, float xAxis,
         case TX_LIGHT:
             txRotateMat4(txGetLightMatrix(), rads, xAxis, yAxis, zAxis);
             break;
+        default:
+            txOutputMessage(TX_WARNING, "[CursedGL] txRotate4f: matrix mode is invalid");
+            break;
     }
 }
 
@@ -412,6 +425,9 @@ TX_FORCE_INLINE void txScale3f(float sx, float sy, float sz)
             break;
         case TX_LIGHT:
             txScaleMat4(txGetLightMatrix(), scale);
+            break;
+        default:
+            txOutputMessage(TX_WARNING, "[CursedGL] txScale3f: matrix mode is invalid");
             break;
     }
 }
@@ -452,6 +468,9 @@ TX_FORCE_INLINE void txLoadIdentity()
             break;
         case TX_LIGHT:
             txMat4Identity(txGetLightMatrix());
+            break;
+        default:
+            txOutputMessage(TX_WARNING, "[CursedGL] txLoadIdentity: matrix mode is invalid");
             break;
     }
 }

@@ -3,6 +3,7 @@
 #include "init.h"
 #include "framebuffer.h"
 #include "lights.h"
+#include "error.h"
 
 #include <locale.h>
 
@@ -13,18 +14,17 @@ static struct notcurses* ctx = NULL;
 bool txInit()
 {
     if (!setlocale(LC_ALL, "")) {
-        fprintf(stderr, "ERROR: couldn't set locale\n");
+        txOutputMessage(TX_ERROR, "[CursedGL] txInit: couldn't set locale");
         return false;
     }
 
     if (!(ctx = notcurses_core_init(NULL, NULL))) {
-        fprintf(stderr, "ERROR: couldn't initialize notcurses\n");
+        txOutputMessage(TX_ERROR, "[CursedGL] txInit: couldn't initialize notcurses");
         return false;
     }
 
     if (!txInitFramebuffer(notcurses_stdplane(ctx))) {
-        notcurses_stop(ctx);
-        fprintf(stderr, "ERROR: couldn't initialize framebuffer\n");
+        txOutputMessage(TX_ERROR, "[CursedGL] txInit: couldn't initialize framebuffer");
         return false;
     }
 
@@ -34,8 +34,10 @@ bool txInit()
 ////////////////////////////////////////
 bool txEnd()
 {
-    if (!txFreeFramebuffer())
+    if (!txFreeFramebuffer()) {
+        txOutputMessage(TX_ERROR, "[CursedGL] txEnd: couldn't free the framebuffer(s)");
         return false;
+    }
     return !notcurses_stop(ctx);
 }
 

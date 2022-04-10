@@ -67,7 +67,7 @@ static unsigned swapToRenderRatio = 10;
 static unsigned stateFlags;
 
 ////////////////////////////////////////
-static int depthFunc = TX_LESS;
+static enum TXdepthFunc depthFunc = TX_LESS;
 
 ////////////////////////////////////////
 static bool depthMask = true;
@@ -122,19 +122,19 @@ bool txCompareDepth(float interpolatedDepth, float pixelDepth)
         case TX_NOTEQUAL:
             return !txFloatEquals(interpolatedDepth, pixelDepth);
         default:
-            txOutputError("CursedGL: depthFunc is invalid");
+            txOutputMessage(TX_WARNING, "[CursedGL] txCompareDepth: %d is not a valid depthFunc", depthFunc);
             return false;
     }
 }
 
 ////////////////////////////////////////
-void txDepthFunc(int func)
+void txDepthFunc(enum TXdepthFunc func)
 {
     depthFunc = func;
 }
 
 ////////////////////////////////////////
-int txGetDepthFunc()
+enum TXdepthFunc txGetDepthFunc()
 {
     return depthFunc;
 }
@@ -198,6 +198,7 @@ void txViewportMax()
 {
     int maxWidth, maxHeight;
     txGetFramebufferMaxDims(&maxWidth, &maxHeight);
+    txOutputMessage(TX_INFO, "[CursedGL] txViewportMax: maxWidth = %d, maxHeight = %d", maxWidth, maxHeight);
     txViewport(maxWidth, maxHeight);
 }
 
@@ -211,6 +212,7 @@ void txViewport(int width, int height)
         newFramebufferHeight    = height;
 
         viewportResized         = true;
+        txOutputMessage(TX_INFO, "[CursedGL] txViewport: viewport has been resized from (width: %d, height: %d) to (width: %d, height: %d)", framebufferWidth, framebufferHeight, width, height);
     }
 }
 
@@ -258,7 +260,7 @@ TXpixel_t* txGetPixelFromFramebuffer(int row, int col, enum TXframebufferType ty
 {
     int pos = row * framebufferWidth + col;
     if (pos < 0 || pos > framebufferWidth * framebufferHeight) {
-        txOutputError("CursedGL: (row, col) is invalid");
+        txOutputMessage(TX_ERROR, "[CursedGL] txGetPixelFromFramebuffer: (row: %d, col: %d) is invalid position for pixel", row, col);
         return NULL;
     }
     return &framebuffers[type][pos];
@@ -268,8 +270,11 @@ TXpixel_t* txGetPixelFromFramebuffer(int row, int col, enum TXframebufferType ty
 void txSetPixelInFramebuffer(int row, int col, TXpixel_t* p, enum TXframebufferType type)
 {
     int pos = row * framebufferWidth + col;
-    if (pos >= 0 && pos <= framebufferWidth * framebufferHeight)
+    if (pos >= 0 && pos <= framebufferWidth * framebufferHeight) {
         txVec4Copy(framebuffers[type][pos].color, p->color);
+    } else {
+        txOutputMessage(TX_ERROR, "[CursedGL] txSetPixelInFramebuffer: (row: %d, col: %d) is invalid position for pixel", row, col);
+    }
 }
 
 ////////////////////////////////////////
@@ -335,8 +340,10 @@ bool txFreeFramebuffer()
         usleep(renderThreadWait);
 
     stopRendering = true;
-    if (pthread_join(renderThread, NULL))
+    if (pthread_join(renderThread, NULL)) {
+        txOutputMessage(TX_ERROR, "[CursedGL] txFreeFramebuffer: pthread_join failed for renderThread");
         return false;
+    }
 
     free(framebuffers[FRONT_BUFFER]);
     free(framebuffers[BACK_BUFFER]);
@@ -367,17 +374,17 @@ void txSwapBuffers()
 
         framebuffers[FRONT_BUFFER] = (TXpixel_t*)malloc(txGetFramebufferSize());
         if (!framebuffers[FRONT_BUFFER]) {
-            txOutputError("CursedGL: couldn't allocate enough memory for front framebuffer");
+            txOutputMessage(TX_ERROR, "[CursedGL] txSwapBuffers: couldn't allocate enough memory for front framebuffer");
         }
 
         framebuffers[BACK_BUFFER] = (TXpixel_t*)malloc(txGetFramebufferSize());
         if (!framebuffers[BACK_BUFFER]) {
-            txOutputError("CursedGL: couldn't allocate enough memory for back framebuffer");
+            txOutputMessage(TX_ERROR, "[CursedGL] txSwapBuffers: couldn't allocate enough memory for back framebuffer");
         }
 
         raw_framebuffer = (uint32_t*)malloc(txGetRawFramebufferSize());
         if (!raw_framebuffer) {
-            txOutputError("CursedGL: couldn't allocate enough memory for raw framebuffer");
+            txOutputMessage(TX_ERROR, "[CursedGL] txSwapBuffers: couldn't allocate enough memory for raw framebuffer");
         }
 
         notcurses_refresh(txGetContext(), NULL, NULL);
@@ -415,7 +422,7 @@ bool txInitFramebuffer(struct ncplane* plane)
 {
     renderPlane = plane;
     if (pthread_create(&renderThread, NULL, drawFramebuffer, NULL)) {
-        txOutputError("CursedGL: couldn't create renderthread");
+        txOutputMessage(TX_ERROR, "[CursedGL] txInitFramebuffer: couldn't create renderThread");
         return false;
     }
     setSwapRenderThreadWaits();

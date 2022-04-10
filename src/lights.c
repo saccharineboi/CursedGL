@@ -3,6 +3,7 @@
 #include "lights.h"
 #include "transform.h"
 #include "material.h"
+#include "error.h"
 
 #include <math.h>
 #include <ncurses.h>
@@ -231,8 +232,10 @@ void txComputeSpotLight(TXvec4 resultColor,
 ////////////////////////////////////////
 void txComputeAttenuation(enum TXlightType lightType, int lightIndex, float constant)
 {
-    if (lightIndex < 0)
+    if (lightIndex < 0) {
+        txOutputMessage(TX_WARNING, "[CursedGL] txComputeAttenuation: lightIndex (%d) is out of range", lightIndex);
         return;
+    }
 
     float range;
     switch (lightType) {
@@ -253,6 +256,8 @@ void txComputeAttenuation(enum TXlightType lightType, int lightIndex, float cons
             }
             break;
         case TX_LIGHT_DIRECTIONAL:
+        default:
+            txOutputMessage(TX_WARNING, "[CursedGL] txComputeAttenuation: lightType (%d) doesn't support attenuation", lightType);
             break;
     }
 }
@@ -265,8 +270,10 @@ void txLight1f(int lightIndex,
 {
     switch (lightType) {
         case TX_LIGHT_DIRECTIONAL:
-            if (lightIndex < 0 || lightIndex >= TX_NUM_DIR_LIGHTS)
+            if (lightIndex < 0 || lightIndex >= TX_NUM_DIR_LIGHTS) {
+                txOutputMessage(TX_WARNING, "[CursedGL] txLight1f: directional light index (%d) is out of range", lightIndex);
                 return;
+            }
             switch (property) {
                 case TX_LIGHT_INTENSITY:
                     dirLights[lightIndex].intensity = s;
@@ -276,12 +283,16 @@ void txLight1f(int lightIndex,
                 case TX_LIGHT_LINEAR_ATTENUATION:
                 case TX_LIGHT_QUADRATIC_ATTENUATION:
                 case TX_LIGHT_CUTOFF:
+                default:
+                    txOutputMessage(TX_WARNING, "[CursedGL] txLight1f: direction lights don't support property %d", property);
                     break;
             }
             break;
         case TX_LIGHT_POINT:
-            if (lightIndex < 0 || lightIndex >= TX_NUM_POINT_LIGHTS)
+            if (lightIndex < 0 || lightIndex >= TX_NUM_POINT_LIGHTS) {
+                txOutputMessage(TX_WARNING, "[CursedGL] txLight1f: point light index (%d) is out of range", lightIndex);
                 return;
+            }
             switch (property) {
                 case TX_LIGHT_INTENSITY:
                     pointLights[lightIndex].intensity = s;
@@ -299,12 +310,16 @@ void txLight1f(int lightIndex,
                     pointLights[lightIndex].quadraticAttenuation = s;
                     break;
                 case TX_LIGHT_CUTOFF:
+                default:
+                    txOutputMessage(TX_WARNING, "[CursedGL] txLight1f: point lights don't support property %d", property);
                     break;
             }
             break;
         case TX_LIGHT_SPOT:
-            if (lightIndex < 0 || lightIndex >= TX_NUM_SPOT_LIGHTS)
+            if (lightIndex < 0 || lightIndex >= TX_NUM_SPOT_LIGHTS) {
+                txOutputMessage(TX_WARNING, "[CursedGL] txLight1f: spot light index (%d) is out of range", lightIndex);
                 return;
+            }
             switch (property) {
                 case TX_LIGHT_INTENSITY:
                     spotLights[lightIndex].intensity = s;
@@ -324,6 +339,8 @@ void txLight1f(int lightIndex,
                 case TX_LIGHT_CUTOFF:
                     spotLights[lightIndex].cutoff = s;
                     break;
+                default:
+                    txOutputMessage(TX_WARNING, "[CursedGL] txLight1f: spot lights don't support property %d", property);
             }
             break;
     }
@@ -337,8 +354,10 @@ void txLight3fv(int lightIndex,
 {
     switch (lightType) {
         case TX_LIGHT_DIRECTIONAL:
-            if (lightIndex < 0 || lightIndex >= TX_NUM_DIR_LIGHTS)
+            if (lightIndex < 0 || lightIndex >= TX_NUM_DIR_LIGHTS) {
+                txOutputMessage(TX_WARNING, "[CursedGL] txLight3fv: directional light index (%d) is out of range", lightIndex);
                 return;
+            }
             switch (property) {
                 case TX_LIGHT_AMBIENT:
                     txVec3Copy(dirLights[lightIndex].ambient, values);
@@ -353,12 +372,16 @@ void txLight3fv(int lightIndex,
                     txVec3Copy(dirLights[lightIndex].direction, values);
                     break;
                 case TX_LIGHT_POSITION:
+                default:
+                    txOutputMessage(TX_WARNING, "[CursedGL] txLight3fv: directional lights don't support property %d", property);
                     break;
             }
             break;
         case TX_LIGHT_POINT:
-            if (lightIndex < 0 || lightIndex >= TX_NUM_POINT_LIGHTS)
+            if (lightIndex < 0 || lightIndex >= TX_NUM_POINT_LIGHTS) {
+                txOutputMessage(TX_WARNING, "[CursedGL] txLight3fv: point light index (%d) is out of range", lightIndex);
                 return;
+            }
             switch (property) {
                 case TX_LIGHT_DIFFUSE:
                     txVec3Copy(pointLights[lightIndex].diffuse, values);
@@ -371,12 +394,16 @@ void txLight3fv(int lightIndex,
                     break;
                 case TX_LIGHT_AMBIENT:
                 case TX_LIGHT_DIRECTION:
+                default:
+                    txOutputMessage(TX_WARNING, "[CursedGL] txLight3fv: point lights don't support property %d", property);
                     break;
             }
             break;
         case TX_LIGHT_SPOT:
-            if (lightIndex < 0 || lightIndex >= TX_NUM_SPOT_LIGHTS)
+            if (lightIndex < 0 || lightIndex >= TX_NUM_SPOT_LIGHTS) {
+                txOutputMessage(TX_WARNING, "[CursedGL] txLight3fv: spot light index (%d) is out of range", lightIndex);
                 return;
+            }
             switch (property) {
                 case TX_LIGHT_DIFFUSE:
                     txVec3Copy(spotLights[lightIndex].diffuse, values);
@@ -391,6 +418,9 @@ void txLight3fv(int lightIndex,
                     txVec3Copy(spotLights[lightIndex].position, values);
                     break;
                 case TX_LIGHT_AMBIENT:
+                    break;
+                default:
+                    txOutputMessage(TX_WARNING, "[CursedGL] txLight3fv: spot lights don't support property %d", property);
                     break;
             }
             break;
@@ -414,8 +444,10 @@ float txLightGet1f(int lightIndex,
 {
     switch (lightType) {
         case TX_LIGHT_DIRECTIONAL:
-            if (lightIndex < 0 || lightIndex >= TX_NUM_DIR_LIGHTS)
+            if (lightIndex < 0 || lightIndex >= TX_NUM_DIR_LIGHTS) {
+                txOutputMessage(TX_WARNING, "[CursedGL] txLightGet1f: directional light index (%d) is out of range", lightIndex);
                 return 0.0f;
+            }
             switch (property) {
                 case TX_LIGHT_INTENSITY:
                     return dirLights[lightIndex].intensity;
@@ -424,12 +456,16 @@ float txLightGet1f(int lightIndex,
                 case TX_LIGHT_LINEAR_ATTENUATION:
                 case TX_LIGHT_QUADRATIC_ATTENUATION:
                 case TX_LIGHT_CUTOFF:
+                default:
+                    txOutputMessage(TX_WARNING, "[CursedGL] txLightGet1f: directional lights don't support property %d", property);
                     return 0.0f;
             }
             break;
         case TX_LIGHT_POINT:
-            if (lightIndex < 0 || lightIndex >= TX_NUM_POINT_LIGHTS)
+            if (lightIndex < 0 || lightIndex >= TX_NUM_POINT_LIGHTS) {
+                txOutputMessage(TX_WARNING, "[CursedGL] txLightGet1f: point light index (%d) is out of range", lightIndex);
                 return 0.0f;
+            }
             switch (property) {
                 case TX_LIGHT_INTENSITY:
                     return pointLights[lightIndex].intensity;
@@ -442,12 +478,16 @@ float txLightGet1f(int lightIndex,
                 case TX_LIGHT_QUADRATIC_ATTENUATION:
                     return pointLights[lightIndex].quadraticAttenuation;
                 case TX_LIGHT_CUTOFF:
+                default:
+                    txOutputMessage(TX_WARNING, "[CursedGL] txLightGet1f: point lights don't support property %d", property);
                     return 0.0f;
             }
             break;
         case TX_LIGHT_SPOT:
-            if (lightIndex < 0 || lightIndex >= TX_NUM_SPOT_LIGHTS)
+            if (lightIndex < 0 || lightIndex >= TX_NUM_SPOT_LIGHTS) {
+                txOutputMessage(TX_WARNING, "[CursedGL] txLightGet1f: spot light index (%d) is out of range", lightIndex);
                 return 0.0f;
+            }
             switch (property) {
                 case TX_LIGHT_INTENSITY:
                     return spotLights[lightIndex].intensity;
@@ -461,6 +501,9 @@ float txLightGet1f(int lightIndex,
                     return spotLights[lightIndex].quadraticAttenuation;
                 case TX_LIGHT_CUTOFF:
                     return spotLights[lightIndex].cutoff;
+                default:
+                    txOutputMessage(TX_WARNING, "[CursedGL] txLightGet1f: spot lights don't support property %d", property);
+                    return 0.0f;
             }
             break;
     }
@@ -474,8 +517,10 @@ float* txLightGet3fv(int lightIndex,
 {
     switch (lightType) {
         case TX_LIGHT_DIRECTIONAL:
-            if (lightIndex < 0 || lightIndex >= TX_NUM_DIR_LIGHTS)
+            if (lightIndex < 0 || lightIndex >= TX_NUM_DIR_LIGHTS) {
+                txOutputMessage(TX_WARNING, "[CursedGL] txLightGet3fv: directional light index (%d) is out of range", lightIndex);
                 return NULL;
+            }
             switch (property) {
                 case TX_LIGHT_AMBIENT:
                     return dirLights[lightIndex].ambient;
@@ -486,12 +531,16 @@ float* txLightGet3fv(int lightIndex,
                 case TX_LIGHT_DIRECTION:
                     return dirLights[lightIndex].direction;
                 case TX_LIGHT_POSITION:
+                default:
+                    txOutputMessage(TX_WARNING, "[CursedGL] txLightGet3fv: directional lights don't support property %d", property);
                     return NULL;
             }
             break;
         case TX_LIGHT_POINT:
-            if (lightIndex < 0 || lightIndex >= TX_NUM_POINT_LIGHTS)
+            if (lightIndex < 0 || lightIndex >= TX_NUM_POINT_LIGHTS) {
+                txOutputMessage(TX_WARNING, "[CursedGL] txLightGet3fv: point light index (%d) is out of range", lightIndex);
                 return NULL;
+            }
             switch (property) {
                 case TX_LIGHT_DIFFUSE:
                     return pointLights[lightIndex].diffuse;
@@ -501,12 +550,16 @@ float* txLightGet3fv(int lightIndex,
                     return pointLights[lightIndex].position;
                 case TX_LIGHT_AMBIENT:
                 case TX_LIGHT_DIRECTION:
+                default:
+                    txOutputMessage(TX_WARNING, "[CursedGL] txLightGet3fv: point lights don't support property %d", property);
                     return NULL;
             }
             break;
         case TX_LIGHT_SPOT:
-            if (lightIndex < 0 || lightIndex >= TX_NUM_SPOT_LIGHTS)
+            if (lightIndex < 0 || lightIndex >= TX_NUM_SPOT_LIGHTS) {
+                txOutputMessage(TX_WARNING, "[CursedGL] txLightGet3fv: spot light index (%d) is out of range", lightIndex);
                 return NULL;
+            }
             switch (property) {
                 case TX_LIGHT_DIFFUSE:
                     return spotLights[lightIndex].diffuse;
@@ -517,6 +570,8 @@ float* txLightGet3fv(int lightIndex,
                 case TX_LIGHT_POSITION:
                     return spotLights[lightIndex].position;
                 case TX_LIGHT_AMBIENT:
+                default:
+                    txOutputMessage(TX_WARNING, "[CursedGL] txLightGet3fv: spot lights don't support property %d", property);
                     return NULL;
             }
             break;

@@ -1,6 +1,7 @@
 // Copyright (C) 2022 saccharineboi
 
 #include "rasterizer.h"
+#include "error.h"
 
 #include <string.h>
 #include <notcurses/notcurses.h>
@@ -94,6 +95,8 @@ bool txPushMatrix()
                 txMat4Copy(projectionMatrixStack[currentProjectionMatrix],
                            projectionMatrixStack[currentProjectionMatrix - 1]);
                 return true;
+            } else {
+                txOutputMessage(TX_WARNING, "[CursedGL] txPushMatrix: projection matrix stack is full");
             }
             break;
         case TX_MODELVIEW:
@@ -102,6 +105,8 @@ bool txPushMatrix()
                 txMat4Copy(modelViewMatrixStack[currentModelViewMatrix],
                            modelViewMatrixStack[currentModelViewMatrix - 1]);
                 return true;
+            } else {
+                txOutputMessage(TX_WARNING, "[CursedGL] txPushMatrix: modelview matrix stack is full");
             }
             break;
         case TX_NORMAL:
@@ -110,6 +115,8 @@ bool txPushMatrix()
                 txMat4Copy(normalMatrixStack[currentNormalMatrix],
                            normalMatrixStack[currentNormalMatrix - 1]);
                 return true;
+            } else {
+                txOutputMessage(TX_WARNING, "[CursedGL] txPushMatrix: normal matrix stack is full");
             }
             break;
         case TX_TEXTURE:
@@ -118,6 +125,8 @@ bool txPushMatrix()
                 txMat4Copy(textureMatrixStack[currentTextureMatrix],
                            textureMatrixStack[currentTextureMatrix - 1]);
                 return true;
+            } else {
+                txOutputMessage(TX_WARNING, "[CursedGL] txPushMatrix: texture matrix stack is full");
             }
             break;
         case TX_LIGHT:
@@ -126,7 +135,13 @@ bool txPushMatrix()
                 txMat4Copy(lightMatrixStack[currentLightMatrix],
                            lightMatrixStack[currentLightMatrix - 1]);
                 return true;
+            } else {
+                txOutputMessage(TX_WARNING, "[CursedGL] txPushMatrix: light matrix stack is full");
             }
+            break;
+        default:
+            txOutputMessage(TX_WARNING, "[CursedGL] txPushMatrix: %d is invalid matrix mode", matrixMode);
+            break;
     }
     return false;
 }
@@ -140,30 +155,35 @@ bool txPopMatrix()
                 --currentProjectionMatrix;
                 return true;
             }
+            txOutputMessage(TX_WARNING, "[CursedGL] txPopMatrix: projection matrix stack is empty");
             break;
         case TX_MODELVIEW:
             if (currentModelViewMatrix > 0) {
                 --currentModelViewMatrix;
                 return true;
             }
+            txOutputMessage(TX_WARNING, "[CursedGL] txPopMatrix: modelview matrix stack is empty");
             break;
         case TX_NORMAL:
             if (currentNormalMatrix > 0) {
                 --currentNormalMatrix;
                 return true;
             }
+            txOutputMessage(TX_WARNING, "[CursedGL] txPopMatrix: normal matrix stack is empty");
             break;
         case TX_TEXTURE:
             if (currentTextureMatrix > 0) {
                 --currentTextureMatrix;
                 return true;
             }
+            txOutputMessage(TX_WARNING, "[CursedGL] txPopMatrix: texture matrix stack is empty");
             break;
         case TX_LIGHT:
             if (currentLightMatrix > 0) {
                 --currentLightMatrix;
                 return true;
             }
+            txOutputMessage(TX_WARNING, "[CursedGL] txPopMatrix: light matrix stack is empty");
             break;
     }
     return false;
@@ -408,6 +428,10 @@ TX_FORCE_INLINE void runVertexShader(enum TXvertexInfo vertexInfo,
         case TX_POSITION_COLOR_TEXCOORD:
         case TX_POSITION_NORMAL_TEXCOORD:
         case TX_POSITION_COLOR_NORMAL_TEXCOORD:
+            txOutputMessage(TX_INFO, "[CursedGL] runVertexShader: given VAO configuration is currently not implemented");
+            break;
+        default:
+            txOutputMessage(TX_WARNING, "[CursedGL] runVertexShader: given VOA configuration (%d) is invalid", vertexInfo);
             break;
     }
 }
@@ -511,7 +535,7 @@ TX_FORCE_INLINE void runFragmentShader(enum TXvertexInfo vertexInfo,
                                viewDir);
             break;
         case TX_POSITION_TEXCOORD:
-            /// TODO: implement textures
+            txOutputMessage(TX_INFO, "[CursedGL] runFragmentShader: texture interpolation is currently not implemented");
             break;
         case TX_POSITION_COLOR_NORMAL:
             txInterpolateVertexElement(outputColor,
@@ -562,13 +586,13 @@ TX_FORCE_INLINE void runFragmentShader(enum TXvertexInfo vertexInfo,
                                viewDir);
             break;
         case TX_POSITION_COLOR_TEXCOORD:
-            /// TODO: implement textures
+            txOutputMessage(TX_INFO, "[CursedGL] runFragmentShader: texture interpolation is currently not implemented");
             break;
         case TX_POSITION_NORMAL_TEXCOORD:
-            /// TODO: implement textures
+            txOutputMessage(TX_INFO, "[CursedGL] runFragmentShader: texture interpolation is currently not implemented");
             break;
         case TX_POSITION_COLOR_NORMAL_TEXCOORD:
-            /// TODO: implement textures
+            txOutputMessage(TX_INFO, "[CursedGL] runFragmentShader: texture interpolation is currently not implemented");
             break;
     }
 }
