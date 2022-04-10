@@ -32,21 +32,21 @@ enum TXframebufferType { TX_FRAMEBUFFER_FRONT, TX_FRAMEBUFFER_BACK };
 ////////////////////////////////////////
 /// These constants are passed to txDepthFunc
 ////////////////////////////////////////
-#define TX_LESS                     1
-#define TX_LEQUAL                   2
-#define TX_EQUAL                    3
-#define TX_GEQUAL                   4
-#define TX_GREATER                  5
-#define TX_NOTEQUAL                 6
+enum TXdepthFunc { TX_LESS,
+                   TX_LEQUAL,
+                   TX_EQUAL,
+                   TX_GEQUAL,
+                   TX_GREATER,
+                   TX_NOTEQUAL };
 
 ////////////////////////////////////////
 /// Sets the depth compare function to be
 /// used during depth-testing
 ////////////////////////////////////////
-void txDepthFunc(int depthFunc);
+void txDepthFunc(enum TXdepthFunc depthFunc);
 
 ////////////////////////////////////////
-int txGetDepthFunc();
+enum TXdepthFunc txGetDepthFunc();
 
 ////////////////////////////////////////
 /// Compares interpolatedDepth with pixelDepth
