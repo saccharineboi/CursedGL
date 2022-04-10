@@ -198,7 +198,6 @@ void txViewportMax()
 {
     int maxWidth, maxHeight;
     txGetFramebufferMaxDims(&maxWidth, &maxHeight);
-    txOutputMessage(TX_INFO, "[CursedGL] txViewportMax: maxWidth = %d, maxHeight = %d", maxWidth, maxHeight);
     txViewport(maxWidth, maxHeight);
 }
 
