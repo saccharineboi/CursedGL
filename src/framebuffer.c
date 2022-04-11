@@ -306,7 +306,6 @@ static void* drawFramebuffer()
         };
 
         currentlyRendering = true;
-        int cnt = 0;
         for (int i = 0; i < framebufferHeight; ++i) {
             for (int j = 0; j < framebufferWidth; ++j) {
                 TXpixel_t* currentPixel = txGetPixelFromFrontFramebuffer(i, j);
@@ -314,10 +313,10 @@ static void* drawFramebuffer()
                 uint32_t u_g = (uint32_t)(currentPixel->color[1] * 255.0f);
                 uint32_t u_b = (uint32_t)(currentPixel->color[2] * 255.0f);
 
-                raw_framebuffer[cnt++] = (((uint32_t)255 << 24) |
-                                                    (u_b << 16) |
-                                                    (u_g << 8)  |
-                                                    (u_r << 0));
+                raw_framebuffer[i * framebufferWidth + j] = (((uint32_t)255 << 24) |
+                                                                       (u_b << 16) |
+                                                                       (u_g << 8)  |
+                                                                       (u_r << 0));
             }
         }
         if (!viewportResized) {
