@@ -1,7 +1,6 @@
 // Copyright (C) 2022 saccharineboi
 
 #include "transform.h"
-#include <ncurses.h>
 #include <unistd.h>
 
 ////////////////////////////////////////

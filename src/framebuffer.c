@@ -283,7 +283,7 @@ void txSetPixelInFramebuffer(int row, int col, TXpixel_t* p, enum TXframebufferT
 /// (aka the main thread) tells it to stop.
 ///
 /// This is where the contents of the framebuffer
-/// is given to ncurses to be rendered to the
+/// is given to notcurses to be rendered to the
 /// terminal
 ////////////////////////////////////////
 static void* drawFramebuffer()
