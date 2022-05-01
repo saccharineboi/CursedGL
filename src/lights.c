@@ -114,8 +114,7 @@ void txComputePointLight(TXvec4 resultColor,
         /// DIFFUSE COLOR
         ////////////////////////////////////////
         TXvec3 direction;
-        txVec3Sub(direction, interpolatedPosition, pointLightPosition);
-        txVec3Negate(direction, direction);
+        txVec3Sub(direction, pointLightPosition, interpolatedPosition);
         txVec3Normalize(direction, direction);
 
         float diff = fmaxf(txVec3Dot(direction, interpolatedNormal), 0.0f);
@@ -169,9 +168,8 @@ void txComputeSpotLight(TXvec4 resultColor,
         txMulMat4Vec3(spotLightPosition, lightMatrix, spotLights[i].position, 1.0f);
 
         TXvec3 direction;
-        txVec3Sub(direction, interpolatedPosition, spotLightPosition);
+        txVec3Sub(direction, spotLightPosition, interpolatedPosition);
         txVec3Normalize(direction, direction);
-        txVec3Negate(direction, direction);
 
         TXvec3 lightDirection;
         txMulMat4Vec3(lightDirection, lightMatrix, spotLights[i].direction, 0.0f);
