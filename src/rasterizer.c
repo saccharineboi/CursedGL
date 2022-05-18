@@ -356,7 +356,7 @@ enum TXwindOrder txGetFrontFace()
 TX_FORCE_INLINE void runVertexShader(enum TXvertexInfo vertexInfo,
                                      TXtriangle_t* tri,
                                      TXvec4 ss_v0, TXvec4 ss_v1, TXvec4 ss_v2,
-                                     TXvec4 zValues,
+                                     TXvec3 zValues,
                                      TXvec4 normal0, TXvec4 normal1, TXvec4 normal2,
                                      TXvec4 mvPos0,  TXvec4 mvPos1,  TXvec4 mvPos2)
 {
@@ -474,8 +474,8 @@ TX_FORCE_INLINE void runFragmentShader(enum TXvertexInfo vertexInfo,
                                        TXvec4 outputColor,
                                        TXvec3 weights,
                                        TXvec3 zValues,
-                                       TXvec4 normal0, TXvec3 normal1, TXvec3 normal2,
-                                       TXvec4 mvPos0,  TXvec3 mvPos1,  TXvec3 mvPos2,
+                                       TXvec4 normal0, TXvec4 normal1, TXvec4 normal2,
+                                       TXvec4 mvPos0,  TXvec4 mvPos1,  TXvec4 mvPos2,
                                        float interpolatedZ)
 {
     TXvec4 interpolatedNormals   = TX_VEC4_ZERO;
