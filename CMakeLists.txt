@@ -11,13 +11,20 @@ SET(CMAKE_C_ARCHIVE_FINISH   true)
 list(APPEND CMAKE_C_FLAGS "-Wall \
                            -Wextra \
                            -Werror \
-                           -Og \
+                           -Wpedantic \
+                           -O1 \
                            -g \
                            -flto \
                            -Wfloat-equal \
                            -Wundef \
                            -Wshadow \
+                           -Wpointer-arith \
+                           -Wcast-align \
+                           -Wswitch-enum \
+                           -Wcast-qual \
                            -Wconversion \
+                           -Wduplicated-cond \
+                           -Wduplicated-branches \
                            -march=native \
                            -Winit-self \
                            -Wmissing-include-dirs")
