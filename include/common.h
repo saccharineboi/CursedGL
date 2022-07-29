@@ -33,8 +33,7 @@ extern "C" {
 
 ////////////////////////////////////////
 /// Various mathematical constants that are
-/// used by CursedGL's own functions. Of course
-/// you are free to use them as well.
+/// used by CursedGL's own functions
 ////////////////////////////////////////
 #define TX_EPSILON  (1e-6f)
 #define TX_PI       (3.1415927f)
