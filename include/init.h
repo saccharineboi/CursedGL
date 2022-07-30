@@ -16,13 +16,16 @@ extern "C" {
 /// Tries to initialize CursedGL, returns true
 /// on success, false otherwise
 ////////////////////////////////////////
-bool txInit();
+bool txInit(int argc, char** argv);
 
 ////////////////////////////////////////
 /// Tries to free resources owned by CursedGL,
 /// returns true on success, false otherwise
 ////////////////////////////////////////
 bool txEnd();
+
+////////////////////////////////////////
+ncblitter_e txGetCurrentBlitter();
 
 ////////////////////////////////////////
 struct notcurses* txGetContext();

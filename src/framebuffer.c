@@ -188,9 +188,50 @@ int txGetFramebufferHeight()
 }
 
 ////////////////////////////////////////
+static void getActualDims(ncblitter_e blitter, int* actualWidth,
+                                               int* actualHeight,
+                                               int effectiveWidth,
+                                               int effectiveHeight)
+{
+    switch (blitter) {
+        case NCBLIT_1x1:
+            *actualWidth = effectiveWidth;
+            *actualHeight = effectiveHeight;
+            break;
+        case NCBLIT_2x1:
+            *actualWidth = effectiveWidth;
+            *actualHeight = effectiveHeight / 2;
+            break;
+        case NCBLIT_2x2:
+            *actualWidth = effectiveWidth / 2;
+            *actualHeight = effectiveHeight / 2;
+            break;
+        case NCBLIT_3x2:
+            *actualWidth = effectiveWidth / 2;
+            *actualHeight = effectiveHeight / 3;
+            break;
+        case NCBLIT_BRAILLE:
+            *actualWidth = effectiveWidth / 2;
+            *actualHeight = effectiveHeight / 4;
+            break;
+        case NCBLIT_PIXEL:
+        case NCBLIT_DEFAULT:
+        case NCBLIT_4x1:
+        case NCBLIT_8x1:
+            break;
+    }
+}
+
+////////////////////////////////////////
 float txGetFramebufferAspectRatio()
 {
-    return (float)framebufferWidth / (float)framebufferHeight;
+    ncblitter_e currentBlitter = txGetCurrentBlitter();
+    int actualWidth = 0, actualHeight = 0;
+    getActualDims(currentBlitter, &actualWidth,
+                                  &actualHeight,
+                                  framebufferWidth,
+                                  framebufferHeight);
+    return (float)actualWidth / (float)actualHeight;
 }
 
 ////////////////////////////////////////
@@ -202,16 +243,61 @@ void txViewportMax()
 }
 
 ////////////////////////////////////////
+static void getEffectiveDims(ncblitter_e blitter, int* effectiveWidth,
+                                                  int* effectiveHeight,
+                                                  int actualWidth,
+                                                  int actualHeight)
+{
+    switch (blitter) {
+        case NCBLIT_1x1:
+            *effectiveWidth = actualWidth;
+            *effectiveHeight = actualHeight;
+            break;
+        case NCBLIT_2x1:
+            *effectiveWidth = actualWidth;
+            *effectiveHeight = actualHeight * 2;
+            break;
+        case NCBLIT_2x2:
+            *effectiveWidth = actualWidth * 2;
+            *effectiveHeight = actualHeight * 2;
+            break;
+        case NCBLIT_3x2:
+            *effectiveWidth = actualWidth * 2;
+            *effectiveHeight = actualHeight * 3;
+            break;
+        case NCBLIT_BRAILLE:
+            *effectiveWidth = actualWidth * 2;
+            *effectiveHeight = actualHeight * 4;
+            break;
+        case NCBLIT_PIXEL:
+        case NCBLIT_DEFAULT:
+        case NCBLIT_4x1:
+        case NCBLIT_8x1:
+            break;
+    }
+}
+
+////////////////////////////////////////
 void txViewport(int width, int height)
 {
-    if (framebufferWidth   != width   ||
-        framebufferHeight  != height) {
+    ncblitter_e currentBlitter = txGetCurrentBlitter();
+    int actualWidth = 0, actualHeight = 0;
+    getActualDims(currentBlitter, &actualWidth,
+                                  &actualHeight,
+                                  framebufferWidth,
+                                  framebufferHeight);
 
-        newFramebufferWidth     = width;
-        newFramebufferHeight    = height;
+    if (actualWidth   != width   ||
+        actualHeight  != height) {
+
+        getEffectiveDims(currentBlitter, &newFramebufferWidth,
+                                         &newFramebufferHeight,
+                                         width,
+                                         height);
 
         viewportResized         = true;
-        txOutputMessage(TX_INFO, "[CursedGL] txViewport: viewport has been resized from (width: %d, height: %d) to (width: %d, height: %d)", framebufferWidth, framebufferHeight, width, height);
+
+        txOutputMessage(TX_INFO, "[CursedGL] txViewPort: actual dims: %d:%d, param dims: %d:%d, effective dims: %d:%d", actualWidth, actualHeight, width, height, newFramebufferWidth, newFramebufferHeight);
     }
 }
 
@@ -297,12 +383,14 @@ static void* drawFramebuffer()
             continue;
         }
 
+        ncblitter_e currentBlitter = txGetCurrentBlitter();
+
         struct ncvisual_options options = {
             .n          = renderPlane,
             .scaling    = NCSCALE_NONE,
             .leny       = (unsigned)framebufferHeight,
             .lenx       = (unsigned)framebufferWidth,
-            .blitter    = NCBLIT_1x1
+            .blitter    = currentBlitter
         };
 
         currentlyRendering = true;

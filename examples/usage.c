@@ -19,31 +19,27 @@ static bool processInput()
 // Callback used for getting information from CursedGL
 static void messageCallback(enum TXmessageType type, const char* message)
 {
-    FILE* outputFile = fopen(OUTPUT_FILE, "a");
-    if (outputFile) {
-        switch (type) {
-            case TX_INFO:
-                fprintf(outputFile, "[INFO] %s\n", message);
-                break;
-            case TX_WARNING:
-                fprintf(outputFile, "[WARNING] %s\n", message);
-                break;
-            case TX_ERROR:
-                fprintf(outputFile, "[ERROR] %s\n", message);
-                break;
-        }
-        fclose(outputFile);
+    switch (type) {
+        case TX_INFO:
+            fprintf(stderr, "[INFO] %s\n", message);
+            break;
+        case TX_WARNING:
+            fprintf(stderr, "[WARNING] %s\n", message);
+            break;
+        case TX_ERROR:
+            fprintf(stderr, "[ERROR] %s\n", message);
+            break;
     }
 }
 
 // Spinning triangle
-int main(void)
+int main(int argc, char** argv)
 {
     // Set callback to listen to CursedGL's text output
     txSetMessageCallback(messageCallback);
 
     // Initialize CursedGL
-    if (!txInit())
+    if (!txInit(argc, argv))
         return -1;
 
     // Set the color the framebuffer will be cleared with

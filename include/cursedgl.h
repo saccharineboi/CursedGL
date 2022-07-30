@@ -9,6 +9,11 @@ extern "C" {
 ////////////////////////////////////////
 
 ////////////////////////////////////////
+#define CURSEDGL_VERSION_MAJOR 0
+#define CURSEDGL_VERSION_MINOR 5
+#define CURSEDGL_VERSION_PATCH 0
+
+////////////////////////////////////////
 /// Constants and routines that may
 /// be useful for everywhere in CursedGL's
 /// source code

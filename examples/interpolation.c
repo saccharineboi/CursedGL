@@ -63,20 +63,16 @@ static bool processInput()
 ////////////////////////////////////////
 static void messageCallback(enum TXmessageType type, const char* message)
 {
-    FILE* outputFile = fopen(OUTPUT_FILE, "a");
-    if (outputFile) {
-        switch (type) {
-            case TX_INFO:
-                fprintf(outputFile, "[INFO] %s\n", message);
-                break;
-            case TX_WARNING:
-                fprintf(outputFile, "[WARNING] %s\n", message);
-                break;
-            case TX_ERROR:
-                fprintf(outputFile, "[ERROR] %s\n", message);
-                break;
-        }
-        fclose(outputFile);
+    switch (type) {
+        case TX_INFO:
+            fprintf(stderr, "[INFO] %s\n", message);
+            break;
+        case TX_WARNING:
+            fprintf(stderr, "[WARNING] %s\n", message);
+            break;
+        case TX_ERROR:
+            fprintf(stderr, "[ERROR] %s\n", message);
+            break;
     }
 }
 
@@ -90,10 +86,10 @@ static void messageCallback(enum TXmessageType type, const char* message)
 /// Q to quit
 /// WASDZC and arrow keys to rotate
 ////////////////////////////////////////
-int main()
+int main(int argc, char** argv)
 {
     txSetMessageCallback(messageCallback);
-    if (!txInit())
+    if (!txInit(argc, argv))
         return ERR_INIT;
 
     txClearColor3f(0.0f, 0.0f, 0.0f);
