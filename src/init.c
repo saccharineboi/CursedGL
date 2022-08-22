@@ -19,8 +19,7 @@ static ncblitter_e currentBlitter = NCBLIT_1x1;
 #define CURSEDGL_OPTION_NAME_MAX_LEN 100
 
 ////////////////////////////////////////
-#define CURSEDGL_HELP       "Usage: cursedgl [OPTION]...\n" \
-                            "Render 2D or 3D objects in the terminal.\n\n" \
+#define CURSEDGL_HELP       "Usage: <executable> [OPTION]...\n" \
                             "Options:\n" \
                             "\t-h, --help\t\tprint this help and exit\n" \
                             "\t-v, --version\t\tprint the version and exit\n" \
