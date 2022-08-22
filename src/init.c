@@ -158,6 +158,7 @@ bool txEnd()
         txOutputMessage(TX_ERROR, "[CursedGL] txEnd: couldn't free the framebuffer(s)");
         return false;
     }
+    txOutputMessage(TX_INFO, "[CursedGL] txEnd: ending CursedGL, invoking notcurses_stop ...");
     return !notcurses_stop(ctx);
 }
 
