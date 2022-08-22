@@ -38,7 +38,8 @@ set(SOURCE_FILES    ${CMAKE_SOURCE_DIR}/src/framebuffer.c
                     ${CMAKE_SOURCE_DIR}/src/rasterizer.c
                     ${CMAKE_SOURCE_DIR}/src/shapes.c
                     ${CMAKE_SOURCE_DIR}/src/transform.c
-                    ${CMAKE_SOURCE_DIR}/src/error.c)
+                    ${CMAKE_SOURCE_DIR}/src/error.c
+                    ${CMAKE_SOURCE_DIR}/src/texture.c)
 
 # add header files
 set(HEADER_FILES    ${CMAKE_SOURCE_DIR}/include/common.h
@@ -57,11 +58,14 @@ set(HEADER_FILES    ${CMAKE_SOURCE_DIR}/include/common.h
                     ${CMAKE_SOURCE_DIR}/include/transform.h
                     ${CMAKE_SOURCE_DIR}/include/cursedgl.h
                     ${CMAKE_SOURCE_DIR}/include/vec.h
-                    ${CMAKE_SOURCE_DIR}/include/error.h)
+                    ${CMAKE_SOURCE_DIR}/include/error.h
+                    ${CMAKE_SOURCE_DIR}/include/texture.h
+                    ${CMAKE_SOURCE_DIR}/tp/stb_image.h)
 
 # include directories
 include_directories (
     "${CMAKE_SOURCE_DIR}/include"
+    "${CMAKE_SOURCE_DIR}/tp"
 )
 
 # build library
@@ -83,6 +87,11 @@ target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
 # hello_triangle
 set(EXAMPLE hello_triangle)
 add_executable(${EXAMPLE} examples/hello_triangle.c)
+target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+
+# hello_textured_triangle
+set(EXAMPLE hello_textured_triangle)
+add_executable(${EXAMPLE} examples/hello_textured_triangle.c)
 target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
 
 # teapot
