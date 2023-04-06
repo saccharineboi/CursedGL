@@ -13,14 +13,8 @@ extern "C" {
 #include <notcurses/notcurses.h>
 
 ////////////////////////////////////////
-/// Tries to initialize CursedGL, returns true
-/// on success, false otherwise
-////////////////////////////////////////
 bool txInit(int argc, char** argv);
 
-////////////////////////////////////////
-/// Tries to free resources owned by CursedGL,
-/// returns true on success, false otherwise
 ////////////////////////////////////////
 bool txEnd();
 
