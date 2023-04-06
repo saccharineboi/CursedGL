@@ -34,7 +34,6 @@ set(SOURCE_FILES    ${CMAKE_SOURCE_DIR}/src/framebuffer.c
                     ${CMAKE_SOURCE_DIR}/src/init.c
                     ${CMAKE_SOURCE_DIR}/src/lights.c
                     ${CMAKE_SOURCE_DIR}/src/material.c
-                    ${CMAKE_SOURCE_DIR}/src/objLoader.c
                     ${CMAKE_SOURCE_DIR}/src/rasterizer.c
                     ${CMAKE_SOURCE_DIR}/src/shapes.c
                     ${CMAKE_SOURCE_DIR}/src/transform.c
@@ -50,7 +49,6 @@ set(HEADER_FILES    ${CMAKE_SOURCE_DIR}/include/common.h
                     ${CMAKE_SOURCE_DIR}/include/mat3.h
                     ${CMAKE_SOURCE_DIR}/include/mat4.h
                     ${CMAKE_SOURCE_DIR}/include/material.h
-                    ${CMAKE_SOURCE_DIR}/include/objLoader.h
                     ${CMAKE_SOURCE_DIR}/include/pixel.h
                     ${CMAKE_SOURCE_DIR}/include/quat.h
                     ${CMAKE_SOURCE_DIR}/include/rasterizer.h
@@ -94,11 +92,6 @@ set(EXAMPLE hello_textured_triangle)
 add_executable(${EXAMPLE} examples/hello_textured_triangle.c)
 target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
 
-# teapot
-set(EXAMPLE teapot)
-add_executable(${EXAMPLE} examples/teapot.c)
-target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
-
 # montecarlo
 set(EXAMPLE montecarlo)
 add_executable(${EXAMPLE} examples/montecarlo.c)
@@ -107,11 +100,6 @@ target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
 # hello_cube
 set(EXAMPLE hello_cube)
 add_executable(${EXAMPLE} examples/hello_cube.c)
-target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
-
-# first_person_demo
-set(EXAMPLE first_person_demo)
-add_executable(${EXAMPLE} examples/first_person_demo.c)
 target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
 
 # hello_lines
