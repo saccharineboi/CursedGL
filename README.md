@@ -188,26 +188,6 @@ PGP fingerprint: 693E AD50 5142 9D3F 74D9  F415 869B 4A61 D04F AD71
     
   - [minirender](https://github.com/aslze/minirender) by *asize* : A simple software rasterizer for 3D meshes
     
-## Donations and Tips
-
-If you wish to, you can donate anonymously to one of the following addresses:
-    
-<p float="left">
-    
-<img alt="Monero Logo" src=".github/crypto_addresses/xmr-addr.png" width="24%" height="auto">
-    
-<img alt="Bitcoin Logo" src=".github/crypto_addresses/btc-addr.png" width="24%" height="auto">
-    
-<img alt="Ethereum Logo" src=".github/crypto_addresses/eth-addr.png" width="24%" height="auto">
-    
-<img alt="Dogecoin Logo" src=".github/crypto_addresses/doge-addr.png" width="24%" height="auto">
-    
-</p>
-    
-<br>
-    
-**Thanks for the support!**
-
 ## License
 
 Copyright (C) 2022 saccharineboi
