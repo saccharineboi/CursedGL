@@ -13,26 +13,15 @@ extern "C" {
 #include "mat4.h"
 
 ////////////////////////////////////////
-/// Feel free to change these numbers,
-/// though you should know that the more
-/// lights your application has, more
-/// CPU-hungry it will become
-////////////////////////////////////////
 #define TX_NUM_DIR_LIGHTS   2
 #define TX_NUM_POINT_LIGHTS 2
 #define TX_NUM_SPOT_LIGHTS  2
 
 ////////////////////////////////////////
-/// Types of light supported by CursedGL.
-/// Note that point and spot lights do
-/// not contribute to the ambient coloring
-/// of objects in the scene
-////////////////////////////////////////
 enum TXlightType {
     TX_LIGHT_DIRECTIONAL,
     TX_LIGHT_POINT,
-    TX_LIGHT_SPOT,
-    // TX_LIGHT_AREA // one can dream ...
+    TX_LIGHT_SPOT
 };
 
 ////////////////////////////////////////
@@ -110,10 +99,6 @@ void txComputeSpotLight(TXvec4 resultColor,
                         TXvec3 viewDir);
 
 ////////////////////////////////////////
-/// Approximates constant attenuation,
-/// linear attenuation, and quadratic
-/// attenuation based on range property
-///
 /// See: https://wiki.ogre3d.org/Light+Attenuation+Shortcut
 ////////////////////////////////////////
 void txComputeAttenuation(enum TXlightType lightType, int lightIndex, float constant);
