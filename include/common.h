@@ -12,13 +12,6 @@ extern "C" {
 #include <stdbool.h>
 
 ////////////////////////////////////////
-/// NOTE: Unfortunately currently only the GCC compiler
-/// is supported, but support for other compilers is
-/// in the plans.
-///
-/// Some of them aren't used currently but reserved
-/// for future use
-////////////////////////////////////////
 #ifdef __GNUC__
     #define TX_ALIGNED_BUFFER(TYPE, NAME, SIZE, ALIGNMENT) \
         TYPE NAME[SIZE] __attribute__((aligned(ALIGNMENT)))
@@ -32,9 +25,6 @@ extern "C" {
 #endif
 
 ////////////////////////////////////////
-/// Various mathematical constants that are
-/// used by CursedGL's own functions
-////////////////////////////////////////
 #define TX_EPSILON  (1e-6f)
 #define TX_PI       (3.1415927f)
 #define TX_PI2      (TX_PI * 2.0f)
@@ -42,29 +32,20 @@ extern "C" {
 #define TX_PIQ      (TX_PI * 0.25f)
 
 ////////////////////////////////////////
-/// Returns true if a and b are approximately equal.
-/// This function still cannot compare floats with
-/// high accuracy but it's better than comparing
-/// floats directly.
-///
 /// Note that the CMakeLists.txt file sets the
 /// appropriate flag for the compiler to make
 /// direct floating-point comparisons illegal. Check the
 /// links below for more info:
 ///
-/// 1. https://bitbashing.io/comparing-floats.html
-/// 2. https://stackoverflow.com/questions/4548004/how-to-correctly-and-standardly-compare-floats
-/// 3. https://pages.cs.wisc.edu/~david/courses/cs552/S12/handouts/goldberg-floating-point.pdf
+/// * https://bitbashing.io/comparing-floats.html
+/// * https://stackoverflow.com/questions/4548004/how-to-correctly-and-standardly-compare-floats
+/// * https://pages.cs.wisc.edu/~david/courses/cs552/S12/handouts/goldberg-floating-point.pdf
 ////////////////////////////////////////
 TX_FORCE_INLINE bool txFloatEquals(float a, float b)
 {
     return fabsf(a - b) <= TX_EPSILON * fmaxf(1.0f, fmaxf(fabsf(a), fabsf(b)));
 }
 
-////////////////////////////////////////
-/// Returns true if a and b are within delta of each other.
-/// This function is used for the rasterization of lines;
-/// See txRasterizeLine in rasterizer.h for more info.
 ////////////////////////////////////////
 TX_FORCE_INLINE bool txFloatWithin(float a, float b, float delta)
 {
