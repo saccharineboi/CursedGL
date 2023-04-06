@@ -14,15 +14,10 @@ extern "C" {
 #include <string.h>
 
 ////////////////////////////////////////
-/// Each TX_VEC{N}_SIZE is the size of N-vector
-/// in bytes
-////////////////////////////////////////
 #define TX_VEC2_SIZE 2 * sizeof(float)
 #define TX_VEC3_SIZE 3 * sizeof(float)
 #define TX_VEC4_SIZE 4 * sizeof(float)
 
-////////////////////////////////////////
-/// Useful vector initializers
 ////////////////////////////////////////
 #define TX_VEC2_ZERO { 0.0f, 0.0f }
 #define TX_VEC3_ZERO { 0.0f, 0.0f, 0.0f }
