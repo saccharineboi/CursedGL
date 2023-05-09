@@ -24,16 +24,6 @@ extern "C" {
 #define TX_FB_BIAS   0.01f
 
 ////////////////////////////////////////
-/// Sizes of each matrix stacks. You may
-/// configure them however you like
-////////////////////////////////////////
-#define TX_PROJECTION_MATRIX_STACK_SIZE 8
-#define TX_MODELVIEW_MATRIX_STACK_SIZE  8
-#define TX_NORMAL_MATRIX_STACK_SIZE     8
-#define TX_TEXTURE_MATRIX_STACK_SIZE    8
-#define TX_LIGHT_MATRIX_STACK_SIZE      8
-
-////////////////////////////////////////
 /// Specifies which face(s) of a triangle
 /// must be culled.
 ///
@@ -50,92 +40,6 @@ enum TXcullFace { TX_NONE,
                   TX_FRONT,
                   TX_BACK,
                   TX_FRONT_AND_BACK };
-
-////////////////////////////////////////
-/// Specifies how the vertex data is
-/// structured in memory. In theory it's
-/// possible to emulate OpenGL's VAO
-/// functionality by allowing the users
-/// to specify their data however they like,
-/// but for now the following predefined
-/// configurations will suffice
-////////////////////////////////////////
-enum TXvertexInfo { TX_POSITION,
-                    TX_POSITION_COLOR,
-                    TX_POSITION_NORMAL,
-                    TX_POSITION_TEXCOORD,
-                    TX_POSITION_COLOR_NORMAL,
-                    TX_POSITION_COLOR_TEXCOORD,
-                    TX_POSITION_NORMAL_TEXCOORD,
-                    TX_POSITION_COLOR_NORMAL_TEXCOORD };
-
-////////////////////////////////////////
-enum TXmatrixType { TX_PROJECTION,
-                    TX_MODELVIEW,
-                    TX_NORMAL,
-                    TX_TEXTURE,
-                    TX_LIGHT };
-
-////////////////////////////////////////
-/// Specifies the shading model:
-/// TX_UNLIT:   pixels are shaded using a single color
-/// TX_FLAT:    pixels are shaded using non-interpolated normals
-/// TX_SMOOTH:  pixels are shaded using interpolated normals
-///
-/// TX_UNLIT is similar to emissive materials of game engines like
-/// Unity: it essentially doesn't react to light sources
-///
-/// TX_FLAT is NOT Gouraud shading: color computations still occur
-/// in the emulated fragment shader, but the normals and positions
-/// aren't interpolated
-///
-/// TX_SMOOTH uses Blinn-Phong algorithm for color computations
-/// and requires interpolated normals and positions to do its job.
-/// TX_FLAT also uses Blinn-Phong.
-///
-/// The default mode is TX_UNLIT, therefore if you
-/// want to use lighting, you need to explicitly tell CursedGL
-/// to use either TX_FLAT or TX_SMOOTH. You don't need to
-/// txEnable(TX_LIGHTING) or anything like that, CursedGL is
-/// intelligent enough to know that you want lighting enabled
-/// when you select TX_FLAT or TX_SMOOTH.
-///
-/// Among these three modes TX_UNLIT is the fastest,
-/// and TX_FLAT and TX_SMOOTH are pretty much equivalent in terms of
-/// computational intensity. TX_SMOOTH is only very slightly more
-/// computationally expensive, and that's because the normals have
-/// to be interpolated before the rendering can begin: you don't
-/// need to worry about it unless your mesh has a LOT of normals.
-///
-/// CursedGL performs perspective-correct interpolation on all attributes
-////////////////////////////////////////
-enum TXshadeModel { TX_UNLIT, TX_FLAT, TX_SMOOTH };
-
-////////////////////////////////////////
-void txShadeModel(enum TXshadeModel model);
-
-////////////////////////////////////////
-enum TXshadeModel txGetShadeModel();
-
-////////////////////////////////////////
-void txMatrixMode(enum TXmatrixType type);
-
-////////////////////////////////////////
-enum TXmatrixType txGetMatrixMode();
-
-////////////////////////////////////////
-/// Pushes the current matrix type into stack,
-/// returns true if the push is successful,
-/// false otherwise
-////////////////////////////////////////
-bool txPushMatrix();
-
-////////////////////////////////////////
-/// Pops the current matrix type out of the stack,
-/// returns true if the pop is successful,
-/// false otherwise
-////////////////////////////////////////
-bool txPopMatrix();
 
 ////////////////////////////////////////
 /// Specifies the winding order of the
