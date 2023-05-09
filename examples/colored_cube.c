@@ -10,7 +10,6 @@
 #include <stdint.h>
 
 ////////////////////////////////////////
-#define SUCCESS  0
 #define ERR_INIT 1
 #define ERR_EXIT 2
 #define ERR_LOAD 3
@@ -108,29 +107,70 @@ static void messageCallback(enum TXmessageType type, const char* message)
 ////////////////////////////////////////
 int main(int argc, char** argv)
 {
-    txSetMessageCallback(messageCallback);
-    if (!txInit(argc, argv))
-        return ERR_INIT;
+    if (!setlocale(LC_ALL, "")) {
+        fprintf(stderr, "ERROR: couldn't set locale\n");
+        exit(EXIT_FAILURE);
+    }
 
-    txClearColor3f(0.0f, 0.0f, 0.0f);
+    TXappInfo_t appInfo = {
+        .options = {
+            .termType = NULL,
+            .loglevel = NCLOGLEVEL_WARNING,
 
-    txEnable(TX_DEPTH_TEST | TX_CULL_FACE);
+            .margin_t = 0,
+            .margin_r = 0,
+            .margin_b = 0,
+            .margin_l = 0,
+
+            .flags = NCOPTION_SUPPRESS_BANNERS
+        },
+        .blitter = NCBLIT_1x1,
+        .messageCallback = messageCallback
+    };
+
+    appInfo.ctx = notcurses_core_init(&appInfo.options, NULL);
+    if (!appInfo.ctx) {
+        fprintf(stderr, "ERROR: failed to initialize notcurses\n");
+        exit(EXIT_FAILURE);
+    }
+
+    TXframebufferInfo_t framebufferInfo;
+    framebufferInfo.renderPlane = notcurses_stdplane(appInfo.ctx);
+
+    ncplane_dim_yx(framebufferInfo.renderPlane, (unsigned*)(&framebufferInfo.height), (unsigned*)(&framebufferInfo.width));
+
+    framebufferInfo.framebuffers[0] = (TXpixel_t*)malloc(framebufferInfo.width * framebufferInfo.height * sizeof(TXpixel_t));
+    framebufferInfo.framebuffers[1] = (TXpixel_t*)malloc(framebufferInfo.width * framebufferInfo.height * sizeof(TXpixel_t));
+    framebufferInfo.currentFramebuffer = 0;
+
+    if (!framebufferInfo.framebuffers[0] || !framebufferInfo.framebuffers[1]) {
+        fprintf(stderr, "ERROR: failed to allocate enough memory for framebuffer(s)\n");
+        exit(EXIT_FAILURE);
+    }
+
+    framebufferInfo.clearColor = { 0.2f, 0.3f, 0.3f, 1.0f };
+
+    framebufferInfo.depthFunc = TX_LESS;
+    framebufferInfo.depthMask = true;
+    framebufferInfo.depthClear = 1.0f;
+
+    framebufferInfo.flags = TX_DEPTH_TEST | TX_CULL_FACE;
 
     txTranslate3f(0.0f, 0.0f, -2.5f);
     txScale3f(2.0f, 2.0f, 2.0f);
+
     while (!processInput()) {
         txClear(TX_COLOR_BIT | TX_DEPTH_BIT);
-        txViewportMax();
         txPerspective(TX_PI / 2.0f,
                       txGetFramebufferAspectRatio(),
                       0.1f,
                       100.0f);
 
         txDrawColoredCube();
-
-        txSwapBuffers();
     }
 
-    txEnd();
-    return SUCCESS;
+    free(framebufferInfo.framebuffers[0]);
+    free(framebufferInfo.framebuffers[1]);
+
+    return notcurses_stop(appInfo.ctx);
 }
