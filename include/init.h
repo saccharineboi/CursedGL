@@ -8,21 +8,19 @@ extern "C" {
 #endif
 ////////////////////////////////////////
 
-#include <stdlib.h>
-#include <stdbool.h>
+#include "error.h"
+
 #include <notcurses/notcurses.h>
 
 ////////////////////////////////////////
-bool txInit(int argc, char** argv);
-
-////////////////////////////////////////
-bool txEnd();
-
-////////////////////////////////////////
-ncblitter_e txGetCurrentBlitter();
-
-////////////////////////////////////////
-struct notcurses* txGetContext();
+struct TXappInfo
+{
+    struct notcurses* ctx;
+    notcurses_options options;
+    ncblitter_e blitter;
+    txMessageCallback messageCallback;
+};
+typedef struct TXappInfo TXappInfo_t;
 
 ////////////////////////////////////////
 #ifdef __cplusplus
