@@ -3,20 +3,14 @@
 #include "error.h"
 
 #include <time.h>
+#include <assert.h>
 
 ////////////////////////////////////////
-static txMessageCallback messageCallback = NULL;
-
-////////////////////////////////////////
-void txSetMessageCallback(txMessageCallback callback)
+void txOutputMessage(const TXappInfo* appInfo, enum TXmessageType type, const char* message, ...)
 {
-    messageCallback = callback;
-}
+    assert(appInfo != NULL && message != NULL);
 
-////////////////////////////////////////
-void txOutputMessage(enum TXmessageType type, const char* message, ...)
-{
-    if (messageCallback) {
+    if (appInfo->messageCallback) {
         va_list arg;
         va_start(arg, message);
 
@@ -34,6 +28,6 @@ void txOutputMessage(enum TXmessageType type, const char* message, ...)
         vsnprintf(formattedMessage + c, FORMATTED_MESSAGE_MAX_SIZE, message, arg);
         va_end(arg);
 
-        messageCallback(type, formattedMessage);
+        appInfo->messageCallback(type, formattedMessage);
     }
 }
