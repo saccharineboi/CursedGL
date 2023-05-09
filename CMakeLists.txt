@@ -31,7 +31,6 @@ list(APPEND CMAKE_C_FLAGS "-Wall \
 
 # add source files
 set(SOURCE_FILES    ${CMAKE_SOURCE_DIR}/src/framebuffer.c
-                    ${CMAKE_SOURCE_DIR}/src/init.c
                     ${CMAKE_SOURCE_DIR}/src/lights.c
                     ${CMAKE_SOURCE_DIR}/src/material.c
                     ${CMAKE_SOURCE_DIR}/src/rasterizer.c
@@ -73,29 +72,29 @@ add_library(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 # build examples
 
 # colored_cube
-set(EXAMPLE colored_cube)
-add_executable(${EXAMPLE} examples/colored_cube.c)
-target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+# set(EXAMPLE colored_cube)
+# add_executable(${EXAMPLE} examples/colored_cube.c)
+# target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
 
 # interpolation
-set(EXAMPLE interpolation)
-add_executable(${EXAMPLE} examples/interpolation.c)
-target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+# set(EXAMPLE interpolation)
+# add_executable(${EXAMPLE} examples/interpolation.c)
+# target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
 
 # hello_triangle
-set(EXAMPLE hello_triangle)
-add_executable(${EXAMPLE} examples/hello_triangle.c)
-target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+# set(EXAMPLE hello_triangle)
+# add_executable(${EXAMPLE} examples/hello_triangle.c)
+# target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
 
 # hello_textured_triangle
-set(EXAMPLE hello_textured_triangle)
-add_executable(${EXAMPLE} examples/hello_textured_triangle.c)
-target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+# set(EXAMPLE hello_textured_triangle)
+# add_executable(${EXAMPLE} examples/hello_textured_triangle.c)
+# target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
 
 # montecarlo
-set(EXAMPLE montecarlo)
-add_executable(${EXAMPLE} examples/montecarlo.c)
-target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+# set(EXAMPLE montecarlo)
+# add_executable(${EXAMPLE} examples/montecarlo.c)
+# target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
 
 # hello_cube
 set(EXAMPLE hello_cube)
@@ -103,11 +102,11 @@ add_executable(${EXAMPLE} examples/hello_cube.c)
 target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
 
 # hello_lines
-set(EXAMPLE hello_lines)
-add_executable(${EXAMPLE} examples/hello_lines.c)
-target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+# set(EXAMPLE hello_lines)
+# add_executable(${EXAMPLE} examples/hello_lines.c)
+# target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
 
 # usage
-set(EXAMPLE usage)
-add_executable(${EXAMPLE} examples/usage.c)
-target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
+# set(EXAMPLE usage)
+# add_executable(${EXAMPLE} examples/usage.c)
+# target_link_libraries(${EXAMPLE} PUBLIC ${LIBS} ${PROJECT_NAME})
