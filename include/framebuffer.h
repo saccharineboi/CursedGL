@@ -11,8 +11,11 @@ extern "C" {
 #include "vec.h"
 #include "pixel.h"
 #include "common.h"
+#include "init.h"
 
 #include <notcurses/notcurses.h>
+
+#include <stdint.h>
 
 ////////////////////////////////////////
 enum TXframebufferType { TX_FRAMEBUFFER_FRONT, TX_FRAMEBUFFER_BACK };
@@ -40,143 +43,34 @@ enum TXdepthFunc { TX_LESS,
                    TX_NOTEQUAL };
 
 ////////////////////////////////////////
-void txDepthFunc(enum TXdepthFunc depthFunc);
+struct TXframebufferInfo
+{
+    TXpixel_t* framebuffers[2];
+    int currentFramebuffer;
+
+    int width;
+    int height;
+
+    TXvec4 clearColor;
+
+    unsigned flags;
+
+    enum TXdepthFunc depthFunc;
+    bool depthMask;
+    float depthClear;
+
+    struct ncplane* renderPlane;
+};
+typedef struct TXframebufferInfo TXframebufferInfo_t;
 
 ////////////////////////////////////////
-enum TXdepthFunc txGetDepthFunc();
+bool txCompareDepth(const TXappInfo_t* appInfo, const TXframebufferInfo_t* framebufferInfo, float interpolatedDepth, float pixelDepth);
 
 ////////////////////////////////////////
-bool txCompareDepth(float interpolatedDepth, float pixelDepth);
+float txGetFramebufferAspectRatio(const TXappInfo_t* appInfo, const TXframebufferInfo_t* framebufferInfo);
 
 ////////////////////////////////////////
-bool txIsDepthTestEnabled();
-
-////////////////////////////////////////
-bool txIsCullingEnabled();
-
-////////////////////////////////////////
-void txEnable(unsigned flags);
-
-////////////////////////////////////////
-void txDisable(unsigned flags);
-
-////////////////////////////////////////
-bool txInitFramebuffer(struct ncplane* renderPlane);
-
-////////////////////////////////////////
-int txGetFramebufferWidth();
-
-////////////////////////////////////////
-int txGetFramebufferHeight();
-
-////////////////////////////////////////
-void txGetFramebufferMaxDims(int* width, int* height);
-
-////////////////////////////////////////
-float txGetFramebufferAspectRatio();
-
-////////////////////////////////////////
-unsigned txGetSwapThreadWait();
-
-////////////////////////////////////////
-unsigned txGetRenderThreadWait();
-
-////////////////////////////////////////
-bool txIsCurrentlyRendering();
-
-////////////////////////////////////////
-void txViewport(int width, int height);
-
-////////////////////////////////////////
-/// Alias for txViewport(WINDOW_WIDTH, WINDOW_HEIGHT)
-/// where WINDOW_WIDTH is the width of the terminal, and
-/// WINDOW_HEIGHT is the height of the terminal
-////////////////////////////////////////
-void txViewportMax();
-
-////////////////////////////////////////
-void txGetFramebufferDims(int* width, int* height);
-
-////////////////////////////////////////
-/// Returns the size of one of the framebuffers
-/// in bytes. Note that both framebuffers
-/// (front and back) are of the same size
-////////////////////////////////////////
-size_t txGetFramebufferSize();
-
-////////////////////////////////////////
-/// Returns the size of one of the raw
-/// framebuffers in bytes. Note that both
-/// framebuffers (front and back) are of
-/// the same size
-////////////////////////////////////////
-size_t txGetRawFramebufferSize();
-
-////////////////////////////////////////
-void txClearColor4f(float r, float g, float b, float a);
-
-////////////////////////////////////////
-#define txClearColor3f(r, g, b) txClearColor4f(r, g, b, 1.0f)
-
-////////////////////////////////////////
-void txClearColor4fv(TXvec4 color);
-
-////////////////////////////////////////
-void txClear(int flags);
-
-////////////////////////////////////////
-TXpixel_t* txGetPixelFromFramebuffer(int row, int col, enum TXframebufferType type);
-
-////////////////////////////////////////
-#define txGetPixelFromFrontFramebuffer(row, col) txGetPixelFromFramebuffer(row, col, txGetFrontBuffer())
-
-////////////////////////////////////////
-#define txGetPixelFromBackFramebuffer(row, col) txGetPixelFromFramebuffer(row, col, txGetBackBuffer())
-
-////////////////////////////////////////
-void txSetPixelInFramebuffer(int row, int col, TXpixel_t* p, enum TXframebufferType type);
-
-////////////////////////////////////////
-#define txSetPixelInBackFramebuffer(row, col, pixel) txSetPixelInFramebuffer(row, col, pixel, txGetBackBuffer())
-
-////////////////////////////////////////
-#define txSetPixelInFrontFramebuffer(row, col, pixel) txSetPixelInFramebuffer(row, col, pixel, txGetFrontBuffer())
-
-////////////////////////////////////////
-bool txFreeFramebuffer();
-
-////////////////////////////////////////
-void txSwapBuffers();
-
-////////////////////////////////////////
-enum TXframebufferType txGetFrontBuffer();
-
-////////////////////////////////////////
-enum TXframebufferType txGetBackBuffer();
-
-////////////////////////////////////////
-void txSetWaitMilliseconds(unsigned milliseconds);
-
-////////////////////////////////////////
-unsigned txGetWaitMilliseconds();
-
-////////////////////////////////////////
-void txSetSwapToRenderRatio(unsigned ratio);
-
-////////////////////////////////////////
-void txDepthMask(bool flag);
-
-////////////////////////////////////////
-void txClearDepth(float value);
-
-////////////////////////////////////////
-float txGetClearDepth();
-
-////////////////////////////////////////
-bool txGetDepthMask();
-
-////////////////////////////////////////
-struct ncplane* txGetRenderPlane();
+void txGetEffectiveDims(const TXappInfo_t* appInfo, const TXframebufferInfo_t* framebufferInfo, int* effectiveWidth, int* effectiveHeight);
 
 ////////////////////////////////////////
 #ifdef __cplusplus
