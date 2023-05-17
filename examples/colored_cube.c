@@ -134,33 +134,34 @@ int main(int argc, char** argv)
         exit(EXIT_FAILURE);
     }
 
-    TXframebufferInfo_t framebufferInfo;
-    framebufferInfo.renderPlane = notcurses_stdplane(appInfo.ctx);
+    TXframebufferInfo_t framebufferInfo = {
+        .framebuffers = { NULL, NULL },
+        .clearColor = { 0.2f, 0.3f, 0.3f, 1.0f },
 
-    ncplane_dim_yx(framebufferInfo.renderPlane, (unsigned*)(&framebufferInfo.height), (unsigned*)(&framebufferInfo.width));
+        .flags = TX_DEPTH_TEST | TX_CULL_FACE,
 
-    framebufferInfo.framebuffers[0] = (TXpixel_t*)malloc(framebufferInfo.width * framebufferInfo.height * sizeof(TXpixel_t));
-    framebufferInfo.framebuffers[1] = (TXpixel_t*)malloc(framebufferInfo.width * framebufferInfo.height * sizeof(TXpixel_t));
-    framebufferInfo.currentFramebuffer = 0;
+        .depthFunc = TX_LESS,
+        .depthMask = true,
+        .depthClear = 1.0f,
 
-    if (!framebufferInfo.framebuffers[0] || !framebufferInfo.framebuffers[1]) {
-        fprintf(stderr, "ERROR: failed to allocate enough memory for framebuffer(s)\n");
-        exit(EXIT_FAILURE);
-    }
+        .renderPlane = notcurses_stdplane(appInfo.ctx)
+    };
 
-    framebufferInfo.clearColor = { 0.2f, 0.3f, 0.3f, 1.0f };
-
-    framebufferInfo.depthFunc = TX_LESS;
-    framebufferInfo.depthMask = true;
-    framebufferInfo.depthClear = 1.0f;
-
-    framebufferInfo.flags = TX_DEPTH_TEST | TX_CULL_FACE;
-
-    txTranslate3f(0.0f, 0.0f, -2.5f);
-    txScale3f(2.0f, 2.0f, 2.0f);
+    framebufferInfo.options = {
+        .n = framebufferInfo.renderPlane,
+        .scaling = NCSCALE_NONE,
+        .leny = (unsigned)framebufferInfo.height,
+        .lenx = (unsigned)framebufferInfo.width,
+        .blitter = appInfo.blitter
+    };
 
     while (!processInput()) {
-        txClear(TX_COLOR_BIT | TX_DEPTH_BIT);
+
+        int plane_dim_x, plane_dim_y;
+        ncplane_dim_yx(framebufferInfo.renderPlane, (unsigned*)&plane_dim_y, (unsigned*)&plane_dim_x);
+
+        txViewport(&appInfo, &framebufferInfo, plane_dim_x, plane_dim_y);
+
         txPerspective(TX_PI / 2.0f,
                       txGetFramebufferAspectRatio(),
                       0.1f,
@@ -169,8 +170,6 @@ int main(int argc, char** argv)
         txDrawColoredCube();
     }
 
-    free(framebufferInfo.framebuffers[0]);
-    free(framebufferInfo.framebuffers[1]);
-
+    txFreeFramebuffer(&framebufferInfo);
     return notcurses_stop(appInfo.ctx);
 }

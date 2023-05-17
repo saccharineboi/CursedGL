@@ -18,22 +18,11 @@ extern "C" {
 #include <stdint.h>
 
 ////////////////////////////////////////
-enum TXframebufferType { TX_FRAMEBUFFER_FRONT, TX_FRAMEBUFFER_BACK };
-
-////////////////////////////////////////
-/// These constants are passed to txClear
-////////////////////////////////////////
 #define TX_COLOR_BIT (1ULL << 1)
 #define TX_DEPTH_BIT (1ULL << 2)
+#define TX_DEPTH_TEST (1ULL << 3)
+#define TX_CULL_FACE  (1ULL << 4)
 
-////////////////////////////////////////
-/// These constants are passed to tx{Enable,Disable}
-////////////////////////////////////////
-#define TX_DEPTH_TEST (1ULL << 1)
-#define TX_CULL_FACE  (1ULL << 2)
-
-////////////////////////////////////////
-/// These constants are passed to txDepthFunc
 ////////////////////////////////////////
 enum TXdepthFunc { TX_LESS,
                    TX_LEQUAL,
@@ -60,6 +49,9 @@ struct TXframebufferInfo
     float depthClear;
 
     struct ncplane* renderPlane;
+    struct ncvisual_options options;
+
+    uint32_t* raw_framebuffer;
 };
 typedef struct TXframebufferInfo TXframebufferInfo_t;
 
@@ -71,6 +63,30 @@ float txGetFramebufferAspectRatio(const TXappInfo_t* appInfo, const TXframebuffe
 
 ////////////////////////////////////////
 void txGetEffectiveDims(const TXappInfo_t* appInfo, const TXframebufferInfo_t* framebufferInfo, int* effectiveWidth, int* effectiveHeight);
+
+////////////////////////////////////////
+bool txViewport(const TXappInfo_t* appInfo, const TXframebufferInfo_t* framebufferInfo, int width, int height);
+
+////////////////////////////////////////
+void txClear(const TXframebufferInfo_t* framebufferInfo);
+
+////////////////////////////////////////
+TXpixel_t* txGetPixelFromCurrentFramebuffer(const TXframebufferInfo_t* framebufferInfo, int row, int col);
+
+////////////////////////////////////////
+TXpixel_t* txGetPixelFromDisplayFramebuffer(const TXframebufferInfo_t* framebufferInfo, int row, int col);
+
+////////////////////////////////////////
+bool txSetPixelInCurrentFramebuffer(TXframebufferInfo_t* framebufferInfo, int row, int col, const TXpixel_t* pixel)
+
+////////////////////////////////////////
+bool txSetPixelInDisplayFramebuffer(TXframebufferInfo_t* framebufferInfo, int row, int col, const TXpixel_t* pixel)
+
+////////////////////////////////////////
+void txDrawFramebuffer(TXappInfo_t* appInfo, TXframebufferInfo_t* framebufferInfo, int offsetX, int offsetY, int limitX, int limitY);
+
+////////////////////////////////////////
+void txFreeFramebuffer(TXframebufferInfo_t* framebufferInfo);
 
 ////////////////////////////////////////
 #ifdef __cplusplus

@@ -83,119 +83,120 @@ void txGetEffectiveDims(const TXappInfo_t* appInfo, const TXframebufferInfo_t* f
             *effectiveWidth = framebufferInfo->width;
             *effectiveHeight = framebufferInfo->height;
             break;
+        default:
+            *effectiveWidth = 0;
+            *effectiveHeight = 0;
+            break;
     }
 }
 
 ////////////////////////////////////////
-void txViewport(int width, int height)
+bool txViewport(const TXappInfo_t* appInfo, const TXframebufferInfo_t* framebufferInfo, int width, int height)
 {
-    ncblitter_e currentBlitter = txGetCurrentBlitter();
-    int actualWidth = 0, actualHeight = 0;
-    getActualDims(currentBlitter, &actualWidth,
-                                  &actualHeight,
-                                  framebufferWidth,
-                                  framebufferHeight);
+    if (!framebufferInfo->framebuffers[0] || !framebufferInfo->framebuffers[1] ||
+        framebufferInfo->width != width || framebufferInfo->height != height) {
+        framebufferInfo->width = width;
+        framebufferInfo->height = height;
 
-    if (actualWidth   != width   ||
-        actualHeight  != height) {
+        int effectiveWidth, effectiveHeight;
+        txGetEffectiveDims(appInfo, framebufferInfo, &effectiveWidth, &effectiveHeight);
 
-        getEffectiveDims(currentBlitter, &newFramebufferWidth,
-                                         &newFramebufferHeight,
-                                         width,
-                                         height);
+        free(framebufferInfo->framebuffers[0]);
+        free(framebufferInfo->framebuffers[1]);
 
-        viewportResized         = true;
+        framebufferInfo->framebuffers[0] = (TXpixel_t*)malloc(effectiveWidth * effectiveHeight * sizeof(TXpixel_t));
+        framebufferInfo->framebuffers[1] = (TXpixel_t*)malloc(effectiveWidth * effectiveHeight * sizeof(TXpixel_t));
 
-        txOutputMessage(TX_INFO, "[CursedGL] txViewPort: actual dims: %d:%d, param dims: %d:%d, effective dims: %d:%d", actualWidth, actualHeight, width, height, newFramebufferWidth, newFramebufferHeight);
+        framebufferInfo->raw_framebuffer = (uint32_t*)malloc(effectiveWidth * effectiveHeight * sizeof(uint32_t));
+
+        if (!framebufferInfo->framebuffers[0] || !framebufferInfo->framebuffers[1] || !framebufferInfo->raw_framebuffer) {
+            return false;
+        }
+
+        framebufferInfo->currentFramebuffer = 0;
     }
 }
 
 ////////////////////////////////////////
-void txClear(int flags)
+void txClear(const TXframebufferInfo_t* framebufferInfo)
 {
-    for (int i = 0; i < framebufferWidth * framebufferHeight; ++i) {
-        if (flags & TX_COLOR_BIT)
-            txVec4Copy(framebuffers[BACK_BUFFER][i].color, framebufferClearColor);
-        if ((stateFlags & TX_DEPTH_TEST) && (flags & TX_DEPTH_BIT))
-            framebuffers[BACK_BUFFER][i].depth = depthClear;
+    for (int i = 0; i < framebufferInfo->width * framebufferInfo->height; ++i) {
+        if (framebufferInfo->flags & TX_COLOR_BIT)
+            txVec4Copy(framebufferInfo->framebuffers[framebufferInfo->currentFramebuffer][i].color, framebufferInfo->clearColor);
+        if ((framebufferInfo->flags & TX_DEPTH_TEST) && (framebufferInfo->flags & TX_DEPTH_BIT))
+            framebufferInfo->framebuffers[framebufferInfo->currentFramebuffer][i].depth = framebufferInfo->depthClear;
     }
 }
 
 ////////////////////////////////////////
-TXpixel_t* txGetPixelFromFramebuffer(int row, int col, enum TXframebufferType type)
+TXpixel_t* txGetPixelFromCurrentFramebuffer(const TXframebufferInfo_t* framebufferInfo, int row, int col)
 {
-    int pos = row * framebufferWidth + col;
-    if (pos < 0 || pos > framebufferWidth * framebufferHeight) {
-        txOutputMessage(TX_ERROR, "[CursedGL] txGetPixelFromFramebuffer: (row: %d, col: %d) is invalid position for pixel", row, col);
+    int pos = row * framebufferInfo->width + col;
+    if (pos < 0 || pos > framebufferInfo->width * framebufferInfo->height) {
         return NULL;
     }
-    return &framebuffers[type][pos];
+    return &framebufferInfo->framebuffers[framebufferInfo->currentFramebuffer][pos];
 }
 
 ////////////////////////////////////////
-void txSetPixelInFramebuffer(int row, int col, TXpixel_t* p, enum TXframebufferType type)
+TXpixel_t* txGetPixelFromDisplayFramebuffer(const TXframebufferInfo_t* framebufferInfo, int row, int col)
 {
-    int pos = row * framebufferWidth + col;
-    if (pos >= 0 && pos <= framebufferWidth * framebufferHeight) {
-        txVec4Copy(framebuffers[type][pos].color, p->color);
+    int pos = row * framebufferInfo->width + col;
+    if (pos < 0 || pos > framebufferInfo->width * framebufferInfo->height) {
+        return NULL;
+    }
+    return &framebufferInfo->framebuffers[!framebufferInfo->currentFramebuffer][pos];
+}
+
+////////////////////////////////////////
+bool txSetPixelInCurrentFramebuffer(TXframebufferInfo_t* framebufferInfo, int row, int col, TXpixel_t* p)
+{
+    int pos = row * framebufferInfo->width + col;
+    if (pos >= 0 && pos <= framebufferInfo->width * framebufferInfo->height) {
+        txVec4Copy(framebufferInfo->framebuffers[framebufferInfo->currentFramebuffer][pos].color, p->color);
+        return true;
     } else {
-        txOutputMessage(TX_ERROR, "[CursedGL] txSetPixelInFramebuffer: (row: %d, col: %d) is invalid position for pixel", row, col);
+        return false;
     }
 }
 
 ////////////////////////////////////////
-/// This function is running continuously
-/// on a different thread, and it will
-/// continue to run until the swap thread
-/// (aka the main thread) tells it to stop.
-///
-/// This is where the contents of the framebuffer
-/// is given to notcurses to be rendered to the
-/// terminal
-////////////////////////////////////////
-static void* drawFramebuffer()
+bool txSetPixelInDisplayFramebuffer(TXframebufferInfo_t* framebufferInfo, int row, int col, TXpixel_t* p)
 {
-    while (true) {
-        if (stopRendering)
-            return NULL;
-
-        if (!startRendering) {
-            usleep(renderThreadWait);
-            continue;
-        }
-
-        ncblitter_e currentBlitter = txGetCurrentBlitter();
-
-        struct ncvisual_options options = {
-            .n          = renderPlane,
-            .scaling    = NCSCALE_NONE,
-            .leny       = (unsigned)framebufferHeight,
-            .lenx       = (unsigned)framebufferWidth,
-            .blitter    = currentBlitter
-        };
-
-        currentlyRendering = true;
-        for (int i = 0; i < framebufferHeight; ++i) {
-            for (int j = 0; j < framebufferWidth; ++j) {
-                TXpixel_t* currentPixel = txGetPixelFromFrontFramebuffer(i, j);
-                uint32_t u_r = (uint32_t)(currentPixel->color[0] * 255.0f);
-                uint32_t u_g = (uint32_t)(currentPixel->color[1] * 255.0f);
-                uint32_t u_b = (uint32_t)(currentPixel->color[2] * 255.0f);
-
-                raw_framebuffer[i * framebufferWidth + j] = (((uint32_t)255 << 24) |
-                                                                       (u_b << 16) |
-                                                                       (u_g << 8)  |
-                                                                       (u_r << 0));
-            }
-        }
-        if (!viewportResized) {
-            ncblit_rgba(raw_framebuffer,
-                        txGetFramebufferWidth() * (int)(sizeof(uint32_t)),
-                        &options);
-            notcurses_render(txGetContext());
-        }
-
-        startRendering = false;
-        currentlyRendering = false;
+    int pos = row * framebufferInfo->width + col;
+    if (pos >= 0 && pos <= framebufferInfo->width * framebufferInfo->height) {
+        txVec4Copy(framebufferInfo->framebuffers[!framebufferInfo->currentFramebuffer][pos].color, p->color);
+        return true;
+    } else {
+        return false;
     }
+}
+
+////////////////////////////////////////
+void txDrawFramebuffer(TXappInfo_t* appInfo, TXframebufferInfo_t* framebufferInfo, int offsetX, int offsetY, int limitX, int limitY)
+{
+    for (int i = 0; i < framebufferInfo->height; ++i) {
+        for (int j = 0; j < framebufferInfo->width; ++j) {
+            TXpixel_t* currentPixel = txGetPixelFromCurrentFramebuffer(i, j);
+
+            uint32_t u_r = (uint32_t)(currentPixel->color[0] * 255.0f);
+            uint32_t u_g = (uint32_t)(currentPixel->color[1] * 255.0f);
+            uint32_t u_b = (uint32_t)(currentPixel->color[2] * 255.0f);
+
+            framebufferInfo->raw_framebuffer[i * framebufferInfo->width + j] = (((uint32_t)255 << 24) |
+                                                                                          (u_b << 16) |
+                                                                                          (u_g << 8)  |
+                                                                                          (u_r << 0));
+        }
+    }
+    ncblit_rgba(raw_framebuffer, framebufferInfo->width * (int)(sizeof(uint32_t)), &framebufferInfo->options);
+    notcurses_render(appInfo->ctx);
+}
+
+////////////////////////////////////////
+void txFreeFramebuffer(TXframebufferInfo_t* framebufferInfo)
+{
+    free(framebufferInfo->framebuffers[0]);
+    free(framebufferInfo->framebuffers[1]);
+    free(framebufferInfo->raw_framebuffer);
 }
