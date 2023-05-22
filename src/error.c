@@ -1,12 +1,13 @@
 // Copyright (C) 2022 saccharineboi
 
 #include "error.h"
+#include "init.h"
 
 #include <time.h>
 #include <assert.h>
 
 ////////////////////////////////////////
-void txOutputMessage(const TXappInfo* appInfo, enum TXmessageType type, const char* message, ...)
+void txOutputMessage(const TXappInfo_t* appInfo, enum TXmessageType type, const char* message, ...)
 {
     assert(appInfo != NULL && message != NULL);
 

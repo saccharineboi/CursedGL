@@ -91,7 +91,7 @@ void txGetEffectiveDims(const TXappInfo_t* appInfo, const TXframebufferInfo_t* f
 }
 
 ////////////////////////////////////////
-bool txViewport(const TXappInfo_t* appInfo, const TXframebufferInfo_t* framebufferInfo, int width, int height)
+bool txViewport(const TXappInfo_t* appInfo, TXframebufferInfo_t* framebufferInfo, int width, int height)
 {
     if (!framebufferInfo->framebuffers[0] || !framebufferInfo->framebuffers[1] ||
         framebufferInfo->width != width || framebufferInfo->height != height) {
@@ -104,10 +104,10 @@ bool txViewport(const TXappInfo_t* appInfo, const TXframebufferInfo_t* framebuff
         free(framebufferInfo->framebuffers[0]);
         free(framebufferInfo->framebuffers[1]);
 
-        framebufferInfo->framebuffers[0] = (TXpixel_t*)malloc(effectiveWidth * effectiveHeight * sizeof(TXpixel_t));
-        framebufferInfo->framebuffers[1] = (TXpixel_t*)malloc(effectiveWidth * effectiveHeight * sizeof(TXpixel_t));
+        framebufferInfo->framebuffers[0] = (TXpixel_t*)malloc((unsigned)(effectiveWidth * effectiveHeight) * sizeof(TXpixel_t));
+        framebufferInfo->framebuffers[1] = (TXpixel_t*)malloc((unsigned)(effectiveWidth * effectiveHeight) * sizeof(TXpixel_t));
 
-        framebufferInfo->raw_framebuffer = (uint32_t*)malloc(effectiveWidth * effectiveHeight * sizeof(uint32_t));
+        framebufferInfo->raw_framebuffer = (uint32_t*)malloc((unsigned)(effectiveWidth * effectiveHeight) * sizeof(uint32_t));
 
         if (!framebufferInfo->framebuffers[0] || !framebufferInfo->framebuffers[1] || !framebufferInfo->raw_framebuffer) {
             return false;
@@ -115,10 +115,11 @@ bool txViewport(const TXappInfo_t* appInfo, const TXframebufferInfo_t* framebuff
 
         framebufferInfo->currentFramebuffer = 0;
     }
+    return true;
 }
 
 ////////////////////////////////////////
-void txClear(const TXframebufferInfo_t* framebufferInfo)
+void txClear(TXframebufferInfo_t* framebufferInfo)
 {
     for (int i = 0; i < framebufferInfo->width * framebufferInfo->height; ++i) {
         if (framebufferInfo->flags & TX_COLOR_BIT)
@@ -175,9 +176,15 @@ bool txSetPixelInDisplayFramebuffer(TXframebufferInfo_t* framebufferInfo, int ro
 ////////////////////////////////////////
 void txDrawFramebuffer(TXappInfo_t* appInfo, TXframebufferInfo_t* framebufferInfo, int offsetX, int offsetY, int limitX, int limitY)
 {
+    offsetX = offsetX;
+    offsetY = offsetY;
+
+    limitX = limitX;
+    limitY = limitY;
+
     for (int i = 0; i < framebufferInfo->height; ++i) {
         for (int j = 0; j < framebufferInfo->width; ++j) {
-            TXpixel_t* currentPixel = txGetPixelFromCurrentFramebuffer(i, j);
+            TXpixel_t* currentPixel = txGetPixelFromCurrentFramebuffer(framebufferInfo, i, j);
 
             uint32_t u_r = (uint32_t)(currentPixel->color[0] * 255.0f);
             uint32_t u_g = (uint32_t)(currentPixel->color[1] * 255.0f);
