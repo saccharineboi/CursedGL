@@ -189,7 +189,7 @@ void txDrawFramebuffer(TXappInfo_t* appInfo, TXframebufferInfo_t* framebufferInf
                                                                                           (u_r << 0));
         }
     }
-    ncblit_rgba(raw_framebuffer, framebufferInfo->width * (int)(sizeof(uint32_t)), &framebufferInfo->options);
+    ncblit_rgba(framebufferInfo->raw_framebuffer, framebufferInfo->width * (int)(sizeof(uint32_t)), &framebufferInfo->options);
     notcurses_render(appInfo->ctx);
 }
 

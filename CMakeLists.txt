@@ -31,23 +31,18 @@ list(APPEND CMAKE_C_FLAGS "-Wall \
 
 # add source files
 set(SOURCE_FILES    ${CMAKE_SOURCE_DIR}/src/framebuffer.c
-                    ${CMAKE_SOURCE_DIR}/src/lights.c
-                    ${CMAKE_SOURCE_DIR}/src/material.c
                     ${CMAKE_SOURCE_DIR}/src/rasterizer.c
                     ${CMAKE_SOURCE_DIR}/src/shapes.c
                     ${CMAKE_SOURCE_DIR}/src/transform.c
-                    ${CMAKE_SOURCE_DIR}/src/error.c
-                    ${CMAKE_SOURCE_DIR}/src/texture.c)
+                    ${CMAKE_SOURCE_DIR}/src/error.c)
 
 # add header files
 set(HEADER_FILES    ${CMAKE_SOURCE_DIR}/include/common.h
                     ${CMAKE_SOURCE_DIR}/include/framebuffer.h
                     ${CMAKE_SOURCE_DIR}/include/init.h
-                    ${CMAKE_SOURCE_DIR}/include/lights.h
                     ${CMAKE_SOURCE_DIR}/include/mat2.h
                     ${CMAKE_SOURCE_DIR}/include/mat3.h
                     ${CMAKE_SOURCE_DIR}/include/mat4.h
-                    ${CMAKE_SOURCE_DIR}/include/material.h
                     ${CMAKE_SOURCE_DIR}/include/pixel.h
                     ${CMAKE_SOURCE_DIR}/include/quat.h
                     ${CMAKE_SOURCE_DIR}/include/rasterizer.h
@@ -56,7 +51,6 @@ set(HEADER_FILES    ${CMAKE_SOURCE_DIR}/include/common.h
                     ${CMAKE_SOURCE_DIR}/include/cursedgl.h
                     ${CMAKE_SOURCE_DIR}/include/vec.h
                     ${CMAKE_SOURCE_DIR}/include/error.h
-                    ${CMAKE_SOURCE_DIR}/include/texture.h
                     ${CMAKE_SOURCE_DIR}/tp/stb_image.h)
 
 # include directories

@@ -14,7 +14,6 @@ extern "C" {
 #include "common.h"
 #include "framebuffer.h"
 #include "transform.h"
-#include "lights.h"
 #include "error.h"
 
 #include <unistd.h>

@@ -77,10 +77,10 @@ TXpixel_t* txGetPixelFromCurrentFramebuffer(const TXframebufferInfo_t* framebuff
 TXpixel_t* txGetPixelFromDisplayFramebuffer(const TXframebufferInfo_t* framebufferInfo, int row, int col);
 
 ////////////////////////////////////////
-bool txSetPixelInCurrentFramebuffer(TXframebufferInfo_t* framebufferInfo, int row, int col, const TXpixel_t* pixel)
+bool txSetPixelInCurrentFramebuffer(TXframebufferInfo_t* framebufferInfo, int row, int col, const TXpixel_t* pixel);
 
 ////////////////////////////////////////
-bool txSetPixelInDisplayFramebuffer(TXframebufferInfo_t* framebufferInfo, int row, int col, const TXpixel_t* pixel)
+bool txSetPixelInDisplayFramebuffer(TXframebufferInfo_t* framebufferInfo, int row, int col, const TXpixel_t* pixel);
 
 ////////////////////////////////////////
 void txDrawFramebuffer(TXappInfo_t* appInfo, TXframebufferInfo_t* framebufferInfo, int offsetX, int offsetY, int limitX, int limitY);

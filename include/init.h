@@ -8,9 +8,13 @@ extern "C" {
 #endif
 ////////////////////////////////////////
 
-#include "error.h"
-
 #include <notcurses/notcurses.h>
+
+////////////////////////////////////////
+enum TXmessageType { TX_INFO, TX_WARNING, TX_ERROR };
+
+////////////////////////////////////////
+typedef void (*txMessageCallback) (enum TXmessageType type, const char* message);
 
 ////////////////////////////////////////
 struct TXappInfo

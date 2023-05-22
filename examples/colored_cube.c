@@ -95,8 +95,6 @@ static void messageCallback(enum TXmessageType type, const char* message)
 }
 
 ////////////////////////////////////////
-/// example: colored_cube
-////////////////////////////////////////
 /// This example shows how to render
 /// a 3D object
 ///

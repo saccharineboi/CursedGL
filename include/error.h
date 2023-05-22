@@ -14,13 +14,7 @@ extern "C" {
 #include <stdarg.h>
 
 ////////////////////////////////////////
-enum TXmessageType { TX_INFO, TX_WARNING, TX_ERROR };
-
-////////////////////////////////////////
-typedef void (*txMessageCallback) (enum TXmessageType type, const char* message);
-
-////////////////////////////////////////
-void txOutputMessage(const TXappInfo* appInfo, enum TXmessageType type, const char* message, ...);
+void txOutputMessage(const TXappInfo_t* appInfo, enum TXmessageType type, const char* message, ...);
 
 ////////////////////////////////////////
 #ifdef __cplusplus
