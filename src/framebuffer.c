@@ -1,4 +1,4 @@
-// Copyright (C) 2022 saccharineboi
+// Copyright (C) 2023 saccharineboi
 
 #include "framebuffer.h"
 #include "pixel.h"
