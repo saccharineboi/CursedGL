@@ -32,7 +32,6 @@ list(APPEND CMAKE_C_FLAGS "-Wall \
 # add source files
 set(SOURCE_FILES    ${CMAKE_SOURCE_DIR}/src/framebuffer.c
                     ${CMAKE_SOURCE_DIR}/src/rasterizer.c
-                    ${CMAKE_SOURCE_DIR}/src/shapes.c
                     ${CMAKE_SOURCE_DIR}/src/transform.c
                     ${CMAKE_SOURCE_DIR}/src/error.c)
 
@@ -46,7 +45,6 @@ set(HEADER_FILES    ${CMAKE_SOURCE_DIR}/include/common.h
                     ${CMAKE_SOURCE_DIR}/include/pixel.h
                     ${CMAKE_SOURCE_DIR}/include/quat.h
                     ${CMAKE_SOURCE_DIR}/include/rasterizer.h
-                    ${CMAKE_SOURCE_DIR}/include/shapes.h
                     ${CMAKE_SOURCE_DIR}/include/transform.h
                     ${CMAKE_SOURCE_DIR}/include/cursedgl.h
                     ${CMAKE_SOURCE_DIR}/include/vec.h

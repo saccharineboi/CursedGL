@@ -3,6 +3,8 @@
 #include "error.h"
 #include "init.h"
 
+#include <stdio.h>
+#include <stdarg.h>
 #include <time.h>
 #include <assert.h>
 

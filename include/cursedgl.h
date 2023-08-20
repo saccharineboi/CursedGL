@@ -24,7 +24,6 @@ extern "C" {
 #include "pixel.h"
 #include "framebuffer.h"
 #include "rasterizer.h"
-#include "shapes.h"
 #include "init.h"
 #include "error.h"
 

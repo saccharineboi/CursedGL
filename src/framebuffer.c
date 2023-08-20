@@ -29,7 +29,7 @@ bool txCompareDepth(const TXappInfo_t* appInfo, const TXframebufferInfo_t* frame
             return !txFloatEquals(interpolatedDepth, pixelDepth);
         default:
             if (appInfo->messageCallback) {
-                appInfo->messageCallback(TX_WARNING, "[CursedGL] txCompareDepth: invalid value");
+                appInfo->messageCallback(TX_WARNING, "[CursedGL] txCompareDepth: invalid value: %d", framebufferInfo->depthFunc);
             }
             return false;
     }

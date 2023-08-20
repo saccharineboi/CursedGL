@@ -10,9 +10,6 @@ extern "C" {
 
 #include "init.h"
 
-#include <stdio.h>
-#include <stdarg.h>
-
 ////////////////////////////////////////
 void txOutputMessage(const TXappInfo_t* appInfo, enum TXmessageType type, const char* message, ...);
 
